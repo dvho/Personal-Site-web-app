@@ -3,7 +3,6 @@ html {
 }
 
 body {
-    overflow: hidden;
     margin: 0;
     background-color: rgb(1, 1, 20);
 }
@@ -16,8 +15,8 @@ body {
     position: absolute;
     height: 100vh;
     transform: translateX(-50%);
-    border-left: solid 3000px rgb(1, 1, 20); /* Only way to hide clouds from exiting out from behind main-image was to give main-image a border, since it's dynamic positioning/sizing made it impossible to flank it with similarly dynamic divs that would fit flush against its left and right sides */
-    border-right: solid 3000px rgb(1, 1, 20);
+    border-left: solid 300px rgb(1, 1, 20); /* Only way to hide clouds from exiting out from behind main-image was to give main-image a border, since it's dynamic positioning/sizing made it impossible to flank it with similarly dynamic divs that would fit flush against its left and right sides */
+    border-right: solid 300px rgb(1, 1, 20);
 }
 
 .clouds {
