@@ -3,8 +3,8 @@ import '../App.css'
 import config from '../config'
 
 class Cloud extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
             opacity: .7
         }
@@ -18,7 +18,8 @@ class Cloud extends React.Component {
                 src={config.images.veil}
                 className='canvas'
                 style={{
-                    opacity: `${this.state.opacity.toString()}`
+                    opacity: `${this.props.opacity.toString()}`,
+                    transition: 'opacity 2s ease'
                     }}/>
         )
     }

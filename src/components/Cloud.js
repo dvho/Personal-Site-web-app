@@ -1,8 +1,8 @@
 import React from 'react'
 
 class Cloud extends React.Component {
-    constructor() {
-        super()
+    constructor(props) {
+        super(props)
         this.state = {
 
         }
@@ -21,9 +21,10 @@ class Cloud extends React.Component {
                 <i
                     className='fa fa-cloud'
                     style={{
-                        fontSize: '100px',
-                        color: 'red',
-                        transform: 'translateX(-100px) translateY(-50%) scale(1.2) rotateY(180deg)'
+                        fontSize: '10px',
+                        color: 'rgb(255,255,255)',
+                        // *transform: 'rotateY(180deg) translateY(-50%) translateX(-100vw)', *//
+                        animation: `motionAndSize1 ${this.props.travelDuration}s linear`
                         }}>
                 </i>
 
