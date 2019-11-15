@@ -3,6 +3,8 @@ import './App.css'
 import config from './config'
 import { Cloud, Veil } from './components'
 
+//Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
+
 class App extends React.Component {
     constructor() {
         super()
@@ -15,11 +17,13 @@ class App extends React.Component {
 
         return (
             <div className="canvas-parent">
+
                 <img alt={"back"} src={config.images.back} className="canvas" id="back-image"/>
 
                 <Cloud/>
 
                 <img alt={"back trees only"} src={config.images.backTreesOnly} className="canvas" id="back-trees-only-image"/>
+
                 <img alt={"main"} src={config.images.main} className="canvas" id="main-image"/>
 
                 <Veil/>
