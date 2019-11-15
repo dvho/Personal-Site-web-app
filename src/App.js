@@ -3,6 +3,7 @@ import './App.css'
 import config from './config'
 import { Cloud, Veil } from './components'
 
+//NOTE: Need to manually add "homepage": ".", to package.json in order get build/index.html working
 //Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
 
 class App extends React.Component {
