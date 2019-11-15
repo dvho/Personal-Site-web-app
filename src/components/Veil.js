@@ -6,7 +6,7 @@ class Cloud extends React.Component {
     constructor() {
         super()
         this.state = {
-            opacity: .8
+            opacity: .7
         }
     }
 
