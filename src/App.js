@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from 'react'
+import './App.css'
+import config from './config'
+import { Cloud, Veil } from './components'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends React.Component {
+    constructor() {
+        super()
+        this.state = {
+
+        }
+    }
+
+    render() {
+
+        return (
+            <div className="canvas-parent">
+                <img alt={"back"} src={config.images.back} className="canvas" id="back-image"/>
+
+                <Cloud/>
+
+                <img alt={"back trees only"} src={config.images.backTreesOnly} className="canvas" id="back-trees-only-image"/>
+                <img alt={"main"} src={config.images.main} className="canvas" id="main-image"/>
+
+                <Veil/>
+
+           </div>
+        )
+    }
 }
 
 export default App;
