@@ -10,54 +10,89 @@ class App extends React.Component {
     constructor() {
         super()
         this.state = {
+            firstCall: true,
+            screenWidth: 0,
             canvasHeight: 0,
-            canvasWidth: 0
+            canvasWidth: 0,
+            moonDiameter: 0,
+            cloudNumber: 0,
+            veilOpacity: .6
         }
     }
 
-    dimVeil = (rate) => {
-        rate *= 500
+    dimVeil = (travelDuration, size) => {
+
+        travelDuration *= 1000
+
+        if (this.state.canvasWidth === 0) return
+
+        let cloudIn = travelDuration / 2
+        let cloudOut = cloudIn + ((travelDuration/2) / (this.state.screenWidth / this.state.moonDiameter))
+
         setTimeout(() => {
-            console.log('cloud passed')
-        }, rate)
+            this.setState({
+                veilOpacity: this.state.veilOpacity + .1,
+                firstCall: false
+            })
+        }, cloudIn)
+
+        setTimeout(() => {
+            this.setState({
+                veilOpacity: this.state.veilOpacity - .1,
+                firstCall: false
+            })
+        }, cloudOut)
     }
 
-    calcWindowDimensions = () => { //Get the size of the canvas on load and on resize
+    calcAllDimensions = () => { //Get the size of the canvas on load and on resize
         let screenWidth = window.innerWidth
         let canvasHeight = window.innerHeight
-        let canvasWidth = screenWidth < canvasHeight * 1.323572474377745 ? screenWidth : Math.round(canvasHeight * 1.323572474377745)
+        let canvasWidth = Math.round(canvasHeight * 1.323572474377745) // screenWidth < canvasHeight * 1.323572474377745 ? screenWidth : Math.round(canvasHeight * 1.323572474377745)
+        let moonDiameter = Math.round(canvasWidth * 0.199121522693997)
         this.setState({
+            screenWidth: screenWidth,
             canvasHeight: canvasHeight,
-            canvasWidth: canvasWidth
+            canvasWidth: canvasWidth,
+            moonDiameter: moonDiameter
         })
     }
 
     componentDidMount() {
         //Fire up event listeners when App.js mounts
-        ['load', 'resize'].forEach(i => window.addEventListener(i, this.calcWindowDimensions))
+        ['load', 'resize'].forEach(i => window.addEventListener(i, this.calcAllDimensions))
+        //Fire up "game loop"
+        let linearControl
+        (linearControl = () => {
+            let repeatRate = 1000 + 9000 * Math.random()
+            this.setState({
+                cloudNumber: this.state.cloudNumber + 1
+            })
+            setTimeout(linearControl, repeatRate)
+        })()
     }
-
 
     render() {
 
-        this.dimVeil(16)
+        const allClouds = []
+        let i
+
+        for (i = 0; i < this.state.cloudNumber; i++) {
+            allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} dimVeil={this.dimVeil}/>)
+        }
 
         return (
             <div className="canvas-parent">
 
                 <img alt={"back"} src={config.images.back} className="canvas" id="back-image"/>
 
-
+                {allClouds}
 
                 <img alt={"back trees only"} src={config.images.backTreesOnly} className="canvas" id="back-trees-only-image"/>
 
                 <img alt={"main"} src={config.images.main} className="canvas" id="main-image"/>
 
-                <Cloud travelDuration={16} key={1}/>
 
-                <Veil opacity={.5} key={2}/>
-
-                <h1 style={{position: 'absolute', color: 'white'}}>Width: {this.state.canvasWidth}, Height: {this.state.canvasHeight}</h1>
+                <Veil opacity={this.state.veilOpacity} key={2}/>
 
            </div>
         )

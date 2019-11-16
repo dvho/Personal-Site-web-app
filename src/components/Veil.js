@@ -6,11 +6,12 @@ class Cloud extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            opacity: .7
+
         }
     }
 
     render() {
+        //console.log(this.props.opacity)
         return(
 
             <img
@@ -19,7 +20,7 @@ class Cloud extends React.Component {
                 className='canvas'
                 style={{
                     opacity: `${this.props.opacity.toString()}`,
-                    transition: 'opacity 2s ease'
+                    transition: 'opacity 1.5s ease'
                     }}/>
         )
     }
