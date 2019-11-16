@@ -18,7 +18,7 @@ class Cloud extends React.PureComponent {
         let opacity = .2 + Math.random() * .5
         let cloudHaze = Math.round(this.props.canvasHeight / 16)
         let zIndex = Math.random() * 9000
-        let travelDuration = 32 + Math.random() * 32
+        let travelDuration = 32 + Math.random() * 32 //Ideally, travelDuration would be a function of canvas width (inversely proportional to it), which is already a function of canvas height
         let animationNumber = Math.ceil(Math.random() * 32)
 
         this.props.dimVeil(travelDuration, size)
