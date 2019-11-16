@@ -92,12 +92,15 @@ class App extends React.Component {
 
                 {allClouds}
 
+
                 <img alt={"back trees only"} src={config.images.backTreesOnly} className="canvas" id="back-trees-only-image"/>
 
                 <img alt={"main"} src={config.images.main} className="canvas" id="main-image"/>
 
 
                 <Veil opacity={this.state.veilOpacity} key={2}/>
+
+
 
            </div>
         )
