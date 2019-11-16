@@ -6,7 +6,7 @@ import { Cloud, Veil } from './components'
 //NOTE: Needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
 //Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
 
-// --Seting up a custom domain-- 
+// --Seting up a custom domain--
 //https://www.youtube.com/watch?v=mPGi1IHQxFM
 //https://medium.com/employbl/launch-a-website-with-a-custom-url-using-github-pages-and-google-domains-3dd8d90cc33b
 //https://help.github.com/en/github/working-with-github-pages/managing-a-custom-domain-for-your-github-pages-site#configuring-a-records-with-your-dns-provider
@@ -27,21 +27,21 @@ class App extends React.Component {
 
     dimVeil = (travelDuration, size) => {
 
-        travelDuration *= 1000
+        travelDuration *= 1000 //Convert seconds to milliseconds for use in setTimeouts.
 
-        if (this.state.canvasWidth === 0) return
+        if (this.state.canvasWidth === 0) return //If canvasWidth hasn't been set yet it will be null and the calculations below will crash the app.
 
-        let cloudIn = travelDuration / 2
-        let cloudOut = cloudIn + ((travelDuration/2) / (this.state.screenWidth / this.state.moonDiameter))
+        let cloudIn = travelDuration / 2 //The point at which each cloud enters from the left in front of the moon happens to be exactly the center of the screen. It's travel duration is the full width of the view port (translateX(-100vw) through translateX(100vw) or translateX(100vw) through translateX(-100vw) in the case of the cloud icon being flipped... see App.css for these @keyframes) so the moment the cloud enters in front of the moon is exactly it's travelDuration divided by 2.
+        let cloudOut = cloudIn + ((travelDuration/2) / (this.state.screenWidth / this.state.moonDiameter)) //The moment at which the cloud leaves the moon is the moment at which it enters the moon plus a function of its own size and the diamter of the moon.
 
-        setTimeout(() => {
+        setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
             this.setState({
                 veilOpacity: this.state.veilOpacity + .1,
                 firstCall: false
             })
         }, cloudIn)
 
-        setTimeout(() => {
+        setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
             this.setState({
                 veilOpacity: this.state.veilOpacity - .1,
                 firstCall: false
@@ -49,7 +49,7 @@ class App extends React.Component {
         }, cloudOut)
     }
 
-    calcAllDimensions = () => { //Get the size of the canvas on load and on resize
+    calcAllDimensions = () => { //Get the size of the screen, canvas, and moon on both load and on resize
         let screenWidth = window.innerWidth
         let canvasHeight = window.innerHeight
         let canvasWidth = Math.round(canvasHeight * 1.323572474377745) // screenWidth < canvasHeight * 1.323572474377745 ? screenWidth : Math.round(canvasHeight * 1.323572474377745)
@@ -65,14 +65,14 @@ class App extends React.Component {
     componentDidMount() {
         //Fire up event listeners when App.js mounts
         ['load', 'resize'].forEach(i => window.addEventListener(i, this.calcAllDimensions))
-        //Fire up "game loop"
-        let linearControl
-        (linearControl = () => {
+        //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
+        let cloudControl
+        (cloudControl = () => {
             let repeatRate = 1000 + 9000 * Math.random()
             this.setState({
                 cloudNumber: this.state.cloudNumber + 1
             })
-            setTimeout(linearControl, repeatRate)
+            setTimeout(cloudControl, repeatRate)
         })()
     }
 
