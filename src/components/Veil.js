@@ -2,6 +2,8 @@ import React from 'react'
 import '../App.css'
 import config from '../config'
 
+//Float point conversion was giving values like '8.9999999999999' hence the verbose localOpacity = `${((Math.round(this.props.opacity * 10))/10).toString()}`
+
 class Cloud extends React.Component {
     constructor(props) {
         super(props)
@@ -11,7 +13,13 @@ class Cloud extends React.Component {
     }
 
     render() {
-        //console.log(this.props.opacity)
+        let localOpacity
+        if (this.props.opacity >= 1) {
+            localOpacity = '.9'
+        } else {
+            localOpacity = `${((Math.round(this.props.opacity * 10))/10).toString()}`
+        }
+
         return(
 
             <img
@@ -19,7 +27,7 @@ class Cloud extends React.Component {
                 src={config.images.veil}
                 className='canvas'
                 style={{
-                    opacity: `${this.props.opacity.toString()}`,
+                    opacity: localOpacity,
                     transition: 'opacity 1.5s ease'
                     }}/>
         )
