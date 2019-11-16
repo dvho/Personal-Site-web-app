@@ -68,7 +68,7 @@ class App extends React.Component {
         //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
         let cloudControl
         (cloudControl = () => {
-            let repeatRate = 1000 + 9000 * Math.random()
+            let repeatRate = this.state.screenWidth / 1.44 + this.state.screenWidth / .16 * Math.random() //Let repeat rate of the cloudController be a function of screen width, since regardless of anything else, each cloud's path is the width of the viewport (vw)
             this.setState({
                 cloudNumber: this.state.cloudNumber + 1
             })
