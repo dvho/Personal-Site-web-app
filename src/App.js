@@ -11,7 +11,7 @@ import { Cloud, Veil } from './components'
 //https://medium.com/employbl/launch-a-website-with-a-custom-url-using-github-pages-and-google-domains-3dd8d90cc33b
 //https://help.github.com/en/github/working-with-github-pages/managing-a-custom-domain-for-your-github-pages-site#configuring-a-records-with-your-dns-provider
 
-class App extends React.Component {
+class App extends React.PureComponent {
     constructor() {
         super()
         this.state = {
@@ -21,7 +21,7 @@ class App extends React.Component {
             canvasWidth: 0,
             moonDiameter: 0,
             cloudNumber: 0,
-            veilOpacity: .6
+            veilOpacity: .4
         }
     }
 
@@ -68,7 +68,7 @@ class App extends React.Component {
         //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
         let cloudControl
         (cloudControl = () => {
-            let repeatRate = 1000 + 9000 * Math.random() //Ideally, repeat rate of cloudController would be a function of screen width (inversely proporional), since regardless of anything else, each cloud's path is the width of the viewport (vw)... this would prevent the feeling of a cloud onslaught on narrow (mobile) screens
+            let repeatRate = 6000000 / this.state.screenWidth * Math.random() //Repeat rate of cloudController is a function of screen width (inversely proporional), since regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
             this.setState({
                 cloudNumber: this.state.cloudNumber + 1
             })
@@ -92,15 +92,11 @@ class App extends React.Component {
 
                 {allClouds}
 
-
                 <img alt={"back trees only"} src={config.images.backTreesOnly} className="canvas" id="back-trees-only-image"/>
 
                 <img alt={"main"} src={config.images.main} className="canvas" id="main-image"/>
 
-
                 <Veil opacity={this.state.veilOpacity} key={2}/>
-
-
 
            </div>
         )
