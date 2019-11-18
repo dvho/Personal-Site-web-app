@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import config from './config'
-import { Cloud, Veil } from './components'
+import { Cloud, Veil, Face } from './components'
 
 //NOTE: Needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
 //Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
@@ -21,7 +21,7 @@ class App extends React.PureComponent {
             canvasWidth: 0,
             moonDiameter: 0,
             cloudNumber: 0,
-            veilOpacity: .4
+            veilOpacity: 0
         }
     }
 
@@ -68,7 +68,7 @@ class App extends React.PureComponent {
         //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
         let cloudControl
         (cloudControl = () => {
-            let repeatRate = 5000000 / this.state.screenWidth * Math.random() //Repeat rate of cloudController is a function of screen width (inversely proporional), since regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
+            let repeatRate = 3500000 / this.state.screenWidth * Math.random() //Repeat rate of cloudController is a function of screen width (inversely proporional), since regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
             this.setState({
                 cloudNumber: this.state.cloudNumber + 1
             })
@@ -82,7 +82,7 @@ class App extends React.PureComponent {
         let i
 
         for (i = 0; i < this.state.cloudNumber; i++) {
-            allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} dimVeil={this.dimVeil}/>)
+            allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} dimVeil={this.dimVeil}/>)
         }
 
         return (
@@ -96,7 +96,9 @@ class App extends React.PureComponent {
 
                 <img alt={"main"} src={config.images.main} className="canvas" id="main-image"/>
 
-                <Veil opacity={this.state.veilOpacity} key={2}/>
+                <Veil opacity={this.state.veilOpacity} key={'a'}/>
+
+                <Face opacity={this.state.veilOpacity} key={'b'}/>
 
            </div>
         )

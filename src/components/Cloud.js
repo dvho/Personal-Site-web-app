@@ -6,7 +6,7 @@ class Cloud extends React.PureComponent {
         this.state = {
 
         }
-        this.cloudClassNameStrings = ['fa fa-cloud', 'icon ion-ios-cloud', 'icon ion-md-cloud', 'icon ion-ios-cloudy'] //A range of four different cloud icons spanning two svg libraries 
+        this.cloudClassNameStrings = ['fa fa-cloud', 'icon ion-ios-cloud', 'icon ion-md-cloud', 'icon ion-ios-cloudy'] //A range of four different cloud icons spanning two svg libraries
     }
 
     //Important to note that the below variables had to be calculated here, locally in this view component, because had they been calculated in App.js and passed as props it would've triggered a rerender with each setState in App.js which would've, in turn, triggered another call to the loop over the cloud array which, in turn, would've triggered another rerender... i.e. an infinite loop that was crashing the app as well as causing the clouds to disappear, reappear in random places with each rerender. So the dimVeil method of App.js is passed from App.js to Cloud.js which, in turn, calls it after travelDuration and size have been established.

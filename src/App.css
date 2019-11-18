@@ -25,6 +25,9 @@ body {
     position: absolute;
 }
 
+#face-test {
+    opacity: .15
+}
 
 @keyframes motionSizeAndFlip1 {
     0% {transform: rotateY(180deg) translateY(-0%) translateX(-100vw); opacity: 0}
