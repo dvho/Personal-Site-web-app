@@ -36,14 +36,14 @@ class App extends React.PureComponent {
 
         setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
             this.setState({
-                veilOpacity: this.state.veilOpacity + .1,
+                veilOpacity: this.state.veilOpacity + .2,
                 firstCall: false
             })
         }, cloudIn)
 
         setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
             this.setState({
-                veilOpacity: this.state.veilOpacity - .1,
+                veilOpacity: this.state.veilOpacity - .2,
                 firstCall: false
             })
         }, cloudOut)
@@ -98,7 +98,7 @@ class App extends React.PureComponent {
 
                 <Veil opacity={this.state.veilOpacity} key={'a'}/>
 
-                <Face opacity={this.state.veilOpacity} key={'b'}/>
+                <Face opacity={this.state.veilOpacity * .75} key={'b'}/>
 
            </div>
         )
