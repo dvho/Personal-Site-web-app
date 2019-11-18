@@ -28,7 +28,7 @@ class Face extends React.PureComponent {
                 className='canvas'
                 style={{
                     opacity: localOpacity,
-                    transition: 'opacity 8s ease'
+                    transition: 'opacity 2s linear'
                     }}/>
         )
     }
