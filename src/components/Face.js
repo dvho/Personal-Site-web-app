@@ -2,8 +2,6 @@ import React from 'react'
 import '../App.css'
 import config from '../config'
 
-//Float point conversion was giving values like '8.9999999999999' hence the verbose localOpacity = `${((Math.round(this.props.opacity * 10))/10).toString()}`
-
 class Face extends React.PureComponent {
     constructor(props) {
         super(props)
@@ -14,22 +12,30 @@ class Face extends React.PureComponent {
 
     render() {
         let localOpacity
-        if (this.props.opacity > .25) {
-            localOpacity = '.25'
+        if (this.props.opacity > .06) {
+            localOpacity = '.06'
         } else {
-            localOpacity = `${((Math.round(this.props.opacity * 10))/10).toString()}`
+            localOpacity = `${(this.props.opacity).toString()}`
         }
 
         return(
-
-            <img
-                alt={'face'}
-                src={config.images.faceTest}
-                className='canvas'
+            <div
                 style={{
                     opacity: localOpacity,
-                    transition: 'opacity 2s linear'
-                    }}/>
+                    transition: 'opacity 2.5s linear'
+                    }}>
+                <img
+                    alt={'face-main'}
+                    src={config.images.faceMain}
+                    className='canvas'
+                    />
+                <img
+                    alt={'face-frame'}
+                    src={this.props.faceFrame}
+                    className='canvas'
+                    />
+
+            </div>
         )
     }
 }

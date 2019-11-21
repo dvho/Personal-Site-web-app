@@ -15,14 +15,57 @@ class App extends React.PureComponent {
     constructor() {
         super()
         this.state = {
-            firstCall: true,
             screenWidth: 0,
             canvasHeight: 0,
             canvasWidth: 0,
             moonDiameter: 0,
             cloudNumber: 0,
-            veilOpacity: 0
+            veilOpacity: 0,
+            faceFrame: config.images.faceEmpty
         }
+    }
+
+    blink = () => { //blink method sets a blinkDuration which is less than or equal to the repeatRate in blinkControl. The coeffiecients next to blinkDuration in the setTimeouts below go to 1.1, so the max blink duration isn't 150, but 165ms
+        let blinkDuration = 50 + Math.random() * 100
+
+        let current = this.state.faceFrame //the current faceFrame, which will eventually be switched around with an eye position method, is saved as "current" and then the setTimeout are run for the blinks from F to A and back to F again and finally back to current. This way, no arguments need to be passed to blink. TODO: I'LL NEED TO HAVE A "BLINK ACTIVE" KEY IN STATE WHILE BLINK IS ACTIVE SO THAT EYE POSITION METHOD DOESN'T INTERFERE WITH BLINK METHOD 
+
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkF})
+        }, blinkDuration * .02)
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkE})
+        }, blinkDuration * .05)
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkD})
+        }, blinkDuration * .09)
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkC})
+        }, blinkDuration * .14)
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkB})
+        }, blinkDuration * .20)
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkA})
+        }, blinkDuration * .27)
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkB})
+        }, blinkDuration * .36)
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkC})
+        }, blinkDuration * .47)
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkD})
+        }, blinkDuration * .60)
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkE})
+        }, blinkDuration * .75)
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkF})
+        }, blinkDuration * .92)
+        setTimeout(() => {
+            this.setState({faceFrame: current})
+        }, blinkDuration * 1.1)
     }
 
     dimVeil = (travelDuration, size) => {
@@ -36,20 +79,18 @@ class App extends React.PureComponent {
 
         setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
             this.setState({
-                veilOpacity: this.state.veilOpacity + .2,
-                firstCall: false
+                veilOpacity: this.state.veilOpacity + .2
             })
         }, cloudIn)
 
         setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
             this.setState({
-                veilOpacity: this.state.veilOpacity - .2,
-                firstCall: false
+                veilOpacity: this.state.veilOpacity - .2
             })
         }, cloudOut)
     }
 
-    calcAllDimensions = () => { //Get the size of the screen, canvas, and moon on both load and on resize
+    calcAllDimensionsAndResetClouds = () => { //Get the size of the screen, canvas, and moon on both load and on resize
         let screenWidth = window.innerWidth
         let canvasHeight = window.innerHeight
         let canvasWidth = Math.round(canvasHeight * 1.323572474377745) // screenWidth < canvasHeight * 1.323572474377745 ? screenWidth : Math.round(canvasHeight * 1.323572474377745)
@@ -58,21 +99,30 @@ class App extends React.PureComponent {
             screenWidth: screenWidth,
             canvasHeight: canvasHeight,
             canvasWidth: canvasWidth,
-            moonDiameter: moonDiameter
+            moonDiameter: moonDiameter,
+            cloudNumber: 0
         })
     }
 
     componentDidMount() {
         //Fire up event listeners when App.js mounts
-        ['load', 'resize'].forEach(i => window.addEventListener(i, this.calcAllDimensions))
+        ['load', 'resize'].forEach(i => window.addEventListener(i, this.calcAllDimensionsAndResetClouds))
         //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
         let cloudControl
+
         (cloudControl = () => {
-            let repeatRate = 3500000 / this.state.screenWidth * Math.random() //Repeat rate of cloudController is a function of screen width (inversely proporional), since regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
+            let repeatRate = 3500000 / this.state.screenWidth * Math.random() //Repeat rate of cloudControl is a function of screen width (inversely proporional), since regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
             this.setState({
                 cloudNumber: this.state.cloudNumber + 1
             })
             setTimeout(cloudControl, repeatRate)
+        })()
+
+        let blinkControl
+        (blinkControl = () => {
+            let repeatRate = 165 + Math.random() * 5000 //Repeat rate of blinkControl must be less than the blinkDuration in the blink method, which is called below
+            this.blink()
+            setTimeout(blinkControl, repeatRate)
         })()
     }
 
@@ -98,7 +148,7 @@ class App extends React.PureComponent {
 
                 <Veil opacity={this.state.veilOpacity} key={'a'}/>
 
-                <Face opacity={this.state.veilOpacity * .75} key={'b'}/>
+                <Face opacity={this.state.veilOpacity * .15} key={'b'} faceFrame={this.state.faceFrame}/>
 
            </div>
         )
