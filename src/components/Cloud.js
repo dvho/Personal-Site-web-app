@@ -16,8 +16,8 @@ class Cloud extends React.PureComponent {
         let cloudClassNameStringIndex = Math.floor(Math.random() * 4)
         let color = Math.floor(Math.random() * 360)
         let size = this.props.canvasHeight / (3 + Math.random() * 3)
-        let opacity = .2 + Math.random() * .5
-        let cloudHaze = Math.round(this.props.canvasHeight / 16)
+        let opacity = .3 + Math.random() * .6
+        let cloudHaze = size / 4
         let zIndex = Math.random() * 9000
         let travelDuration = 32 + Math.random() * 32 //Ideally, travelDuration would be a function of canvas width (inversely proportional to it), which is already a function of canvas height. "18000 / this.props.canvasHeight + Math.random() * this.props.canvasHeight / 18000" works perfectly but takes too long for clouds to enter the screen on small devices.
         let animationNumber = Math.ceil(Math.random() * 32)
@@ -38,7 +38,7 @@ class Cloud extends React.PureComponent {
                     style={{
                         fontSize: `${size}px`,
                         color: `hsla(${color}, 100%, 96%, ${opacity})`,
-                        filter: `drop-shadow(0px 0px ${cloudHaze}px hsla(${color}, 100%, 96%, 1)`,
+                        filter: `drop-shadow(0px 0px ${cloudHaze}px hsla(${color}, 100%, 96%, 1)`, /*Comment out filter if you need to boost performance during developent. CPU and GPU really strain to animate the drop shadow.*/
                         position: 'absolute',
                         zIndex: `${zIndex}`,
                         animation: `motionSizeAndFlip${animationNumber} ${travelDuration}s linear forwards`
