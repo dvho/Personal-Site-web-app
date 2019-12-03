@@ -28,17 +28,8 @@ class App extends React.PureComponent {
     blink = () => { //blink method sets a blinkDuration which is less than or equal to the repeatRate in blinkControl. The coeffiecients next to blinkDuration in the setTimeouts below go to 1.1, so the max blink duration isn't 150, but 165ms
         let blinkDuration = 50 + Math.random() * 100
 
-        let current = this.state.faceFrame //the current faceFrame, which will eventually be switched around with an eye position method, is saved as "current" and then the setTimeout are run for the blinks from F to A and back to F again and finally back to current. This way, no arguments need to be passed to blink. TODO: I'LL NEED TO HAVE A "BLINK ACTIVE" KEY IN STATE WHILE BLINK IS ACTIVE SO THAT EYE POSITION METHOD DOESN'T INTERFERE WITH BLINK METHOD 
+        let current = this.state.faceFrame //the current faceFrame, which will eventually be switched around with an eye position method, is saved as "current" and then the setTimeout are run for the blinks from F to A and back to F again and finally back to current. This way, no arguments need to be passed to blink. TODO: I'LL NEED TO HAVE A "BLINK ACTIVE" KEY IN STATE WHILE BLINK IS ACTIVE SO THAT EYE POSITION METHOD DOESN'T INTERFERE WITH BLINK METHOD
 
-        setTimeout(() => {
-            this.setState({faceFrame: config.images.faceBlinkF})
-        }, blinkDuration * .02)
-        setTimeout(() => {
-            this.setState({faceFrame: config.images.faceBlinkE})
-        }, blinkDuration * .05)
-        setTimeout(() => {
-            this.setState({faceFrame: config.images.faceBlinkD})
-        }, blinkDuration * .09)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkC})
         }, blinkDuration * .14)
