@@ -34,7 +34,6 @@ class Face extends React.PureComponent {
                     src={this.props.faceFrame}
                     className='canvas'
                     />
-
             </div>
         )
     }

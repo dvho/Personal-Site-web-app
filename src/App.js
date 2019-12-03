@@ -30,6 +30,17 @@ class App extends React.PureComponent {
 
         let current = this.state.faceFrame //the current faceFrame, which will eventually be switched around with an eye position method, is saved as "current" and then the setTimeout are run for the blinks from F to A and back to F again and finally back to current. This way, no arguments need to be passed to blink. TODO: I'LL NEED TO HAVE A "BLINK ACTIVE" KEY IN STATE WHILE BLINK IS ACTIVE SO THAT EYE POSITION METHOD DOESN'T INTERFERE WITH BLINK METHOD
 
+        //First 3 setTimeouts below should be commented out. A blink looks more natural when eyes move rapidly to close and drag more on the way up, and omitting those frames depicted that much better.
+
+        // setTimeout(() => {
+        //     this.setState({faceFrame: config.images.faceBlinkF})
+        // }, blinkDuration * .02)
+        // setTimeout(() => {
+        //     this.setState({faceFrame: config.images.faceBlinkE})
+        // }, blinkDuration * .05)
+        // setTimeout(() => {
+        //     this.setState({faceFrame: config.images.faceBlinkD})
+        // }, blinkDuration * .09)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkC})
         }, blinkDuration * .14)
@@ -65,8 +76,8 @@ class App extends React.PureComponent {
 
         if (this.state.canvasWidth === 0) return //If canvasWidth hasn't been set yet it will be null and the calculations below will crash the app.
 
-        let cloudIn = travelDuration / 2 //The point at which each cloud enters from the left in front of the moon happens to be exactly the center of the screen. It's travel duration is the full width of the view port (translateX(-100vw) through translateX(100vw) or translateX(100vw) through translateX(-100vw) in the case of the cloud icon being flipped... see App.css for these @keyframes) so the moment the cloud enters in front of the moon is exactly it's travelDuration divided by 2.
-        let cloudOut = cloudIn + ((travelDuration/2) / (this.state.screenWidth / this.state.moonDiameter)) //The moment at which the cloud leaves the moon is the moment at which it enters the moon plus a function of its own size and the diamter of the moon.
+        let cloudIn = travelDuration / 3 //The point at which each cloud enters from the left in front of the moon happens to be exactly the center of the screen. It's travel duration is the full width of the view port (translateX(-100vw) through translateX(100vw) or translateX(100vw) through translateX(-100vw) in the case of the cloud icon being flipped... see App.css for these @keyframes) so the moment the cloud enters in front of the moon is exactly it's travelDuration divided by 2.
+        let cloudOut = cloudIn + ((travelDuration/1.33) / (this.state.screenWidth / this.state.moonDiameter)) //The moment at which the cloud leaves the moon is the moment at which it enters the moon plus a function of its travelDuration (and, technically, also its size but I've averaged that between the largets and smallest cloud possibilities for this equation) and the diameter of the moon.
 
         setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
             this.setState({
@@ -102,7 +113,7 @@ class App extends React.PureComponent {
         let cloudControl
 
         (cloudControl = () => {
-            let repeatRate = 3500000 / this.state.screenWidth * Math.random() //Repeat rate of cloudControl is a function of screen width (inversely proporional), since regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
+            let repeatRate = 3500000 / this.state.screenWidth //* Math.random() //Repeat rate of cloudControl is a function of screen width (inversely proporional), since regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
             this.setState({
                 cloudNumber: this.state.cloudNumber + 1
             })

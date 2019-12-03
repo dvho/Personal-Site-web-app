@@ -19,7 +19,7 @@ class Cloud extends React.PureComponent {
         let opacity = .3 + Math.random() * .6
         let cloudHaze = size / 4
         let zIndex = Math.random() * 9000
-        let travelDuration = 32 + Math.random() * 32 //Ideally, travelDuration would be a function of canvas width (inversely proportional to it), which is already a function of canvas height. "18000 / this.props.canvasHeight + Math.random() * this.props.canvasHeight / 18000" works perfectly but takes too long for clouds to enter the screen on small devices.
+        let travelDuration = 24 + Math.random() * 24 //Ideally, travelDuration would be a function of canvas width (inversely proportional to it), which is already a function of canvas height. "18000 / this.props.canvasHeight + Math.random() * this.props.canvasHeight / 18000" works perfectly but takes too long for clouds to enter the screen on small devices.
         let animationNumber = Math.ceil(Math.random() * 32)
 
         this.props.dimVeil(travelDuration, size)
