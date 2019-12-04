@@ -20,13 +20,13 @@ class App extends React.PureComponent {
             canvasWidth: 0,
             moonDiameter: 0,
             cloudNumber: 0,
-            veilOpacity: 0,
+            veilOpacity: .3,
             faceFrame: config.images.faceEmpty
         }
     }
 
-    blink = () => { //blink method sets a blinkDuration which is less than or equal to the repeatRate in blinkControl. The coeffiecients next to blinkDuration in the setTimeouts below go to 1.1, so the max blink duration isn't 150, but 165ms
-        let blinkDuration = 50 + Math.random() * 100
+    blink = () => { //blink method sets a blinkDuration which is less than or equal to the repeatRate in blinkControl. The coeffiecients next to blinkDuration in the setTimeouts below go to 1.1, so the max blink duration isn't 250, but 275ms
+        let blinkDuration = 100 + Math.random() * 150
 
         let current = this.state.faceFrame //the current faceFrame, which will eventually be switched around with an eye position method, is saved as "current" and then the setTimeout are run for the blinks from F to A and back to F again and finally back to current. This way, no arguments need to be passed to blink. TODO: I'LL NEED TO HAVE A "BLINK ACTIVE" KEY IN STATE WHILE BLINK IS ACTIVE SO THAT EYE POSITION METHOD DOESN'T INTERFERE WITH BLINK METHOD
 
@@ -38,9 +38,9 @@ class App extends React.PureComponent {
         // setTimeout(() => {
         //     this.setState({faceFrame: config.images.faceBlinkE})
         // }, blinkDuration * .05)
-        // setTimeout(() => {
-        //     this.setState({faceFrame: config.images.faceBlinkD})
-        // }, blinkDuration * .09)
+        setTimeout(() => {
+            this.setState({faceFrame: config.images.faceBlinkD})
+        }, blinkDuration * .09)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkC})
         }, blinkDuration * .14)
@@ -81,13 +81,13 @@ class App extends React.PureComponent {
 
         setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
             this.setState({
-                veilOpacity: this.state.veilOpacity + .2
+                veilOpacity: this.state.veilOpacity + .15
             })
         }, cloudIn)
 
         setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
             this.setState({
-                veilOpacity: this.state.veilOpacity - .2
+                veilOpacity: this.state.veilOpacity - .15
             })
         }, cloudOut)
     }
@@ -122,7 +122,7 @@ class App extends React.PureComponent {
 
         let blinkControl
         (blinkControl = () => {
-            let repeatRate = 165 + Math.random() * 5000 //Repeat rate of blinkControl must be less than the blinkDuration in the blink method, which is called below
+            let repeatRate = 275 + Math.random() * 5000 //Repeat rate of blinkControl must be less than the blinkDuration in the blink method, which is called below
             this.blink()
             setTimeout(blinkControl, repeatRate)
         })()
@@ -150,7 +150,7 @@ class App extends React.PureComponent {
 
                 <Veil opacity={this.state.veilOpacity} key={'a'}/>
 
-                <Face opacity={this.state.veilOpacity * .15} key={'b'} faceFrame={this.state.faceFrame}/>
+                <Face opacity={(this.state.veilOpacity - .3) * .2} key={'b'} faceFrame={this.state.faceFrame}/>
 
            </div>
         )
