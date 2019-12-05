@@ -21,23 +21,27 @@ class App extends React.PureComponent {
             moonDiameter: 0,
             cloudNumber: 0,
             veilOpacity: .3,
-            faceFrame: config.images.faceEyePosition3L1
+            blinkActive: false,
+            eyesJustSwitched: false,
+            faceFrame: config.images.faceEmpty
         }
     }
 
     switchEyePosition = () => {
         let position = Object.entries(config.images)[5 + Math.floor(Math.random() * 19)][1] //Object.entries is a method takes an object and returns an array whose elements are arrays of that objects key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images)[0][1] would return the 1st image, Object.entries(config.images)[2][1] the 3rd, etc. In this case the first key value pairs in the config.images object are not for the face so we start with Object.entries(config.images)[5][1], which is faceEmpty.
-        this.setState({faceFrame: position})
+        let holdEyePosition = 500 + Math.random() * 500
+        this.setState({faceFrame: position, eyesJustSwitched: true}) //Switch eyesJustSwitched to true
+        setTimeout(() => {this.setState({eyesJustSwitched: false})}, holdEyePosition) //Wait 500 + Math.random() * 500 to switch eyesJustSwitched to false
     }
 
     blink = () => { //blink method sets a blinkDuration which is less than or equal to the repeatRate in blinkControl. The coeffiecients next to blinkDuration in the setTimeouts below go to 1.1, so the max blink duration isn't 250, but 275ms
         let blinkDuration = 100 + Math.random() * 150
         let blinkStareTimeCoefficient = 300 + Math.random() * 300
-        let current = this.state.faceFrame //the current faceFrame, which will eventually be switched around with an eye position method, is saved as "current" and then the setTimeout are run for the blinks from F to A and back to F again and finally back to current. This way, no arguments need to be passed to blink. TODO: I'LL NEED TO HAVE A "BLINK ACTIVE" KEY IN STATE WHILE BLINK IS ACTIVE SO THAT EYE POSITION METHOD DOESN'T INTERFERE WITH BLINK METHOD
+        let current = this.state.faceFrame //the current faceFrame, which will eventually be switched around with an eye position method, is saved as "current" and then the setTimeouts are run for the blinks from F to A and back to F again and finally back to current. This way, no arguments need to be passed to blink.
 
-        //First 3 setTimeouts below should be commented out. A blink looks more natural when eyes move rapidly to close and drag more on the way up, and omitting those frames depicted that much better.
-
-        this.setState({faceFrame: config.images.faceEmpty})
+        //First 2 setTimeouts below should be commented out. A blink looks more natural when eyes move rapidly to close and drag more on the way up, and omitting those frames depicted that much better.
+        this.setState({blinkActive: true}) //Make blinkActive true
+        this.setState({faceFrame: config.images.faceEmpty}) //Set faceFrame to faceEmpty, which reveals eyes facing forward, until first setTimeout is called in blinkDuration * .09
 
         // setTimeout(() => {
         //     this.setState({faceFrame: config.images.faceBlinkF})
@@ -73,7 +77,7 @@ class App extends React.PureComponent {
             this.setState({faceFrame: config.images.faceBlinkF})
         }, blinkStareTimeCoefficient + blinkDuration * .92)
         setTimeout(() => {
-            this.setState({faceFrame: current})
+            this.setState({faceFrame: current, blinkActive: false}) //Make blinkActive false again
         }, blinkStareTimeCoefficient + blinkDuration * 1.1)
     }
 
@@ -130,17 +134,21 @@ class App extends React.PureComponent {
         let blinkControl
         (blinkControl = () => {
             let repeatRate = 600 + Math.random() * 5000 //Repeat rate of blinkControl must be less than the blinkDuration in the blink method, which is called below
-            this.blink()
+            if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then switch eye position again and blink.
+                this.switchEyePosition()
+                this.blink()
+            }
             setTimeout(blinkControl, repeatRate)
         })()
 
         let switchEyePositionControl
         (switchEyePositionControl = () => {
             let repeatRate = 1000 + Math.random() * 2000
-            this.switchEyePosition()
+            if (!this.state.blinkActive && !this.state.eyesJustSwitched) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) only then can you run switchEyePosition. Note, switchEyePosition can run from blinkControl as well so the condition !this.state.eyesJustSwitched must be reiterated here even through repeatRate for switchEyePositionControl is greater than 1000ms.
+                this.switchEyePosition()
+            }
             setTimeout(switchEyePositionControl, repeatRate)
         })()
-
     }
 
     render() {
