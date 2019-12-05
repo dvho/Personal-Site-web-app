@@ -26,13 +26,13 @@ class App extends React.PureComponent {
     }
 
     switchEyePosition = () => {
-        let position = Object.entries(config.images)[5 + Math.floor(Math.random() * 12)][1] //Object.entries is a method takes an object and returns an array whose elements are arrays of that objects key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images)[0][1] would return the 1st image, Object.entries(config.images)[2][1] the 3rd, etc. In this case the first key value pairs in the config.images object are not for the face so we start with Object.entries(config.images)[5][1], which is faceEmpty.
+        let position = Object.entries(config.images)[5 + Math.floor(Math.random() * 19)][1] //Object.entries is a method takes an object and returns an array whose elements are arrays of that objects key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images)[0][1] would return the 1st image, Object.entries(config.images)[2][1] the 3rd, etc. In this case the first key value pairs in the config.images object are not for the face so we start with Object.entries(config.images)[5][1], which is faceEmpty.
         this.setState({faceFrame: position})
     }
 
     blink = () => { //blink method sets a blinkDuration which is less than or equal to the repeatRate in blinkControl. The coeffiecients next to blinkDuration in the setTimeouts below go to 1.1, so the max blink duration isn't 250, but 275ms
         let blinkDuration = 100 + Math.random() * 150
-        let blinkHangCoefficient = 300 + Math.random() * 300
+        let blinkStareTimeCoefficient = 300 + Math.random() * 300
         let current = this.state.faceFrame //the current faceFrame, which will eventually be switched around with an eye position method, is saved as "current" and then the setTimeout are run for the blinks from F to A and back to F again and finally back to current. This way, no arguments need to be passed to blink. TODO: I'LL NEED TO HAVE A "BLINK ACTIVE" KEY IN STATE WHILE BLINK IS ACTIVE SO THAT EYE POSITION METHOD DOESN'T INTERFERE WITH BLINK METHOD
 
         //First 3 setTimeouts below should be commented out. A blink looks more natural when eyes move rapidly to close and drag more on the way up, and omitting those frames depicted that much better.
@@ -47,34 +47,34 @@ class App extends React.PureComponent {
         // }, blinkDuration * .05)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkD})
-        }, blinkHangCoefficient + blinkDuration * .09)
+        }, blinkStareTimeCoefficient + blinkDuration * .09)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkC})
-        }, blinkHangCoefficient + blinkDuration * .14)
+        }, blinkStareTimeCoefficient + blinkDuration * .14)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkB})
-        }, blinkHangCoefficient + blinkDuration * .20)
+        }, blinkStareTimeCoefficient + blinkDuration * .20)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkA})
-        }, blinkHangCoefficient + blinkDuration * .27)
+        }, blinkStareTimeCoefficient + blinkDuration * .27)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkB})
-        }, blinkHangCoefficient + blinkDuration * .36)
+        }, blinkStareTimeCoefficient + blinkDuration * .36)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkC})
-        }, blinkHangCoefficient + blinkDuration * .47)
+        }, blinkStareTimeCoefficient + blinkDuration * .47)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkD})
-        }, blinkHangCoefficient + blinkDuration * .60)
+        }, blinkStareTimeCoefficient + blinkDuration * .60)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkE})
-        }, blinkHangCoefficient + blinkDuration * .75)
+        }, blinkStareTimeCoefficient + blinkDuration * .75)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkF})
-        }, blinkHangCoefficient + blinkDuration * .92)
+        }, blinkStareTimeCoefficient + blinkDuration * .92)
         setTimeout(() => {
             this.setState({faceFrame: current})
-        }, blinkHangCoefficient + blinkDuration * 1.1)
+        }, blinkStareTimeCoefficient + blinkDuration * 1.1)
     }
 
     dimVeil = (travelDuration, size) => {
