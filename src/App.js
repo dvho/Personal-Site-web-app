@@ -28,7 +28,7 @@ class App extends React.PureComponent {
     }
 
     switchEyePosition = () => {
-        let position = Object.entries(config.images)[5 + Math.floor(Math.random() * 27)][1] //Object.entries is a method takes an object and returns an array whose elements are arrays of that objects key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images)[0][1] would return the 1st image, Object.entries(config.images)[2][1] the 3rd, etc. In this case the first key value pairs in the config.images object are not for the face so we start with Object.entries(config.images)[5][1], which is faceEmpty.
+        let position = Object.entries(config.images)[5 + Math.floor(Math.random() * 38)][1] //Object.entries is a method takes an object and returns an array whose elements are arrays of that objects key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images)[0][1] would return the 1st image, Object.entries(config.images)[2][1] the 3rd, etc. In this case the first key value pairs in the config.images object are not for the face so we start with Object.entries(config.images)[5][1], which is faceEmpty.
         let holdEyePosition = 500 + Math.random() * 500
         this.setState({faceFrame: position, eyesJustSwitched: true}) //Switch eyesJustSwitched to true
         setTimeout(() => {this.setState({eyesJustSwitched: false})}, holdEyePosition) //Wait 500 + Math.random() * 500 to switch eyesJustSwitched to false
