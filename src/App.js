@@ -28,7 +28,7 @@ class App extends React.PureComponent {
     }
 
     switchEyePosition = () => {
-        let position = Object.entries(config.images)[5 + Math.floor(Math.random() * 38)][1] //Object.entries is a method takes an object and returns an array whose elements are arrays of that objects key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images)[0][1] would return the 1st image, Object.entries(config.images)[2][1] the 3rd, etc. In this case the first key value pairs in the config.images object are not for the face so we start with Object.entries(config.images)[5][1], which is faceEmpty.
+        let position = Object.entries(config.images)[5 + Math.floor(Math.random() * 37)][1] //Object.entries is a method takes an object and returns an array whose elements are arrays of that objects key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images)[0][1] would return the 1st image, Object.entries(config.images)[2][1] the 3rd, etc. In this case the first key value pairs in the config.images object are not for the face so we start with Object.entries(config.images)[5][1], which is faceEmpty.
         let holdEyePosition = 500 + Math.random() * 500
         this.setState({faceFrame: position, eyesJustSwitched: true}) //Switch eyesJustSwitched to true
         setTimeout(() => {this.setState({eyesJustSwitched: false})}, holdEyePosition) //Wait 500 + Math.random() * 500 to switch eyesJustSwitched to false
@@ -51,34 +51,34 @@ class App extends React.PureComponent {
         // }, blinkDuration * .05)
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkD})
-        }, blinkStareTimeCoefficient + blinkDuration * .09)
+        }, (blinkStareTimeCoefficient + blinkDuration * .09))
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkC})
-        }, blinkStareTimeCoefficient + blinkDuration * .14)
+        }, (blinkStareTimeCoefficient + blinkDuration * .14))
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkB})
-        }, blinkStareTimeCoefficient + blinkDuration * .20)
+        }, (blinkStareTimeCoefficient + blinkDuration * .20))
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkA})
-        }, blinkStareTimeCoefficient + blinkDuration * .27)
+        }, (blinkStareTimeCoefficient + blinkDuration * .27))
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkB})
-        }, blinkStareTimeCoefficient + blinkDuration * .36)
+        }, (blinkStareTimeCoefficient + blinkDuration * .36))
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkC})
-        }, blinkStareTimeCoefficient + blinkDuration * .47)
+        }, (blinkStareTimeCoefficient + blinkDuration * .47))
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkD})
-        }, blinkStareTimeCoefficient + blinkDuration * .60)
+        }, (blinkStareTimeCoefficient + blinkDuration * .60))
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkE})
-        }, blinkStareTimeCoefficient + blinkDuration * .75)
+        }, (blinkStareTimeCoefficient + blinkDuration * .75))
         setTimeout(() => {
             this.setState({faceFrame: config.images.faceBlinkF})
-        }, blinkStareTimeCoefficient + blinkDuration * .92)
+        }, (blinkStareTimeCoefficient + blinkDuration * .92))
         setTimeout(() => {
             this.setState({faceFrame: current, blinkActive: false}) //Make blinkActive false again
-        }, blinkStareTimeCoefficient + blinkDuration * 1.1)
+        }, (blinkStareTimeCoefficient + blinkDuration * 1.1))
     }
 
     dimVeil = (travelDuration, size) => {
@@ -133,7 +133,7 @@ class App extends React.PureComponent {
 
         let blinkControl
         (blinkControl = () => {
-            let repeatRate = 600 + Math.random() * 5000 //Repeat rate of blinkControl must be less than the blinkDuration in the blink method, which is called below
+            let repeatRate = 875 + Math.random() * 3000 //Repeat rate of blinkControl must be less than the max time it would take to blink, which is blinkStareTimeCoefficient + blinkDuration * 1.1 in the blink method, which is called below
             if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then switch eye position again and blink.
                 this.switchEyePosition()
                 this.blink()
