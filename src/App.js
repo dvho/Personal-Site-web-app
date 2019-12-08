@@ -19,7 +19,7 @@ class App extends React.PureComponent {
             canvasHeight: 0,
             canvasWidth: 0,
             moonDiameter: 0,
-            buttonDiameter: 0,
+            performanceButtonDiameter: 0,
             performanceBoost: false,
             xCoord: -1,
             yCoord: -1,
@@ -142,16 +142,15 @@ class App extends React.PureComponent {
         let canvasHeight = window.innerHeight
         let canvasWidth = Math.round(canvasHeight * 1.323572474377745) //screenWidth < canvasHeight * 1.323572474377745 ? screenWidth : Math.round(canvasHeight * 1.323572474377745)
         let moonDiameter = Math.round(canvasWidth * 0.199121522693997)
-        let buttonDiameter = canvasHeight * .02
+        let performanceButtonDiameter = canvasHeight * .025
 
-        if (e.type === 'load' || e.type === 'resize') { //Get the sizes of the screen, canvas, and moon, and reset cloudNumber on both load and on resize
+        if (e.type === 'load' || e.type === 'resize') { //Get the sizes of the screen, canvas, moon, performance toggle button, and reset cloudNumber on both load and on resize
             this.setState({
                 screenWidth: screenWidth,
                 canvasHeight: canvasHeight,
                 canvasWidth: canvasWidth,
                 moonDiameter: moonDiameter,
-                buttonDiameter: buttonDiameter,
-                cloudNumber: 1
+                performanceButtonDiameter: performanceButtonDiameter
             })
         } else if (e.type === 'mouseover' || e.type === 'mousemove' || e.type === 'touchstart' || e.type === 'touchmove') { //Get the X and Y positions on mouseover, mousemove, touchstart, and touchmove
             let margin = ((screenWidth - canvasWidth) / 2)
@@ -238,7 +237,9 @@ class App extends React.PureComponent {
 
                 <Face opacity={(this.state.veilOpacity - .3) * .2} key={'b'} faceFrame={this.state.faceFrame}/>
 
-                <h1 class="performanceButton" style={{backgroundColor: this.state.performanceBoost ? 'rgb(255,0,0)' : 'rgb(255,255,255)', width: this.state.buttonDiameter, height: this.state.buttonDiameter}} onClick={()=>{this.setState({performanceBoost: !this.state.performanceBoost, cloudNumber: 1})}}></h1>
+                <div className="performanceButtonContainer" style={{width: this.state.performanceButtonDiameter * 2, height: this.state.performanceButtonDiameter * 2}} onClick={()=>{this.setState({performanceBoost: !this.state.performanceBoost})}}>
+                    <div className="performanceButton" style={{backgroundColor: this.state.performanceBoost ? 'rgb(255,0,0)' : 'rgb(255,255,255)', width: this.state.performanceButtonDiameter, height: this.state.performanceButtonDiameter, margin: this.state.performanceButtonDiameter * .5}}></div>
+                </div>
 
            </div>
         )
