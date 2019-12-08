@@ -1,18 +1,21 @@
 html {
+    user-select: none;
     overflow: hidden;
 }
 
 body {
+    user-select: none;
     margin: 0;
     background-color: rgb(1, 1, 20);
-    user-select: none;
 }
 
 .canvas-parent {
+    user-select: none;
     text-align: center;
 }
 
 .canvas {
+    user-select: none;
     position: absolute;
     height: 100vh;
     transform: translateX(-50%);
@@ -21,30 +24,26 @@ body {
 }
 
 .clouds {
+    user-select: none;
     width: 100%;
     height: 100vh;
     position: absolute;
 }
 
 .performanceButton {
+    user-select: none;
     margin: 0;
-    opacity: .2;
+    opacity: .35;
     border-radius: 50%;
-    transition: opacity .3s;
 }
 
 .performanceButtonContainer {
+    user-select: none;
     position: absolute;
     bottom: 0px;
     right: 0px;
     cursor: pointer;
 }
-
-.performanceButtonContainer:hover > .performanceButton {
-    opacity: 1;
-    cursor: pointer;
-}
-
 
 @keyframes motionSizeAndFlip1 {
     0% {transform: rotateY(180deg) translateY(-0%) translateX(-50vw); opacity: 0}
