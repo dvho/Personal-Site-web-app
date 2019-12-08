@@ -19,9 +19,11 @@ class App extends React.PureComponent {
             canvasHeight: 0,
             canvasWidth: 0,
             moonDiameter: 0,
+            buttonDiameter: 0,
+            performanceBoost: false,
             xCoord: -1,
             yCoord: -1,
-            cloudNumber: 0,
+            cloudNumber: 1,
             veilOpacity: .3,
             blinkActive: false,
             eyesJustSwitched: false,
@@ -31,7 +33,20 @@ class App extends React.PureComponent {
     }
 
     userSwitchEyePosition = () => {
+        //Add a conditional statement here that sets a let to the corresponding position and then setState to position
         console.log(this.state.xCoord, this.state.yCoord)
+
+        let position
+
+        if (this.state.xCoord <= .5) {
+            position = config.images.eyePosition.faceEyePosition1R4
+        }
+        if (this.state.xCoord > .5) {
+            position = config.images.eyePosition.faceEyePosition1L3
+        }
+
+        this.setState({faceFrame: position})
+
     }
 
     autoSwitchEyePosition = () => {
@@ -117,7 +132,7 @@ class App extends React.PureComponent {
                     xCoord: -1,
                     yCoord: -1
                 })
-            }, 8000)
+            }, 10000)
         })
     }
 
@@ -127,6 +142,7 @@ class App extends React.PureComponent {
         let canvasHeight = window.innerHeight
         let canvasWidth = Math.round(canvasHeight * 1.323572474377745) //screenWidth < canvasHeight * 1.323572474377745 ? screenWidth : Math.round(canvasHeight * 1.323572474377745)
         let moonDiameter = Math.round(canvasWidth * 0.199121522693997)
+        let buttonDiameter = canvasHeight * .02
 
         if (e.type === 'load' || e.type === 'resize') { //Get the sizes of the screen, canvas, and moon, and reset cloudNumber on both load and on resize
             this.setState({
@@ -134,7 +150,8 @@ class App extends React.PureComponent {
                 canvasHeight: canvasHeight,
                 canvasWidth: canvasWidth,
                 moonDiameter: moonDiameter,
-                cloudNumber: 0
+                buttonDiameter: buttonDiameter,
+                cloudNumber: 1
             })
         } else if (e.type === 'mouseover' || e.type === 'mousemove' || e.type === 'touchstart' || e.type === 'touchmove') { //Get the X and Y positions on mouseover, mousemove, touchstart, and touchmove
             let margin = ((screenWidth - canvasWidth) / 2)
@@ -178,7 +195,7 @@ class App extends React.PureComponent {
         let blinkControl
         (blinkControl = () => {
             let repeatRate = 875 + Math.random() * 3000 //Repeat rate of blinkControl must be less than the max time it would take to blink, which is blinkStareTimeCoefficient + blinkDuration * 1.1 in the blink method, which is called below
-            if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then blink, and if this.state.xCoord === -1, which means it's been longer than 8000ms since mouseover, mousemove, touchstart, or touchmove events have fired, switch eye position again.
+            if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then blink, and if this.state.xCoord === -1, which means it's been longer than 10000ms since mouseover, mousemove, touchstart, or touchmove events have fired, switch eye position again.
                 if (this.state.xCoord === -1) {
                     this.autoSwitchEyePosition()
                 }
@@ -190,7 +207,7 @@ class App extends React.PureComponent {
         let autoSwitchEyePositionControl
         (autoSwitchEyePositionControl = () => {
             let repeatRate = 1000 + Math.random() * 2000
-            if (!this.state.blinkActive && !this.state.eyesJustSwitched && this.state.xCoord === -1) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) and this.state.xCoord === -1, which means it's been longer than 8000ms since mouseover, mousemove, touchstart, or touchmove events have fired only then can you run autoSwitchEyePosition. Note, autoSwitchEyePosition can run from blinkControl as well so the condition !this.state.eyesJustSwitched must be reiterated here even through repeatRate for autoSwitchEyePositionControl is greater than 1000ms.
+            if (!this.state.blinkActive && !this.state.eyesJustSwitched && this.state.xCoord === -1) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) and this.state.xCoord === -1, which means it's been longer than 10000ms since mouseover, mousemove, touchstart, or touchmove events have fired only then can you run autoSwitchEyePosition. Note, autoSwitchEyePosition can run from blinkControl as well so the condition !this.state.eyesJustSwitched must be reiterated here even through repeatRate for autoSwitchEyePositionControl is greater than 1000ms.
                 this.autoSwitchEyePosition()
             }
             setTimeout(autoSwitchEyePositionControl, repeatRate)
@@ -203,7 +220,7 @@ class App extends React.PureComponent {
         let i
 
         for (i = 0; i < this.state.cloudNumber; i++) {
-            allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} dimVeil={this.dimVeil}/>)
+            allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} dimVeil={this.dimVeil} performanceBoost={this.state.performanceBoost}/>)
         }
 
         return (
@@ -220,6 +237,8 @@ class App extends React.PureComponent {
                 <Veil opacity={this.state.veilOpacity} key={'a'}/>
 
                 <Face opacity={(this.state.veilOpacity - .3) * .2} key={'b'} faceFrame={this.state.faceFrame}/>
+
+                <h1 class="performanceButton" style={{backgroundColor: this.state.performanceBoost ? 'rgb(255,0,0)' : 'rgb(255,255,255)', width: this.state.buttonDiameter, height: this.state.buttonDiameter}} onClick={()=>{this.setState({performanceBoost: !this.state.performanceBoost, cloudNumber: 1})}}></h1>
 
            </div>
         )
