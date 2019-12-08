@@ -12,8 +12,8 @@ class Face extends React.PureComponent {
 
     render() {
         let localOpacity
-        if (this.props.opacity > .06) {
-            localOpacity = '.06'
+        if (this.props.opacity > .20) {
+            localOpacity = '.20'
         } else {
             localOpacity = `${(this.props.opacity).toString()}`
         }
