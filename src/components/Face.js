@@ -26,7 +26,7 @@ class Face extends React.PureComponent {
                     }}>
                 <img
                     alt={'face-main'}
-                    src={config.images.faceMain}
+                    src={config.images.canvas.faceMain}
                     className='canvas'
                     />
                 <img

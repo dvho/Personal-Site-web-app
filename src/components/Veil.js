@@ -24,7 +24,7 @@ class Cloud extends React.PureComponent {
 
             <img
                 alt={'veil'}
-                src={config.images.veil}
+                src={config.images.canvas.veil}
                 className='canvas'
                 style={{
                     opacity: localOpacity,
