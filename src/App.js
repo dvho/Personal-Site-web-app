@@ -153,7 +153,7 @@ class App extends React.PureComponent {
                 cloudNumber: 1,
                 performanceButtonDiameter: performanceButtonDiameter
             })
-        } else if (e.type === 'touchstart') { //Get the X and Y positions on mousemove and touchmove
+        } else if (e.type === 'mousemove') { //Get the X and Y positions on mousemove and touchmove
 
             let margin = ((screenWidth - canvasWidth) / 2)
             let yCoord = e.clientY / canvasHeight
@@ -181,7 +181,7 @@ class App extends React.PureComponent {
 
     componentDidMount() {
         //Fire up event listeners when App.js mounts
-        ['load', 'resize', 'touchstart'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds))
+        ['load', 'resize', 'mousemove'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds))
         //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
         let cloudControl
 
@@ -241,7 +241,7 @@ class App extends React.PureComponent {
 
                 <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
 
-                <h1 style={{fontSize: 50, color: 'black', position: 'absolute'}}>{this.state.xCoord}</h1>
+                <h1 style={{fontSize: 50, color: 'blue', position: 'absolute'}}>{this.state.xCoord}</h1>
 
                 <div className="performanceButtonContainer" style={{width: this.state.performanceButtonDiameter * 2, height: this.state.performanceButtonDiameter * 2}} onClick={()=>{this.setState({performanceBoost: !this.state.performanceBoost, cloudNumber: 1})}}>
                     <div className="performanceButton" style={{backgroundColor: this.state.performanceBoost ? 'rgb(255,0,0)' : 'rgb(255,255,255)', width: this.state.performanceButtonDiameter, height: this.state.performanceButtonDiameter, margin: this.state.performanceButtonDiameter * .5}}></div>
