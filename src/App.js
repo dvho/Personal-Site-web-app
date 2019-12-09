@@ -180,7 +180,7 @@ class App extends React.PureComponent {
 
     componentDidMount() {
         //Fire up event listeners when App.js mounts
-        ['load', 'resize', 'mouseover', 'mousemove', 'touchmove'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds, {passive: false}))
+        ['load', 'resize', 'touchmove'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds, {passive: false}))
         //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
         let cloudControl
 
