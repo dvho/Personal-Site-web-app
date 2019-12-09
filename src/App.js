@@ -240,7 +240,7 @@ class App extends React.PureComponent {
 
                 <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
 
-                <h1 style={{color: 'black', position: 'absolute', fontSize: 50}}>{this.state.xCoord}</h1>
+                <h1 style={{color: 'red', position: 'absolute', fontSize: 50}}>{this.state.xCoord}</h1>
 
                 <div className="performanceButtonContainer" style={{width: this.state.performanceButtonDiameter * 2, height: this.state.performanceButtonDiameter * 2}} onClick={()=>{this.setState({performanceBoost: !this.state.performanceBoost, cloudNumber: 1})}}>
                     <div className="performanceButton" style={{backgroundColor: this.state.performanceBoost ? 'rgb(255,0,0)' : 'rgb(255,255,255)', width: this.state.performanceButtonDiameter, height: this.state.performanceButtonDiameter, margin: this.state.performanceButtonDiameter * .5}}></div>
