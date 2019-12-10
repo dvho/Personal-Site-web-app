@@ -20,7 +20,7 @@ class App extends React.PureComponent {
             canvasWidth: 0,
             moonDiameter: 0,
             performanceButtonDiameter: 0,
-            performanceBoost: false,
+            performanceBoost: true,
             xCoord: -1,
             yCoord: -1,
             cloudNumber: 1,
@@ -33,20 +33,102 @@ class App extends React.PureComponent {
     }
 
     userSwitchEyePosition = () => {
-        //Add a conditional statement here that sets a let to the corresponding position and then setState to position
-        console.log(this.state.xCoord, this.state.yCoord)
 
         let position
 
-        if (this.state.xCoord <= .5) {
-            position = config.images.eyePosition.faceEyePosition1R4
+        if (this.state.yCoord >= 0 && this.state.yCoord < .2) {
+
+            if (this.state.xCoord >= 0 && this.state.xCoord < .25) {
+                position = config.images.eyePosition.clock945
+            }
+            if (this.state.xCoord >= .25) {
+                position = config.images.eyePosition.clock1000
+            }
+            if (this.state.xCoord >= .35) {
+                position = config.images.eyePosition.clock1030
+            }
+            if (this.state.xCoord >= .40) {
+                position = config.images.eyePosition.clock1100
+            }
+            if (this.state.xCoord >= .50) {
+                position = config.images.eyePosition.clock1200
+            }
+            if (this.state.xCoord >= .58) {
+                position = config.images.eyePosition.clock100
+            }
+            if (this.state.xCoord >= .70) {
+                position = config.images.eyePosition.clock200
+            }
         }
-        if (this.state.xCoord > .5) {
-            position = config.images.eyePosition.faceEyePosition1L3
+
+        if (this.state.yCoord >=.2 && this.state.yCoord < .4) {
+            if (this.state.xCoord >= 0 && this.state.xCoord < .35) {
+                position = config.images.eyePosition.clock945
+            }
+            if (this.state.xCoord >= .35) {
+                position = config.images.eyePosition.clock1000
+            }
+            if (this.state.xCoord >= .40) {
+                position = config.images.eyePosition.clock1030
+            }
+            if (this.state.xCoord >= .45) {
+                position = config.images.eyePosition.clock1100
+            }
+            if (this.state.xCoord >= .5) {
+                position = config.images.eyePosition.clock1200
+            }
+            if (this.state.xCoord >= .55) {
+                position = config.images.eyePosition.clock100
+            }
+            if (this.state.xCoord >= .65) {
+                position = config.images.eyePosition.clock200
+            }
+            if (this.state.xCoord >= .75) {
+                position = config.images.eyePosition.clock200
+            }
+            if (this.state.xCoord >= .85) {
+                position = config.images.eyePosition.clock230
+            }
+        }
+
+        if (this.state.yCoord >=.4 && this.state.yCoord < .5) {
+            if (this.state.xCoord < .2) {
+                position = config.images.eyePosition.clock930
+            }
+            if (this.state.xCoord >= .2) {
+                position = config.images.eyePosition.clock915
+            }
+            if (this.state.xCoord >= .4) {
+                position = config.images.eyePosition.clock900
+            }
+            if (this.state.xCoord >= .45) {
+                position = config.images.eyePosition.faceEmpty
+            }
+            if (this.state.xCoord >= .55) {
+                position = config.images.eyePosition.clock300
+            }
+            if (this.state.xCoord >= .7) {
+                position = config.images.eyePosition.clock330
+            }
+        }
+
+        if (this.state.yCoord >=.5 && this.state.yCoord < .7) {
+            if (this.state.xCoord < .3) {
+                position = config.images.eyePosition.clock800
+            }
+            if (this.state.xCoord >= .3) {
+                position = config.images.eyePosition.faceEmpty
+            }
+            if (this.state.xCoord >= .7) {
+                position = config.images.eyePosition.clock400
+            }
+        }
+
+        if (this.state.yCoord >=.7) {
+            position = config.images.eyePosition.faceEmpty
         }
 
         this.setState({faceFrame: position})
-
     }
 
     autoSwitchEyePosition = () => {
@@ -126,7 +208,7 @@ class App extends React.PureComponent {
     }
 
     timer = () => {
-        this.setState({ //this.timer is called whenever the mouseover, mousemove, touchstart, touchend and touchcancel events fire, which sets this.state.t to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1. Subsequently, every time this.timer is called, clearTimeout is called on this.state.t, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
+        this.setState({ //this.timer is called whenever the mousemove event fires, which sets this.state.t to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1. Subsequently, every time this.timer is called, clearTimeout is called on this.state.t, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
             t: setTimeout(() => {
                 this.setState({
                     xCoord: -1,
@@ -153,7 +235,7 @@ class App extends React.PureComponent {
                 cloudNumber: 1,
                 performanceButtonDiameter: performanceButtonDiameter
             })
-        } else if (e.type === 'mouseover' || e.type === 'mousemove' || e.type === 'touchstart' || e.type === 'touchend' || e.type === 'touchcancel') { //Get the X and Y positions on mouseover, mousemove, touchstart, touchend and touchcancel
+        } else if (e.type === 'mousemove') { //Get the X and Y positions on mousemove (for some reason touchmove wasn't working)
             let margin = ((screenWidth - canvasWidth) / 2)
             let yCoord = e.clientY / canvasHeight
             let xCoord
@@ -180,7 +262,7 @@ class App extends React.PureComponent {
 
     componentDidMount() {
         //Fire up event listeners when App.js mounts
-        ['load', 'resize', 'mouseover', 'mousemove', 'touchstart', 'touchend', 'touchcancel'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds))
+        ['load', 'resize', 'mousemove'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds))
         //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
         let cloudControl
 
@@ -195,7 +277,7 @@ class App extends React.PureComponent {
         let blinkControl
         (blinkControl = () => {
             let repeatRate = 875 + Math.random() * 3000 //Repeat rate of blinkControl must be less than the max time it would take to blink, which is blinkStareTimeCoefficient + blinkDuration * 1.1 in the blink method, which is called below
-            if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then blink, and if this.state.xCoord === -1, which means it's been longer than 10000ms since mouseover, mousemove, touchstart, touchend and touchcancel events have fired, switch eye position again.
+            if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then blink, and if this.state.xCoord === -1, which means it's been longer than 10000ms since mousemove event has fired, switch eye position again.
                 if (this.state.xCoord === -1) {
                     this.autoSwitchEyePosition()
                 }
@@ -236,11 +318,12 @@ class App extends React.PureComponent {
 
                 <Veil opacity={this.state.veilOpacity} key={'a'}/>
 
-                <Face opacity={(this.state.veilOpacity - .3) * .2} key={'b'} faceFrame={this.state.faceFrame}/>
+                <Face opacity={.05 + (this.state.veilOpacity - .3) * .2} key={'b'} faceFrame={this.state.faceFrame}/>
 
                 <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
 
-                <h1 style={{fontSize: 50, color: 'green', position: 'absolute'}}>{this.state.xCoord}</h1>
+                {/*<h1 style={{fontSize: 50, color: 'blue', position: 'absolute'}}>{this.state.xCoord}</h1>
+                <h1 style={{fontSize: 50, color: 'red', right: 0, position: 'absolute'}}>{this.state.yCoord}</h1>*/}
 
                 <div className="performanceButtonContainer" style={{width: this.state.performanceButtonDiameter * 2, height: this.state.performanceButtonDiameter * 2}} onClick={()=>{this.setState({performanceBoost: !this.state.performanceBoost, cloudNumber: 1})}}>
                     <div className="performanceButton" style={{backgroundColor: this.state.performanceBoost ? 'rgb(255,0,0)' : 'rgb(255,255,255)', width: this.state.performanceButtonDiameter, height: this.state.performanceButtonDiameter, margin: this.state.performanceButtonDiameter * .5}}></div>

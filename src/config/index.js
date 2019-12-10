@@ -53,7 +53,22 @@ export default {
             faceEyePosition5R1: require('../assets/face-5R1.png'),
             faceEyePosition5R2: require('../assets/face-5R2.png'),
             faceEyePosition5R3: require('../assets/face-5R3.png'),
-            faceEyePosition5R4: require('../assets/face-5R4.png')
+            faceEyePosition5R4: require('../assets/face-5R4.png'),
+            clock800: require('../assets/face-5R4.png'),
+            clock900: require('../assets/face-4R4.png'),
+            clock915: require('../assets/face-3R3.png'),
+            clock930: require('../assets/face-2R4.png'),
+            clock945: require('../assets/face-1R4.png'),
+            clock1000: require('../assets/face-1R3.png'),
+            clock1030: require('../assets/face-1R2.png'),
+            clock1100: require('../assets/face-1R1.png'),
+            clock1200: require('../assets/face-1L1.png'),
+            clock100: require('../assets/face-1L2.png'),
+            clock200: require('../assets/face-1L3.png'),
+            clock230: require('../assets/face-2L4.png'),
+            clock300: require('../assets/face-3L3.png'),
+            clock330: require('../assets/face-4L4.png'),
+            clock400: require('../assets/face-5L5.png')
         }
     }
 }
