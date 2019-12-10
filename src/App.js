@@ -276,7 +276,7 @@ class App extends React.PureComponent {
 
         let blinkControl
         (blinkControl = () => {
-            let repeatRate = 875 + Math.random() * 3000 //Repeat rate of blinkControl must be less than the max time it would take to blink, which is blinkStareTimeCoefficient + blinkDuration * 1.1 in the blink method, which is called below
+            let repeatRate = this.state.xCoord === -1 ? (5000 + Math.random() * 5000) : (875 + Math.random() * 3000) //Repeat rate of blinkControl must be more than the max time it would take to blink, which is blinkStareTimeCoefficient + blinkDuration * 1.1 in the blink method, which is called below. If this.state.xCoord === -1, i.e. the user is not firing events, it should be shorter than if the user is firing events.
             if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then blink, and if this.state.xCoord === -1, which means it's been longer than 10000ms since mousemove event has fired, switch eye position again.
                 if (this.state.xCoord === -1) {
                     this.autoSwitchEyePosition()
@@ -326,7 +326,7 @@ class App extends React.PureComponent {
                 <h1 style={{fontSize: 50, color: 'red', right: 0, position: 'absolute'}}>{this.state.yCoord}</h1>*/}
 
                 <div className="performanceButtonContainer" style={{width: this.state.performanceButtonDiameter * 2, height: this.state.performanceButtonDiameter * 2}} onClick={()=>{this.setState({performanceBoost: !this.state.performanceBoost, cloudNumber: 1})}}>
-                    <div className="performanceButton" style={{backgroundColor: this.state.performanceBoost ? 'rgb(255,0,0)' : 'rgb(255,255,255)', width: this.state.performanceButtonDiameter, height: this.state.performanceButtonDiameter, margin: this.state.performanceButtonDiameter * .5}}></div>
+                    <div className="performanceButton" style={{backgroundColor: this.state.performanceBoost ? 'rgb(255,255,0)' : 'rgb(255,255,255)', width: this.state.performanceButtonDiameter, height: this.state.performanceButtonDiameter, margin: this.state.performanceButtonDiameter * .5}}></div>
                 </div>
 
            </div>
