@@ -208,7 +208,7 @@ class App extends React.PureComponent {
     }
 
     timer = () => {
-        this.setState({ //this.timer is called whenever the mousemove event fires, which sets this.state.t to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1. Subsequently, every time this.timer is called, clearTimeout is called on this.state.t, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
+        this.setState({ //this.timer is called whenever the mousemove or touchmove events fire, which sets this.state.t to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1. Subsequently, every time this.timer is called, clearTimeout is called on this.state.t, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
             t: setTimeout(() => {
                 this.setState({
                     xCoord: -1,
@@ -219,6 +219,8 @@ class App extends React.PureComponent {
     }
 
     calcAllDimensionsCoordsAndResetClouds = (e) => {
+
+        console.log(e)
 
         let screenWidth = window.innerWidth
         let canvasHeight = window.innerHeight
@@ -235,15 +237,15 @@ class App extends React.PureComponent {
                 cloudNumber: 1,
                 performanceButtonDiameter: performanceButtonDiameter
             })
-        } else if (e.type === 'mousemove') { //Get the X and Y positions on mousemove (for some reason touchmove wasn't working)
+        } else if (e.type === 'mousemove' || e.type === 'touchmove') { //Get the X and Y positions on mousemove and touchmove. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
             let margin = ((screenWidth - canvasWidth) / 2)
-            let yCoord = e.clientY / canvasHeight
+            let yCoord = e.pageY / canvasHeight
             let xCoord
 
             if (margin > 0) { //If there's a margin, calculate the xCoord of just the event over the canvasWidth
-                xCoord = (e.clientX - margin) / canvasWidth
+                xCoord = (e.pageX - margin) / canvasWidth
             } else {
-                xCoord = e.clientX / screenWidth //else if there's no margin the visible canvasWidth is the same as the screenWidth
+                xCoord = e.pageX / screenWidth //else if there's no margin the visible canvasWidth is the same as the screenWidth
             }
 
             if (xCoord >= 0 && xCoord <= 1 && (this.state.xCoord !== xCoord || this.state.yCoord !== yCoord)) { //If the xCoord is between 0 and 1 and either the xCoord or yCoord has changed
@@ -262,7 +264,7 @@ class App extends React.PureComponent {
 
     componentDidMount() {
         //Fire up event listeners when App.js mounts
-        ['load', 'resize', 'mousemove'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds))
+        ['load', 'resize', 'mousemove', 'touchmove'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds))
         //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
         let cloudControl
 
@@ -277,7 +279,7 @@ class App extends React.PureComponent {
         let blinkControl
         (blinkControl = () => {
             let repeatRate = this.state.xCoord === -1 ? (5000 + Math.random() * 5000) : (875 + Math.random() * 3000) //Repeat rate of blinkControl must be more than the max time it would take to blink, which is blinkStareTimeCoefficient + blinkDuration * 1.1 in the blink method, which is called below. If this.state.xCoord === -1, i.e. the user is not firing events, it should be shorter than if the user is firing events.
-            if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then blink, and if this.state.xCoord === -1, which means it's been longer than 10000ms since mousemove event has fired, switch eye position again.
+            if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then blink, and if this.state.xCoord === -1, which means it's been longer than 10000ms since mousemove or touchmove event has fired, switch eye position again.
                 if (this.state.xCoord === -1) {
                     this.autoSwitchEyePosition()
                 }
@@ -289,7 +291,7 @@ class App extends React.PureComponent {
         let autoSwitchEyePositionControl
         (autoSwitchEyePositionControl = () => {
             let repeatRate = 1000 + Math.random() * 2000
-            if (!this.state.blinkActive && !this.state.eyesJustSwitched && this.state.xCoord === -1) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) and this.state.xCoord === -1, which means it's been longer than 10000ms since mouseover, mousemove, touchstart, touchend and touchcancel events have fired only then can you run autoSwitchEyePosition. Note, autoSwitchEyePosition can run from blinkControl as well so the condition !this.state.eyesJustSwitched must be reiterated here even through repeatRate for autoSwitchEyePositionControl is greater than 1000ms.
+            if (!this.state.blinkActive && !this.state.eyesJustSwitched && this.state.xCoord === -1) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) and this.state.xCoord === -1, which means it's been longer than 10000ms since mousemove or touchmove events have fired, only then can you run autoSwitchEyePosition. Note, autoSwitchEyePosition can run from blinkControl as well so the condition !this.state.eyesJustSwitched must be reiterated here even through repeatRate for autoSwitchEyePositionControl is greater than 1000ms.
                 this.autoSwitchEyePosition()
             }
             setTimeout(autoSwitchEyePositionControl, repeatRate)
@@ -318,7 +320,7 @@ class App extends React.PureComponent {
 
                 <Veil opacity={this.state.veilOpacity} key={'a'}/>
 
-                <Face opacity={.05 + (this.state.veilOpacity - .3) * .2} key={'b'} faceFrame={this.state.faceFrame}/>
+                <Face opacity={(this.state.veilOpacity - .3) * .2} key={'b'} faceFrame={this.state.faceFrame}/>
 
                 <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
 
