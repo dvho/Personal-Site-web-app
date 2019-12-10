@@ -38,7 +38,7 @@ class Cloud extends React.PureComponent {
                     style={{
                         fontSize: `${size}px`,
                         color: `hsla(${color}, 100%, 96%, ${opacity})`,
-                        filter: this.props.performanceBoost ? null : `drop-shadow(0px 0px ${cloudHaze}px hsla(${color}, 100%, 96%, 1)`,   /* Comment out filter property if you need to boost performance during developent. CPU and GPU really strain to animate this drop shadow. */
+                        filter: this.props.performanceBoost ? null : `drop-shadow(0px 0px ${cloudHaze}px hsla(${color}, 100%, 96%, 1)`,
                         position: 'absolute',
                         zIndex: `${zIndex}`,
                         animation: `motionSizeAndFlip${animationNumber} ${travelDuration}s linear forwards`
