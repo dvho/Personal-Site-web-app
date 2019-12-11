@@ -112,20 +112,13 @@ class App extends React.PureComponent {
             }
         }
 
-        if (this.state.yCoord >=.5 && this.state.yCoord < .7) {
-            if (this.state.xCoord < .3) {
+        if (this.state.yCoord >=.5) {
+            if (this.state.xCoord < .52) {
                 position = config.images.eyePosition.clock800
             }
-            if (this.state.xCoord >= .3) {
-                position = config.images.eyePosition.faceEmpty
-            }
-            if (this.state.xCoord >= .7) {
+            if (this.state.xCoord >= .52) {
                 position = config.images.eyePosition.clock400
             }
-        }
-
-        if (this.state.yCoord >=.7) {
-            position = config.images.eyePosition.faceEmpty
         }
 
         this.setState({faceFrame: position})
