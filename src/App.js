@@ -124,10 +124,32 @@ class App extends React.PureComponent {
         }
 
         if (this.state.yCoord >= .5) {
-            if (this.state.xCoord < .52) {
+            if (this.state.xCoord < .20) {
                 position = config.images.eyePosition.clock800
             }
-            if (this.state.xCoord >= .52) {
+            if (this.state.xCoord >= .20) {
+                position = config.images.eyePosition.clock745
+            }
+            if (this.state.xCoord >= .35) {
+                position = config.images.eyePosition.clock730
+            }
+            if (this.state.xCoord >= .45) {
+                position = config.images.eyePosition.clock700
+            }
+            if (this.state.xCoord >= .55) {
+                position = config.images.eyePosition.clock500
+            }
+            if (this.state.xCoord >= .65) {
+                position = config.images.eyePosition.clock445
+            }
+            if (this.state.xCoord >= .75) {
+                position = config.images.eyePosition.clock430
+            }
+            if (this.state.xCoord >= .85) {
+                position = config.images.eyePosition.clock415
+            }
+
+            if (this.state.xCoord >= .90) {
                 position = config.images.eyePosition.clock400
             }
         }
