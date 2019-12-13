@@ -265,14 +265,14 @@ class App extends React.PureComponent {
                     this.userSwitchEyePosition() //call this.userSwitchEyePosition and know that autoSwitchEyePosition isn't being called from either autoSwitchEyePositionControl nor blinkControl because this.state.xCoords would have to === -1 (and, by extention, this.state.yCoords would have to === -1) in order for that to happen.
                 }
 
-                if (e.type === 'click' && !this.state.rippleActive) {
+                if (e.type === 'click' && !this.state.rippleActive) { //If event type is click and the ripple is not currently active, set rippleActive to true and set ripple only coordinates for X and Y 
                     this.setState({
                         rippleActive: true,
                         rippleXCoord: xCoord,
                         rippleYCoord: yCoord
                     })
                     setTimeout(
-                        () => this.setState({
+                        () => this.setState({ //After 200ms set rippleActive back to false
                             rippleActive: false
                         }),
                     200)
