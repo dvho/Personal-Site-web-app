@@ -5,8 +5,8 @@ import config from '../config'
 //Float point conversion was giving values like '8.9999999999999' hence the verbose localOpacity = `${((Math.round(this.props.opacity * 10))/10).toString()}`
 
 class Cloud extends React.PureComponent {
-    constructor(props) {
-        super(props)
+    constructor() {
+        super()
         this.state = {
 
         }

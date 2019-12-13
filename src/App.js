@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import config from './config'
-import { Cloud, Veil, Face, PerformanceButton } from './components'
+import { Cloud, Veil, Face, PerformanceButton, Ripple } from './components'
 
 //NOTE: Needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
 //Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
@@ -265,7 +265,7 @@ class App extends React.PureComponent {
                     this.userSwitchEyePosition() //call this.userSwitchEyePosition and know that autoSwitchEyePosition isn't being called from either autoSwitchEyePositionControl nor blinkControl because this.state.xCoords would have to === -1 (and, by extention, this.state.yCoords would have to === -1) in order for that to happen.
                 }
 
-                if (e.type === 'click' && !this.state.rippleActive) { //If event type is click and the ripple is not currently active, set rippleActive to true and set ripple only coordinates for X and Y 
+                if (e.type === 'click' && !this.state.rippleActive) { //If event type is click and the ripple is not currently active, set rippleActive to true and set ripple only coordinates for X and Y
                     this.setState({
                         rippleActive: true,
                         rippleXCoord: xCoord,
@@ -348,7 +348,7 @@ class App extends React.PureComponent {
 
                 <PerformanceButton state={this.state} togglePerformanceBoost={this.togglePerformanceBoost}/>
 
-                { this.state.rippleActive ? <div className="ripple" style={{width: this.state.canvasHeight / 10, height: this.state.canvasHeight / 10, left: this.state.screenWidth < this.state.canvasWidth ? this.state.screenWidth * this.state.rippleXCoord - this.state.canvasHeight / 20 : this.state.margin - this.state.canvasHeight / 20 + this.state.canvasWidth * this.state.rippleXCoord, top: this.state.canvasHeight * this.state.rippleYCoord - this.state.canvasHeight / 20, boxShadow: `0 0 ${this.state.canvasHeight / 10}px ${this.state.canvasHeight / 10}px #fff, inset 0 0 ${this.state.canvasHeight / 10}px ${this.state.canvasHeight / 10}px #fff`}}></div> : null }
+                { this.state.rippleActive ? <Ripple state={this.state}/> : null }
 
            </div>
         )
