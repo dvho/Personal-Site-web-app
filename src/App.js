@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import config from './config'
-import { Cloud, Veil, Face } from './components'
+import { Cloud, Veil, Face, PerformanceButton } from './components'
 
 //NOTE: Needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
 //Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
@@ -21,8 +21,12 @@ class App extends React.PureComponent {
             moonDiameter: 0,
             performanceButtonDiameter: 0,
             performanceBoost: true,
+            margin: 0,
             xCoord: -1,
             yCoord: -1,
+            rippleXCoord: -1,
+            rippleYCoord: -1,
+            rippleActive: false,
             cloudNumber: 1,
             veilOpacity: .3,
             blinkActive: false,
@@ -30,6 +34,13 @@ class App extends React.PureComponent {
             faceFrame: config.images.eyePosition.faceEmpty,
             t: null
         }
+    }
+
+    togglePerformanceBoost = () => {
+        this.setState({
+            performanceBoost: !this.state.performanceBoost,
+            cloudNumber: 1
+        })
     }
 
     userSwitchEyePosition = () => {
@@ -61,7 +72,7 @@ class App extends React.PureComponent {
             }
         }
 
-        if (this.state.yCoord >=.2 && this.state.yCoord < .4) {
+        if (this.state.yCoord >= .2 && this.state.yCoord < .4) {
             if (this.state.xCoord >= 0 && this.state.xCoord < .35) {
                 position = config.images.eyePosition.clock945
             }
@@ -112,7 +123,7 @@ class App extends React.PureComponent {
             }
         }
 
-        if (this.state.yCoord >=.5) {
+        if (this.state.yCoord >= .5) {
             if (this.state.xCoord < .52) {
                 position = config.images.eyePosition.clock800
             }
@@ -201,7 +212,7 @@ class App extends React.PureComponent {
     }
 
     timer = () => {
-        this.setState({ //this.timer is called whenever the mousemove or touchmove events fire, which sets this.state.t to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1. Subsequently, every time this.timer is called, clearTimeout is called on this.state.t, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
+        this.setState({ //this.timer is called whenever the mousemove, touchmove, or click events fire, which sets this.state.t to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1. Subsequently, every time this.timer is called, clearTimeout is called on this.state.t, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
             t: setTimeout(() => {
                 this.setState({
                     xCoord: -1,
@@ -212,8 +223,6 @@ class App extends React.PureComponent {
     }
 
     calcAllDimensionsCoordsAndResetClouds = (e) => {
-
-        console.log(e)
 
         let screenWidth = window.innerWidth
         let canvasHeight = window.innerHeight
@@ -230,7 +239,7 @@ class App extends React.PureComponent {
                 cloudNumber: 1,
                 performanceButtonDiameter: performanceButtonDiameter
             })
-        } else if (e.type === 'mousemove' || e.type === 'touchmove') { //Get the X and Y positions on mousemove and touchmove. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
+        } else if (e.type === 'mousemove' || e.type === 'touchmove' || e.type === 'click') { //Get the X and Y positions on mousemove, touchmove and click. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
             let margin = ((screenWidth - canvasWidth) / 2)
             let yCoord = e.pageY / canvasHeight
             let xCoord
@@ -241,23 +250,40 @@ class App extends React.PureComponent {
                 xCoord = e.pageX / screenWidth //else if there's no margin the visible canvasWidth is the same as the screenWidth
             }
 
-            if (xCoord >= 0 && xCoord <= 1 && (this.state.xCoord !== xCoord || this.state.yCoord !== yCoord)) { //If the xCoord is between 0 and 1 and either the xCoord or yCoord has changed
+            if (xCoord >= 0 && xCoord <= 1) { //If the xCoord is between 0 and 1
 
-                this.setState({ //set the new xCoord and yCoord in state
-                    xCoord: xCoord,
-                    yCoord: yCoord
-                })
+                if (e.type === 'click' || ((e.type === 'mousemove' || e.type === 'touchmove') && (this.state.xCoord !== xCoord || this.state.yCoord !== yCoord))) { //If event type is click or event type is either mousemove or touchmove AND there hasn't been a change in either xCoord nor yCord in state
 
-                clearTimeout(this.state.t) //clearTimeout of this.state.t
-                this.timer() //restart the this.state.t timeOut function by calling its parent function, this.timer
-                this.userSwitchEyePosition() //call this.userSwitchEyePosition and know that autoSwitchEyePosition isn't being called from either autoSwitchEyePositionControl nor blinkControl because this.state.xCoords would have to === -1 (and, by extention, this.state.yCoords would have to === -1) in order for that to happen.
+                    this.setState({ //set the new xCoord and yCoord in state
+                        margin: margin,
+                        xCoord: xCoord,
+                        yCoord: yCoord
+                    })
+
+                    clearTimeout(this.state.t) //clearTimeout of this.state.t
+                    this.timer() //restart the this.state.t timeOut function by calling its parent function, this.timer
+                    this.userSwitchEyePosition() //call this.userSwitchEyePosition and know that autoSwitchEyePosition isn't being called from either autoSwitchEyePositionControl nor blinkControl because this.state.xCoords would have to === -1 (and, by extention, this.state.yCoords would have to === -1) in order for that to happen.
+                }
+
+                if (e.type === 'click' && !this.state.rippleActive) {
+                    this.setState({
+                        rippleActive: true,
+                        rippleXCoord: xCoord,
+                        rippleYCoord: yCoord
+                    })
+                    setTimeout(
+                        () => this.setState({
+                            rippleActive: false
+                        }),
+                    200)
+                }
             }
         }
     }
 
     componentDidMount() {
         //Fire up event listeners when App.js mounts
-        ['load', 'resize', 'mousemove', 'touchmove'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds))
+        ['load', 'resize', 'mousemove', 'touchmove', 'click'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds))
         //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
         let cloudControl
 
@@ -272,7 +298,7 @@ class App extends React.PureComponent {
         let blinkControl
         (blinkControl = () => {
             let repeatRate = this.state.xCoord === -1 ? (5000 + Math.random() * 5000) : (875 + Math.random() * 3000) //Repeat rate of blinkControl must be more than the max time it would take to blink, which is blinkStareTimeCoefficient + blinkDuration * 1.1 in the blink method, which is called below. If this.state.xCoord === -1, i.e. the user is not firing events, it should be shorter than if the user is firing events.
-            if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then blink, and if this.state.xCoord === -1, which means it's been longer than 10000ms since mousemove or touchmove event has fired, switch eye position again.
+            if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then blink, and if this.state.xCoord === -1, which means it's been longer than 10000ms since mousemove, touchmove or click event has fired, switch eye position again.
                 if (this.state.xCoord === -1) {
                     this.autoSwitchEyePosition()
                 }
@@ -284,7 +310,7 @@ class App extends React.PureComponent {
         let autoSwitchEyePositionControl
         (autoSwitchEyePositionControl = () => {
             let repeatRate = 1000 + Math.random() * 2000
-            if (!this.state.blinkActive && !this.state.eyesJustSwitched && this.state.xCoord === -1) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) and this.state.xCoord === -1, which means it's been longer than 10000ms since mousemove or touchmove events have fired, only then can you run autoSwitchEyePosition. Note, autoSwitchEyePosition can run from blinkControl as well so the condition !this.state.eyesJustSwitched must be reiterated here even through repeatRate for autoSwitchEyePositionControl is greater than 1000ms.
+            if (!this.state.blinkActive && !this.state.eyesJustSwitched && this.state.xCoord === -1) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) and this.state.xCoord === -1, which means it's been longer than 10000ms since mousemove, touchmove or click events have fired, only then can you run autoSwitchEyePosition. Note, autoSwitchEyePosition can run from blinkControl as well so the condition !this.state.eyesJustSwitched must be reiterated here even through repeatRate for autoSwitchEyePositionControl is greater than 1000ms.
                 this.autoSwitchEyePosition()
             }
             setTimeout(autoSwitchEyePositionControl, repeatRate)
@@ -318,11 +344,11 @@ class App extends React.PureComponent {
                 <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
 
                 {/*<h1 style={{fontSize: 50, color: 'blue', position: 'absolute'}}>{this.state.xCoord}</h1>
-                <h1 style={{fontSize: 50, color: 'red', right: 0, position: 'absolute'}}>{this.state.yCoord}</h1>*/}
+                <h1 style={{fontSize: 50, color: 'red', right: 0, position: 'absolute'}}>{this.state.yCoord}</h1> for testing purposes*/}
 
-                <div className="performanceButtonContainer" style={{width: this.state.performanceButtonDiameter * 2, height: this.state.performanceButtonDiameter * 2}} onClick={()=>{this.setState({performanceBoost: !this.state.performanceBoost, cloudNumber: 1})}}>
-                    <div className="performanceButton" style={{backgroundColor: this.state.performanceBoost ? 'rgb(255,255,0)' : 'rgb(255,255,255)', width: this.state.performanceButtonDiameter, height: this.state.performanceButtonDiameter, margin: this.state.performanceButtonDiameter * .5}}></div>
-                </div>
+                <PerformanceButton state={this.state} togglePerformanceBoost={this.togglePerformanceBoost}/>
+
+                { this.state.rippleActive ? <div className="ripple" style={{width: this.state.canvasHeight / 10, height: this.state.canvasHeight / 10, left: this.state.screenWidth < this.state.canvasWidth ? this.state.screenWidth * this.state.rippleXCoord - this.state.canvasHeight / 20 : this.state.margin - this.state.canvasHeight / 20 + this.state.canvasWidth * this.state.rippleXCoord, top: this.state.canvasHeight * this.state.rippleYCoord - this.state.canvasHeight / 20, boxShadow: `0 0 ${this.state.canvasHeight / 10}px ${this.state.canvasHeight / 10}px #fff, inset 0 0 ${this.state.canvasHeight / 10}px ${this.state.canvasHeight / 10}px #fff`}}></div> : null }
 
            </div>
         )
