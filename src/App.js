@@ -275,7 +275,7 @@ class App extends React.PureComponent {
                         () => this.setState({ //After 200ms set rippleActive back to false
                             rippleActive: false
                         }),
-                    200)
+                    400)
                 }
             }
         }
