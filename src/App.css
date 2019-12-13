@@ -42,7 +42,7 @@ body {
 .ripple {
     position: absolute;
     border-radius: 50%;
-    animation: rippleEffect .21s ease;
+    animation: rippleEffect .21s ease; /* ripple active time is 200ms and time of animation needs to be just a bit longer than that otherwise there'll be an animation glitch */
 }
 
 @keyframes rippleEffect {
