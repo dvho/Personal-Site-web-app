@@ -39,6 +39,17 @@ body {
     cursor: pointer;
 }
 
+.ripple {
+    position: absolute;
+    border-radius: 50%;
+    animation: rippleEffect .21s ease;
+}
+
+@keyframes rippleEffect {
+    0% {transform: scale(.1); opacity: .3}
+    100% {transform: scale(1); opacity: 0}
+}
+
 @keyframes motionSizeAndFlip1 {
     0% {transform: rotateY(180deg) translateY(-0%) translateX(-50vw); opacity: 0}
     1% {transform: rotateY(180deg) translateY(-0%) translateX(-50vw); opacity: 1}
