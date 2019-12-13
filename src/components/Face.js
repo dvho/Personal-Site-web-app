@@ -18,8 +18,6 @@ class Face extends React.PureComponent {
             localOpacity = `${(localOpacity).toString()}`
         }
 
-        console.log(localOpacity)
-
         return(
             <div
                 style={{

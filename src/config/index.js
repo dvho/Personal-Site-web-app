@@ -68,7 +68,14 @@ export default {
             clock230: require('../assets/face-2L4.png'),
             clock300: require('../assets/face-3L3.png'),
             clock330: require('../assets/face-4L4.png'),
-            clock400: require('../assets/face-5L5.png')
+            clock400: require('../assets/face-5L5.png'),
+            clock415: require('../assets/face-5L4.png'),
+            clock430: require('../assets/face-5L3.png'),
+            clock445: require('../assets/face-5L2.png'),
+            clock500: require('../assets/face-5L1.png'),
+            clock700: require('../assets/face-5R1.png'),
+            clock730: require('../assets/face-5R2.png'),
+            clock745: require('../assets/face-5R3.png')
         }
     }
 }
