@@ -339,7 +339,7 @@ class App extends React.PureComponent {
 
                 <Veil opacity={this.state.veilOpacity} key={'a'}/>
 
-                <Face opacity={(this.state.veilOpacity * .5)} key={'b'} faceFrame={this.state.faceFrame}/>
+                <Face opacity={(this.state.veilOpacity * .75)} key={'b'} faceFrame={this.state.faceFrame}/>
 
                 <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
 
