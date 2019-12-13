@@ -3,8 +3,8 @@ import '../App.css'
 import config from '../config'
 
 class Face extends React.PureComponent {
-    constructor(props) {
-        super(props)
+    constructor() {
+        super()
         this.state = {
 
         }
