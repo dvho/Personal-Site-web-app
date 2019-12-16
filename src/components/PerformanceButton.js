@@ -1,6 +1,5 @@
 import React from 'react'
 import '../App.css'
-import config from '../config'
 
 class PerformanceButton extends React.PureComponent {
     constructor() {
@@ -12,13 +11,14 @@ class PerformanceButton extends React.PureComponent {
 
     render() {
 
-        let containerDiameter = this.props.state.performanceButtonDiameter * 2
-        let buttonDiameter = this.props.state.performanceButtonDiameter
-        let backgroundColor = this.props.state.performanceBoost ? 'rgb(128,128,0)' : 'rgb(255,255,255)'
+        let containerDiameter = this.props.performanceButtonDiameter * 2
+        let buttonDiameter = this.props.performanceButtonDiameter
+        let margin = this.props.performanceButtonDiameter * .5
+        let backgroundColor = this.props.performanceBoost ? 'rgb(128,128,0)' : 'rgb(255,255,255)'
 
         return(
             <div className="performanceButtonContainer" style={{width: containerDiameter, height: containerDiameter}} onClick={() => this.props.togglePerformanceBoost()}>
-                <div className="performanceButton" style={{backgroundColor: backgroundColor, width: buttonDiameter, height: buttonDiameter, margin: this.props.state.performanceButtonDiameter /2}}></div>
+                <div className="performanceButton" style={{backgroundColor: backgroundColor, width: buttonDiameter, height: buttonDiameter, margin: margin}}></div>
             </div>
         )
     }

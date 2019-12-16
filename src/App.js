@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import config from './config'
-import { Cloud, Veil, Face, PerformanceButton, Ripple } from './components'
+import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Ripple} from './components'
 
 //NOTE: Needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
 //Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
@@ -27,6 +27,7 @@ class App extends React.PureComponent {
             rippleXCoord: -1,
             rippleYCoord: -1,
             rippleActive: false,
+            song: 'https://freesound.org/data/previews/395/395842_1137749-lq.mp3',
             cloudNumber: 1,
             veilOpacity: .3,
             blinkActive: false,
@@ -48,109 +49,46 @@ class App extends React.PureComponent {
         let position
 
         if (this.state.yCoord >= 0 && this.state.yCoord < .2) {
-
-            if (this.state.xCoord >= 0 && this.state.xCoord < .25) {
-                position = config.images.eyePosition.clock945
-            }
-            if (this.state.xCoord >= .25) {
-                position = config.images.eyePosition.clock1000
-            }
-            if (this.state.xCoord >= .35) {
-                position = config.images.eyePosition.clock1030
-            }
-            if (this.state.xCoord >= .40) {
-                position = config.images.eyePosition.clock1100
-            }
-            if (this.state.xCoord >= .50) {
-                position = config.images.eyePosition.clock1200
-            }
-            if (this.state.xCoord >= .58) {
-                position = config.images.eyePosition.clock100
-            }
-            if (this.state.xCoord >= .70) {
-                position = config.images.eyePosition.clock200
-            }
+            if (this.state.xCoord < .25) {position = config.images.eyePosition.clock945}
+            if (this.state.xCoord >= .25) {position = config.images.eyePosition.clock1000}
+            if (this.state.xCoord >= .35) {position = config.images.eyePosition.clock1030}
+            if (this.state.xCoord >= .40) {position = config.images.eyePosition.clock1100}
+            if (this.state.xCoord >= .50) {position = config.images.eyePosition.clock1200}
+            if (this.state.xCoord >= .58) {position = config.images.eyePosition.clock100}
+            if (this.state.xCoord >= .70) {position = config.images.eyePosition.clock200}
         }
 
         if (this.state.yCoord >= .2 && this.state.yCoord < .4) {
-            if (this.state.xCoord >= 0 && this.state.xCoord < .35) {
-                position = config.images.eyePosition.clock945
-            }
-            if (this.state.xCoord >= .35) {
-                position = config.images.eyePosition.clock1000
-            }
-            if (this.state.xCoord >= .40) {
-                position = config.images.eyePosition.clock1030
-            }
-            if (this.state.xCoord >= .45) {
-                position = config.images.eyePosition.clock1100
-            }
-            if (this.state.xCoord >= .5) {
-                position = config.images.eyePosition.clock1200
-            }
-            if (this.state.xCoord >= .55) {
-                position = config.images.eyePosition.clock100
-            }
-            if (this.state.xCoord >= .65) {
-                position = config.images.eyePosition.clock200
-            }
-            if (this.state.xCoord >= .75) {
-                position = config.images.eyePosition.clock200
-            }
-            if (this.state.xCoord >= .85) {
-                position = config.images.eyePosition.clock230
-            }
+            if (this.state.xCoord < .35) {position = config.images.eyePosition.clock945}
+            if (this.state.xCoord >= .35) {position = config.images.eyePosition.clock1000}
+            if (this.state.xCoord >= .40) {position = config.images.eyePosition.clock1030}
+            if (this.state.xCoord >= .45) {position = config.images.eyePosition.clock1100}
+            if (this.state.xCoord >= .5) {position = config.images.eyePosition.clock1200}
+            if (this.state.xCoord >= .55) {position = config.images.eyePosition.clock100}
+            if (this.state.xCoord >= .65) {position = config.images.eyePosition.clock200}
+            if (this.state.xCoord >= .75) {position = config.images.eyePosition.clock200}
+            if (this.state.xCoord >= .85) {position = config.images.eyePosition.clock230}
         }
 
         if (this.state.yCoord >=.4 && this.state.yCoord < .5) {
-            if (this.state.xCoord < .2) {
-                position = config.images.eyePosition.clock930
-            }
-            if (this.state.xCoord >= .2) {
-                position = config.images.eyePosition.clock915
-            }
-            if (this.state.xCoord >= .4) {
-                position = config.images.eyePosition.clock900
-            }
-            if (this.state.xCoord >= .45) {
-                position = config.images.eyePosition.faceEmpty
-            }
-            if (this.state.xCoord >= .55) {
-                position = config.images.eyePosition.clock300
-            }
-            if (this.state.xCoord >= .7) {
-                position = config.images.eyePosition.clock330
-            }
+            if (this.state.xCoord < .2) {position = config.images.eyePosition.clock930}
+            if (this.state.xCoord >= .2) {position = config.images.eyePosition.clock915}
+            if (this.state.xCoord >= .4) {position = config.images.eyePosition.clock900}
+            if (this.state.xCoord >= .45) {position = config.images.eyePosition.faceEmpty}
+            if (this.state.xCoord >= .55) {position = config.images.eyePosition.clock300}
+            if (this.state.xCoord >= .7) {position = config.images.eyePosition.clock330}
         }
 
         if (this.state.yCoord >= .5) {
-            if (this.state.xCoord < .15) {
-                position = config.images.eyePosition.clock800
-            }
-            if (this.state.xCoord >= .15) {
-                position = config.images.eyePosition.clock745
-            }
-            if (this.state.xCoord >= .30) {
-                position = config.images.eyePosition.clock730
-            }
-            if (this.state.xCoord >= .45) {
-                position = config.images.eyePosition.clock700
-            }
-            if (this.state.xCoord >= .55) {
-                position = config.images.eyePosition.clock500
-            }
-            if (this.state.xCoord >= .625) {
-                position = config.images.eyePosition.clock445
-            }
-            if (this.state.xCoord >= .70) {
-                position = config.images.eyePosition.clock430
-            }
-            if (this.state.xCoord >= .775) {
-                position = config.images.eyePosition.clock415
-            }
-            if (this.state.xCoord >= .85) {
-                position = config.images.eyePosition.clock400
-            }
+            if (this.state.xCoord < .15) {position = config.images.eyePosition.clock800}
+            if (this.state.xCoord >= .15) {position = config.images.eyePosition.clock745}
+            if (this.state.xCoord >= .30) {position = config.images.eyePosition.clock730}
+            if (this.state.xCoord >= .45) {position = config.images.eyePosition.clock700}
+            if (this.state.xCoord >= .55) {position = config.images.eyePosition.clock500}
+            if (this.state.xCoord >= .625) {position = config.images.eyePosition.clock445}
+            if (this.state.xCoord >= .70) {position = config.images.eyePosition.clock430}
+            if (this.state.xCoord >= .775) {position = config.images.eyePosition.clock415}
+            if (this.state.xCoord >= .85) {position = config.images.eyePosition.clock400}
         }
 
         this.setState({faceFrame: position})
@@ -250,6 +188,7 @@ class App extends React.PureComponent {
         let canvasWidth = Math.round(canvasHeight * 1.323572474377745) //screenWidth < canvasHeight * 1.323572474377745 ? screenWidth : Math.round(canvasHeight * 1.323572474377745)
         let moonDiameter = Math.round(canvasWidth * 0.199121522693997)
         let performanceButtonDiameter = canvasHeight * .025
+        let margin = ((screenWidth - canvasWidth) / 2)
 
         if (e.type === 'load' || e.type === 'resize') { //Get the sizes of the screen, canvas, moon, performance toggle button, and reset cloudNumber on both load and on resize
             this.setState({
@@ -257,11 +196,11 @@ class App extends React.PureComponent {
                 canvasHeight: canvasHeight,
                 canvasWidth: canvasWidth,
                 moonDiameter: moonDiameter,
+                margin: margin,
                 cloudNumber: 1,
                 performanceButtonDiameter: performanceButtonDiameter
             })
         } else if (e.type === 'mousemove' || e.type === 'touchmove' || e.type === 'click') { //Get the X and Y positions on mousemove, touchmove and click. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
-            let margin = ((screenWidth - canvasWidth) / 2)
             let yCoord = e.pageY / canvasHeight
             let xCoord
 
@@ -367,9 +306,11 @@ class App extends React.PureComponent {
                 {/*<h1 style={{fontSize: 50, color: 'blue', position: 'absolute'}}>{this.state.xCoord}</h1>
                 <h1 style={{fontSize: 50, color: 'red', right: 0, position: 'absolute'}}>{this.state.yCoord}</h1> for testing purposes*/}
 
-                <PerformanceButton state={this.state} togglePerformanceBoost={this.togglePerformanceBoost}/>
+                <PerformanceButton performanceBoost={this.state.performanceBoost} performanceButtonDiameter={this.state.performanceButtonDiameter} togglePerformanceBoost={this.togglePerformanceBoost}/>
 
-                { this.state.rippleActive ? <Ripple state={this.state}/> : null }
+                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} song={this.state.song}/>
+
+                { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }
 
            </div>
         )

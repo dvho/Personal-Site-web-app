@@ -45,6 +45,48 @@ body {
     animation: rippleEffect .41s cubic-bezier(0, 0, 0, 1); /* ripple active time is 200ms and time of animation needs to be just a bit longer than that otherwise there'll be an animation glitch */
 }
 
+
+.slider {
+  -webkit-appearance: none;
+  width: 100%;
+  height: 1px;
+  background: rgba(32,32,1,.5);
+  outline: none;
+  -webkit-transition: .2s;
+  transition: opacity .2s;
+}
+.slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 28px;
+  height: 14px;
+  border-radius: 25%;
+  background: rgba(32,32,1,.85);
+  cursor: pointer;
+}
+.slider::-moz-range-thumb {
+  width: 28px;
+  height: 14px;
+  border-radius: 25%;
+  background: rgba(32,32,1,.85);
+  cursor: pointer;
+}
+
+/* Would've had to import a seperate library like "glamorous" to have been able to pass pseudo selectors as inline styles (in AudioPlayer.js, which I would have used to make the slider thumb below scale with canvasHeight). Also important to note that I wouldn't want slider thumb to scale very much as it would've be grabbable/useable. Against one of my goals for this project, to make all rendering fluidly dynamic without use of media breakpoints, in this particular case it was the optimal solution. */
+@media only screen and (max-height: 400px) {
+  .slider::-webkit-slider-thumb {
+    width: 20px;
+    height: 10px;
+  }
+}
+@media only screen and (max-height: 400px) {
+  .slider::-moz-range-thumb {
+      width: 20px;
+      height: 10px;
+  }
+}
+
+
 @keyframes rippleEffect {
     0% {transform: scale(.1); opacity: .3}
     100% {transform: scale(1); opacity: 0}
