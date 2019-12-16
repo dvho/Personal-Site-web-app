@@ -45,7 +45,6 @@ body {
     animation: rippleEffect .41s cubic-bezier(0, 0, 0, 1); /* ripple active time is 200ms and time of animation needs to be just a bit longer than that otherwise there'll be an animation glitch */
 }
 
-
 .slider {
   -webkit-appearance: none;
   width: 100%;
@@ -72,7 +71,7 @@ body {
   cursor: pointer;
 }
 
-/* Would've had to import a seperate library like "glamorous" to have been able to pass pseudo selectors as inline styles (in AudioPlayer.js, which I would have used to make the slider thumb below scale with canvasHeight). Also important to note that I wouldn't want slider thumb to scale very much as it would've be grabbable/useable. Against one of my goals for this project, to make all rendering fluidly dynamic without use of media breakpoints, in this particular case it was the optimal solution. */
+/* Would've had to import a seperate library like "glamorous" to have been able to pass pseudo selectors as inline styles (in AudioPlayer.js, which I would have used to make the slider thumb below scale with canvasHeight). Also important to note that I wouldn't want slider thumb to scale very much as it would've be grabbable/useable. Against one of my goals for this project, to make all rendering fluidly dynamic without use of media breakpoints, in this particular case it was the optimal solution. Incidentally, when I decided I wanted to tether color and opacity of the audio interface with veilOpacity, I did import the emotion library and for some reason, though fully integrated without its syntax crashing anything, it didn't work. */
 @media only screen and (max-height: 400px) {
   .slider::-webkit-slider-thumb {
     width: 20px;

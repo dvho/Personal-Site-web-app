@@ -27,7 +27,7 @@ class App extends React.PureComponent {
             rippleXCoord: -1,
             rippleYCoord: -1,
             rippleActive: false,
-            song: 'https://freesound.org/data/previews/395/395842_1137749-lq.mp3',
+            song: 'https://freesound.org/data/previews/135/135834_1050391-lq.mp3',
             cloudNumber: 1,
             veilOpacity: .3,
             blinkActive: false,
@@ -308,7 +308,7 @@ class App extends React.PureComponent {
 
                 <PerformanceButton performanceBoost={this.state.performanceBoost} performanceButtonDiameter={this.state.performanceButtonDiameter} togglePerformanceBoost={this.togglePerformanceBoost}/>
 
-                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} song={this.state.song}/>
+                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} veilOpacity={this.state.veilOpacity} song={this.state.song}/>
 
                 { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }
 
