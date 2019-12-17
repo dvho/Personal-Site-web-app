@@ -3,6 +3,7 @@ import ReactPlayer from 'react-player'
 import '../App.css'
 
 //Add onTouch and onClick to Play, Stop, Pause and slider
+//Link drop box and filter shadows to this.state.performanceBoost in App.js
 
 class AudioPlayer extends React.PureComponent {
     constructor() {
@@ -78,8 +79,8 @@ class AudioPlayer extends React.PureComponent {
         let sliderBoxShadowSpread = (this.props.veilOpacity - .3) * 18 //Only interesting thing here was that transition uses box-shadow property instead of boxShadow
         let sliderBoxShadowRgbaOpacity = (this.props.veilOpacity - .3) * .5 //Only interesting thing here was that transition uses box-shadow property instead of boxShadow
         let fontSize = this.props.canvasHeight / 30
-        let totalTimeStringTextShadowSpread = (this.props.veilOpacity - .3) * 50 //Only interesting thing here was that transition uses text-shadow property instead of textShadow
-        let totalTimeStringTextShadowRgbaOpacity = (this.props.veilOpacity - .3) * 1.2 //Only interesting thing here was that transition uses text-shadow property instead of textShadow
+        let totalTimeStringTextShadowSpread = (this.props.veilOpacity - .3) * 40 //Only interesting thing here was that transition uses text-shadow property instead of textShadow
+        let totalTimeStringTextShadowRgbaOpacity = (this.props.veilOpacity - .3) * .8 //Only interesting thing here was that transition uses text-shadow property instead of textShadow
         let iconDiameter =  this.props.canvasHeight * .05
         let iconMarginRight = iconDiameter * .15
         let iconDropShadowSpread = (this.props.veilOpacity - .3) * 50
@@ -96,7 +97,7 @@ class AudioPlayer extends React.PureComponent {
                     <i onClick={()=>this.handlePlayer('pause')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,30,1,.75)', filter: `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: 'filter 2.5s linear'}} className="fa fa-pause-circle"></i>
                 </div>
 
-                <p style={{position: 'absolute', margin: 0, right: 0, fontSize: fontSize, opacity: .75, textShadow: `0px 0px ${totalTimeStringTextShadowSpread}px rgba(255,255,255,${totalTimeStringTextShadowRgbaOpacity})`, color: 'rgba(30,1,1,.75)', transition: 'text-shadow 2.5s linear'}}>{this.state.totalTimeString}</p>
+                <p style={{position: 'absolute', margin: 0, right: 0, fontSize: fontSize, textShadow: `0px 0px ${totalTimeStringTextShadowSpread}px rgba(255,255,255,${totalTimeStringTextShadowRgbaOpacity})`, color: 'rgba(30,1,1,.75)', transition: 'text-shadow 2.5s linear'}}>{this.state.totalTimeString}</p>
 
                 <input style={{marginTop: containerHeight, boxShadow: `0px 0px ${sliderBoxShadowSpread}px rgba(255,255,255,${sliderBoxShadowRgbaOpacity})`, transition: 'box-shadow 2.5s linear'}} className='slider' type='range' min='0' max={this.state.trackLength} value={this.state.totalSeconds} onChange={this.slidePlaybackAndUpdatePlaybackTime}/>
 
