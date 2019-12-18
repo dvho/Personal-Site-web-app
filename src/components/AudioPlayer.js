@@ -2,8 +2,8 @@ import React from 'react'
 import ReactPlayer from 'react-player'
 import '../App.css'
 
-//Add onTouch and onClick to Play, Stop, Pause and slider
-//Link drop box and filter shadows to this.state.performanceBoost in App.js
+//Add forward and back buttons that simply call advanceTrackOrEnd, and make advanceTrackOrEnd take an argument to handle those
+//May have to ditch all the drop shadows and go with a box around the interface that appears with veilOpacity because it's straining GPU
 
 class AudioPlayer extends React.PureComponent {
     constructor() {
@@ -18,6 +18,26 @@ class AudioPlayer extends React.PureComponent {
         }
     }
 
+    advanceTrackOrEnd = () => {
+        this.setState({ //First, by default, just set isPlaying to false, totalSeconds to 0 and hasEnded to true. If the track needs to advance those will all be set again when componentDidUpdate calls this.handlePlayer('play')
+            isPlaying: false,
+            totalSeconds: 0,
+            hasEnded: true
+        })
+
+        const tempAllTitles = []
+
+        this.props.allTracks.forEach(i => { //Loop through this.props.allTracks and push just the titles to a new temp array
+            tempAllTitles.push(i[0])
+        })
+
+        const trackNumber = tempAllTitles.indexOf(this.state.currentTrack[0]) //The trackNumber of the track that just played is the indexOf this.state.currentTrack[0] in tempAllTitles
+
+        if (trackNumber < tempAllTitles.length - 1) { //If the track that just played wasn't the final track call the this.props.selectTrack method in App.js and pass the next track to it.
+            this.props.selectTrack(this.props.allTracks[trackNumber + 1])
+        }
+    }
+
     handlePlayer = (type) => { //Handle the 3 buttons with one function (Play, stop, pause)
 
         if (this.state.currentTrack !== null) { //Don't let any controls be active unless there's a track cued in to this.state
@@ -28,7 +48,7 @@ class AudioPlayer extends React.PureComponent {
                     hasEnded: true
                 })
                 this.player.seekTo(0) //If stop, reset internal track to 0 as well.
-                setTimeout(() => this.autoUpdatePlaybackTime(), 0)//Don't wait the <= 1000ms for the playback counter to go back to 0, just do it now
+                setTimeout(() => this.autoUpdatePlaybackTime(), 0) //Don't wait the <= 1000ms for the playback counter to go back to 0, just do it now.
             }
             if (type === 'play') {
                 this.setState({
@@ -72,13 +92,13 @@ class AudioPlayer extends React.PureComponent {
         this.player = player
     }
 
-    componentDidUpdate() {
+    componentDidUpdate() { //Must use componentDidUpdate, rather than render, to handle checking for changes between this.props.currentTrack and this.state.currentTrack, otherwise face warning in console “Cannot update during an existing state transition (such as within render). Render methods should be a pure function of props and state.”
         if (this.props.currentTrack !== this.state.currentTrack) { //If the track changed, reset this.state.totalSeconds to -1, because you have to call this.autoUpdatePlaybackTime immediately afterward (from a setTimeout), which will advance this.state.totalSeconds + 1 to 0. Also pass 'play' to this.handlePlayer.
             this.setState({
                 totalSeconds: -1,
             })
 
-            setTimeout(() => this.autoUpdatePlaybackTime(), 0)
+            setTimeout(() => this.autoUpdatePlaybackTime(), 0) //Don't wait the <= 1000ms for the playback counter to go back to 0, just do it now.
 
             this.handlePlayer('play')
         }
@@ -127,7 +147,7 @@ class AudioPlayer extends React.PureComponent {
                     playing={this.state.isPlaying}
                     progressInterval={1000}
                     onProgress={this.autoUpdatePlaybackTime}
-                    onEnded={() => this.setState({isPlaying: false, totalSeconds: 0, hasEnded: true})}
+                    onEnded={this.advanceTrackOrEnd}
                     onDuration={(duration) => this.setState({trackLength: duration})}
                     />
             </div>
