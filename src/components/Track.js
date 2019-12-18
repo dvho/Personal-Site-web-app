@@ -11,7 +11,9 @@ class Track extends React.PureComponent {
 
     render() {
 
-        let trackTitle = this.props.currentTrack[0] //this.props.currentTrack is an array where the first element is the track title and the second is the url
+        let isSelected = this.props.track[0] === this.props.currentTrack[0]
+
+        let trackTitle = this.props.track[0] //this.props.track is an array where the first element is the track title and the second is the url
 
         let aspectRatio = 1808 / 1366 //Aspect ratio of the canvas (derived from main.png)
         let fontSizeDenom = 34 //Set denominator of fontSize here
@@ -22,14 +24,14 @@ class Track extends React.PureComponent {
         return(
             this.props.leftColumn ?
 
-            <div style={{position: 'relative', left: leftOrRightPosition}} onClick={() => this.props.selectTrack(this.props.currentTrack)}>
-                <h1 style={{color: 'white', margin: textMargin, fontSize: fontSizeCalc}}>{this.props.trackNumber}. {trackTitle}</h1>
+            <div style={{position: 'relative', left: leftOrRightPosition}} onClick={() => this.props.selectTrack(this.props.track)}>
+                <h1 style={{color: isSelected ? 'blue' : 'white', margin: textMargin, fontSize: fontSizeCalc, transition: 'color .5s'}} >{this.props.trackNumber}. {trackTitle}</h1>
             </div>
 
             :
 
-            <div style={{position: 'relative', right: leftOrRightPosition}} onClick={() => this.props.selectTrack(this.props.currentTrack)}>
-                <h1 style={{color: 'white', margin: textMargin, fontSize: fontSizeCalc}}>{this.props.trackNumber}. {trackTitle}</h1>
+            <div style={{position: 'relative', right: leftOrRightPosition}} onClick={() => this.props.selectTrack(this.props.track)}>
+                <h1 style={{color: isSelected ? 'blue' : 'white', margin: textMargin, fontSize: fontSizeCalc, transition: 'color .5s'}} >{this.props.trackNumber}. {trackTitle}</h1>
             </div>
         )
     }

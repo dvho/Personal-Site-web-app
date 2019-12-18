@@ -30,6 +30,7 @@ class App extends React.PureComponent {
             rippleXCoord: -1,
             rippleYCoord: -1,
             rippleActive: false,
+            allTracks: [],
             currentTrack: [], //This data shape is an array where the first element is the track title and the second is the url
             cloudNumber: 1,
             veilOpacity: .3,
@@ -41,7 +42,10 @@ class App extends React.PureComponent {
     }
 
     selectTrack = (currentTrack) => {
-        this.setState({currentTrack: currentTrack})
+        if (currentTrack[1] !== this.state.currentTrack[1]) { //Make sure the track isn't already selected. For some reason JavaScript can't compare two arrays so you have to select an element in them (in this case [1], the url, but it could have just as easily been [0]) and then compare.
+            this.setState({currentTrack: currentTrack})
+            setTimeout(() => this.renderTracks(), 0) //Have to call renderTracks again to be able to pass the new this.state.currentTrack, and to do that without it being the penultimate this.state.currentTrack, it must be broken out into a setTimeout of 0ms.
+        }
     }
 
     togglePerformanceBoost = () => {
@@ -189,6 +193,7 @@ class App extends React.PureComponent {
     }
 
     renderTracks = () => {
+
         const leftColumnTracks = []
         const rightColumnTracks = []
         const tracksArray = Object.entries(config.tracks) //Object.entries is a method that takes an object and returns an array whose elements are arrays of that object's key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images.eyePosition)[0][1] would return the 1st image, Object.entries(config.images.eyePosition)[2][1] the 3rd, etc.
@@ -199,16 +204,17 @@ class App extends React.PureComponent {
         for (j = 0; j < tracksArray.length; j++) {
 
             if (j < 5) {
-                leftColumnTracks.push(<Track key={j} leftColumn={true} trackNumber={j + 1} selectTrack={this.selectTrack} currentTrack={tracksArray[j]} canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin}/>)
+                leftColumnTracks.push(<Track key={j} leftColumn={true} trackNumber={j + 1} selectTrack={this.selectTrack} track={tracksArray[j]} currentTrack={this.state.currentTrack} canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin}/>)
             } else {
-                rightColumnTracks.push(<Track key={j} leftColumn={false} trackNumber={j + 1} selectTrack={this.selectTrack} currentTrack={tracksArray[j]} canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin}/>)
+                rightColumnTracks.push(<Track key={j} leftColumn={false} trackNumber={j + 1} selectTrack={this.selectTrack} track={tracksArray[j]} currentTrack={this.state.currentTrack} canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin}/>)
             }
         }
 
         this.setState({
             leftColumnTracks: leftColumnTracks,
             rightColumnTracks: rightColumnTracks,
-            titlesColumnsMargin: titlesColumnsMargin
+            titlesColumnsMargin: titlesColumnsMargin,
+            allTracks: tracksArray
         })
     }
 
@@ -321,10 +327,6 @@ class App extends React.PureComponent {
             allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} dimVeil={this.dimVeil} performanceBoost={this.state.performanceBoost}/>)
         }
 
-
-
-
-
         return (
             <div className="canvas-parent">
 
@@ -347,7 +349,7 @@ class App extends React.PureComponent {
 
                 <PerformanceButton performanceBoost={this.state.performanceBoost} performanceButtonDiameter={this.state.performanceButtonDiameter} togglePerformanceBoost={this.togglePerformanceBoost}/>
 
-                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} performanceBoost={this.state.performanceBoost} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack}/>
+                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} performanceBoost={this.state.performanceBoost} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack}/>
 
                 <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginLeft: this.state.titlesColumnsMargin, left: 0}}>
                     {this.state.leftColumnTracks}
