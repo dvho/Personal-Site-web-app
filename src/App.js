@@ -22,6 +22,9 @@ class App extends React.PureComponent {
             performanceButtonDiameter: 0,
             performanceBoost: true,
             margin: 0,
+            leftColumnTracks: [],
+            rightColumnTracks: [],
+            titlesColumnsMargin: 0,
             xCoord: -1,
             yCoord: -1,
             rippleXCoord: -1,
@@ -185,6 +188,30 @@ class App extends React.PureComponent {
         })
     }
 
+    renderTracks = () => {
+        const leftColumnTracks = []
+        const rightColumnTracks = []
+        const tracksArray = Object.entries(config.tracks) //Object.entries is a method that takes an object and returns an array whose elements are arrays of that object's key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images.eyePosition)[0][1] would return the 1st image, Object.entries(config.images.eyePosition)[2][1] the 3rd, etc.
+        let titlesColumnsMargin = this.state.canvasHeight * .03
+
+        let j
+
+        for (j = 0; j < tracksArray.length; j++) {
+
+            if (j < 5) {
+                leftColumnTracks.push(<Track key={j} leftColumn={true} trackNumber={j + 1} selectTrack={this.selectTrack} currentTrack={tracksArray[j]} canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin}/>)
+            } else {
+                rightColumnTracks.push(<Track key={j} leftColumn={false} trackNumber={j + 1} selectTrack={this.selectTrack} currentTrack={tracksArray[j]} canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin}/>)
+            }
+        }
+
+        this.setState({
+            leftColumnTracks: leftColumnTracks,
+            rightColumnTracks: rightColumnTracks,
+            titlesColumnsMargin: titlesColumnsMargin
+        })
+    }
+
     calcAllDimensionsCoordsAndResetClouds = (e) => {
 
         let screenWidth = window.innerWidth
@@ -204,6 +231,9 @@ class App extends React.PureComponent {
                 cloudNumber: 1,
                 performanceButtonDiameter: performanceButtonDiameter
             })
+
+        this.renderTracks() //Now that all the basic dimensions have been set in state render the tracks
+
         } else if (e.type === 'mousemove' || e.type === 'touchmove' || e.type === 'click') { //Get the X and Y positions on mousemove, touchmove and click. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
             let yCoord = e.pageY / canvasHeight
             let xCoord
@@ -248,6 +278,7 @@ class App extends React.PureComponent {
     componentDidMount() {
         //Fire up event listeners when App.js mounts
         ['load', 'resize', 'mousemove', 'touchmove', 'click'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds))
+
         //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
         let cloudControl
 
@@ -290,20 +321,9 @@ class App extends React.PureComponent {
             allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} dimVeil={this.dimVeil} performanceBoost={this.state.performanceBoost}/>)
         }
 
-        let titlesColumnsMargin = this.state.canvasHeight * .03 //Top and horizontal margins for both columns of track titles (for some reason, this is not calculating from this.calcAllDimensionsCoordsAndResetClouds when e.type === 'load)
-        const leftColumnTracks = []
-        const rightColumnTracks = []
-        const tracksArray = Object.entries(config.tracks) //Object.entries is a method that takes an object and returns an array whose elements are arrays of that object's key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images.eyePosition)[0][1] would return the 1st image, Object.entries(config.images.eyePosition)[2][1] the 3rd, etc.
-        let j
 
-        for (j = 0; j < tracksArray.length; j++) {
 
-            if (j < 5) {
-                leftColumnTracks.push(<Track key={j} leftColumn={true} trackNumber={j + 1} selectTrack={this.selectTrack} currentTrack={tracksArray[j]} canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin}/>)
-            } else {
-                rightColumnTracks.push(<Track key={j} leftColumn={false} trackNumber={j + 1} selectTrack={this.selectTrack} currentTrack={tracksArray[j]} canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin}/>)
-            }
-        }
+
 
         return (
             <div className="canvas-parent">
@@ -329,11 +349,11 @@ class App extends React.PureComponent {
 
                 <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} performanceBoost={this.state.performanceBoost} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack}/>
 
-                <div style={{position: 'absolute', marginTop: titlesColumnsMargin, marginLeft: titlesColumnsMargin, left: 0}}>
-                    {leftColumnTracks}
+                <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginLeft: this.state.titlesColumnsMargin, left: 0}}>
+                    {this.state.leftColumnTracks}
                 </div>
-                <div style={{position: 'absolute', marginTop: titlesColumnsMargin, marginRight: titlesColumnsMargin, right: 0}}>
-                    {rightColumnTracks}
+                <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginRight: this.state.titlesColumnsMargin, right: 0}}>
+                    {this.state.rightColumnTracks}
                 </div>
 
                 { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }

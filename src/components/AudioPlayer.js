@@ -9,7 +9,7 @@ class AudioPlayer extends React.PureComponent {
     constructor() {
         super()
         this.state = {
-            currentTrack: [], //This data shape is an array where the first element is the track title and the second is the url 
+            currentTrack: [], //This data shape is an array where the first element is the track title and the second is the url
             trackLength: 0,
             totalSeconds: 0,
             isPlaying: false,
@@ -28,6 +28,7 @@ class AudioPlayer extends React.PureComponent {
                     hasEnded: true
                 })
                 this.player.seekTo(0) //If stop, reset internal track to 0 as well.
+                setTimeout(() => this.autoUpdatePlaybackTime(), 0)//Don't wait the <= 1000ms for the playback counter to go back to 0, just do it now
             }
             if (type === 'play') {
                 this.setState({
@@ -71,16 +72,13 @@ class AudioPlayer extends React.PureComponent {
         this.player = player
     }
 
-    render() {
-
+    componentDidUpdate() {
         if (this.props.currentTrack !== this.state.currentTrack) { //If the track changed, reset this.state.totalSeconds to -1, because you have to call this.autoUpdatePlaybackTime immediately afterward (from a setTimeout), which will advance this.state.totalSeconds + 1 to 0. Also pass 'play' to this.handlePlayer.
             this.setState({
                 totalSeconds: -1,
             })
 
-            setTimeout(() => {
-                this.autoUpdatePlaybackTime()
-            }, 5)
+            setTimeout(() => this.autoUpdatePlaybackTime(), 0)
 
             this.handlePlayer('play')
         }
@@ -88,6 +86,9 @@ class AudioPlayer extends React.PureComponent {
         this.setState({ //Update this.state.currentTrack to whatever was selected
             currentTrack: this.props.currentTrack
         })
+    }
+
+    render() {
 
         let performanceBoost = this.props.performanceBoost
         //Variables below are all calculated dynamically with each render and are based on App.js state properties canvasHeight, canvasWidth, screenWidth, margin, and veilOpacity
