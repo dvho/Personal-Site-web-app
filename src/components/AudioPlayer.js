@@ -9,7 +9,7 @@ class AudioPlayer extends React.PureComponent {
     constructor() {
         super()
         this.state = {
-            currentTrack: [], //This data shape is an array where the first element is the track title and the second the url 
+            currentTrack: [], //This data shape is an array where the first element is the track title and the second is the url 
             trackLength: 0,
             totalSeconds: 0,
             isPlaying: false,

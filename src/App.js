@@ -27,7 +27,7 @@ class App extends React.PureComponent {
             rippleXCoord: -1,
             rippleYCoord: -1,
             rippleActive: false,
-            currentTrack: [], //This data shape is an array where the first element is the track title and the second the url
+            currentTrack: [], //This data shape is an array where the first element is the track title and the second is the url
             cloudNumber: 1,
             veilOpacity: .3,
             blinkActive: false,
