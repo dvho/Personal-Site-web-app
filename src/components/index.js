@@ -3,6 +3,7 @@ import Veil from './Veil'
 import Face from './Face'
 import PerformanceButton from './PerformanceButton'
 import AudioPlayer from './AudioPlayer'
+import Track from './Track'
 import Ripple from './Ripple'
 
 export {
@@ -11,5 +12,6 @@ export {
     Face,
     PerformanceButton,
     AudioPlayer,
+    Track,
     Ripple
 }
