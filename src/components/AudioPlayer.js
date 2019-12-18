@@ -9,6 +9,7 @@ class AudioPlayer extends React.PureComponent {
     constructor() {
         super()
         this.state = {
+            currentTrack: [], //This data shape is an array where the first element is the track title and the second the url 
             trackLength: 0,
             totalSeconds: 0,
             isPlaying: false,
@@ -19,24 +20,26 @@ class AudioPlayer extends React.PureComponent {
 
     handlePlayer = (type) => { //Handle the 3 buttons with one function (Play, stop, pause)
 
-        if (type === 'stop') {
-            this.setState({
-                totalSeconds: 0,
-                isPlaying: false,
-                hasEnded: true
-            })
-            this.player.seekTo(0) //If stop, reset internal track to 0 as well.
-        }
-        if (type === 'play') {
-            this.setState({
-                isPlaying: true,
-                hasEnded: false
-            })
-        }
-        if (type === 'pause') {
-            this.setState({
-                isPlaying: false
-            })
+        if (this.state.currentTrack !== null) { //Don't let any controls be active unless there's a track cued in to this.state
+            if (type === 'stop') {
+                this.setState({
+                    totalSeconds: 0,
+                    isPlaying: false,
+                    hasEnded: true
+                })
+                this.player.seekTo(0) //If stop, reset internal track to 0 as well.
+            }
+            if (type === 'play') {
+                this.setState({
+                    isPlaying: true,
+                    hasEnded: false
+                })
+            }
+            if (type === 'pause') {
+                this.setState({
+                    isPlaying: false
+                })
+            }
         }
     }
 
@@ -70,7 +73,23 @@ class AudioPlayer extends React.PureComponent {
 
     render() {
 
-        let song = this.props.song
+        if (this.props.currentTrack !== this.state.currentTrack) { //If the track changed, reset this.state.totalSeconds to -1, because you have to call this.autoUpdatePlaybackTime immediately afterward (from a setTimeout), which will advance this.state.totalSeconds + 1 to 0. Also pass 'play' to this.handlePlayer.
+            this.setState({
+                totalSeconds: -1,
+            })
+
+            setTimeout(() => {
+                this.autoUpdatePlaybackTime()
+            }, 5)
+
+            this.handlePlayer('play')
+        }
+
+        this.setState({ //Update this.state.currentTrack to whatever was selected
+            currentTrack: this.props.currentTrack
+        })
+
+        let performanceBoost = this.props.performanceBoost
         //Variables below are all calculated dynamically with each render and are based on App.js state properties canvasHeight, canvasWidth, screenWidth, margin, and veilOpacity
         let containerHeight = this.props.canvasHeight * .07
         let containerWidth = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth * .8 : this.props.screenWidth * .8
@@ -80,7 +99,7 @@ class AudioPlayer extends React.PureComponent {
         let sliderBoxShadowRgbaOpacity = (this.props.veilOpacity - .3) * .5 //Only interesting thing here was that transition uses box-shadow property instead of boxShadow
         let fontSize = this.props.canvasHeight / 30
         let totalTimeStringTextShadowSpread = (this.props.veilOpacity - .3) * 40 //Only interesting thing here was that transition uses text-shadow property instead of textShadow
-        let totalTimeStringTextShadowRgbaOpacity = (this.props.veilOpacity - .3) * .8 //Only interesting thing here was that transition uses text-shadow property instead of textShadow
+        let totalTimeStringTextShadowRgbaOpacity = (this.props.veilOpacity - .3) //Only interesting thing here was that transition uses text-shadow property instead of textShadow
         let iconDiameter =  this.props.canvasHeight * .05
         let iconMarginRight = iconDiameter * .15
         let iconDropShadowSpread = (this.props.veilOpacity - .3) * 50
@@ -92,18 +111,18 @@ class AudioPlayer extends React.PureComponent {
             <div style={{position: 'absolute', width: containerWidth, height: containerHeight, left: left, bottom: bottom}}>
 
                 <div style={{display: 'flex', flexDirection: 'row', position: 'absolute'}}>
-                    <i onClick={()=>this.handlePlayer('play')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,1,30,.75)', filter: `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: 'filter 2.5s linear'}} className="fa fa-play-circle"></i>
-                    <i onClick={()=>this.handlePlayer('stop')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(30,1,1,.75)', filter: `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: 'filter 2.5s linear'}} className="fa fa-stop-circle"></i>
-                    <i onClick={()=>this.handlePlayer('pause')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,30,1,.75)', filter: `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: 'filter 2.5s linear'}} className="fa fa-pause-circle"></i>
+                    <i onClick={()=>this.handlePlayer('play')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,1,30,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-play-circle"></i>
+                    <i onClick={()=>this.handlePlayer('stop')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(30,1,1,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-stop-circle"></i>
+                    <i onClick={()=>this.handlePlayer('pause')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,30,1,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-pause-circle"></i>
                 </div>
 
-                <p style={{position: 'absolute', margin: 0, right: 0, fontSize: fontSize, textShadow: `0px 0px ${totalTimeStringTextShadowSpread}px rgba(255,255,255,${totalTimeStringTextShadowRgbaOpacity})`, color: 'rgba(30,1,1,.75)', transition: 'text-shadow 2.5s linear'}}>{this.state.totalTimeString}</p>
+                <p style={{position: 'absolute', margin: 0, right: 0, fontSize: fontSize, textShadow: performanceBoost ? null : `0px 0px ${totalTimeStringTextShadowSpread}px rgba(255,255,255,${totalTimeStringTextShadowRgbaOpacity})`, color: 'rgba(30,1,1,.75)', transition: performanceBoost ? null : 'text-shadow 2.5s linear'}}>{this.state.totalTimeString}</p> {/* Need a fontFamily here */}
 
-                <input style={{marginTop: containerHeight, boxShadow: `0px 0px ${sliderBoxShadowSpread}px rgba(255,255,255,${sliderBoxShadowRgbaOpacity})`, transition: 'box-shadow 2.5s linear'}} className='slider' type='range' min='0' max={this.state.trackLength} value={this.state.totalSeconds} onChange={this.slidePlaybackAndUpdatePlaybackTime}/>
+                <input style={{marginTop: containerHeight, boxShadow: performanceBoost ? null : `0px 0px ${sliderBoxShadowSpread}px rgba(255,255,255,${sliderBoxShadowRgbaOpacity})`, transition: performanceBoost ? null : 'box-shadow 2.5s linear'}} className='slider' type='range' min='0' max={this.state.trackLength} value={this.state.totalSeconds} onChange={this.slidePlaybackAndUpdatePlaybackTime}/>
 
                 <ReactPlayer
                     ref={this.ref}
-                    url={song}
+                    url={this.state.currentTrack[1]}
                     playing={this.state.isPlaying}
                     progressInterval={1000}
                     onProgress={this.autoUpdatePlaybackTime}
