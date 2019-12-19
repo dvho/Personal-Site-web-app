@@ -71,6 +71,12 @@ body {
   cursor: pointer;
 }
 
+.title:hover {
+    transform: scale(1.2);
+    cursor: pointer;
+    /* For some reason, placing  " transition: 'all .25s' "  here in .title:hover  gets the transition in but not out */
+}
+
 /* Would've had to import a seperate library like "glamorous" to have been able to pass pseudo selectors as inline styles (in AudioPlayer.js, which I would have used to make the slider thumb below scale with canvasHeight). Also important to note that I wouldn't want slider thumb to scale very much as it would've be grabbable/useable. Against one of my goals for this project, to make all rendering fluidly dynamic without use of media breakpoints, in this particular case it was the optimal solution. Incidentally, when I decided I wanted to tether color and opacity of the audio interface with veilOpacity, I did import the emotion library and for some reason, though fully integrated without its syntax crashing anything, it didn't work. */
 @media only screen and (max-height: 400px) {
   .slider::-webkit-slider-thumb {

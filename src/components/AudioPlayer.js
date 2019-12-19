@@ -4,6 +4,7 @@ import '../App.css'
 
 //Add forward and back buttons that simply call advanceTrackOrEnd, and make advanceTrackOrEnd take an argument to handle those
 //May have to ditch all the drop shadows and go with a box around the interface that appears with veilOpacity because it's straining GPU
+//Choose font and fix the colors/opacities 
 
 class AudioPlayer extends React.PureComponent {
     constructor() {
