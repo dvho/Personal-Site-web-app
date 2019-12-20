@@ -1,10 +1,12 @@
 import React from 'react'
 import ReactPlayer from 'react-player'
 import '../App.css'
+import config from '../config'
 
+//Need to track onLoad and only play if onLoad has completed
 //Add forward and back buttons that simply call advanceTrackOrEnd, and make advanceTrackOrEnd take an argument to handle those
 //May have to ditch all the drop shadows and go with a box around the interface that appears with veilOpacity because it's straining GPU
-//Choose font and fix the colors/opacities 
+//Choose font and fix the colors/opacities
 
 class AudioPlayer extends React.PureComponent {
     constructor() {
@@ -19,8 +21,8 @@ class AudioPlayer extends React.PureComponent {
         }
     }
 
-    advanceTrackOrEnd = () => {
-        this.setState({ //First, by default, just set isPlaying to false, totalSeconds to 0 and hasEnded to true. If the track needs to advance those will all be set again when componentDidUpdate calls this.handlePlayer('play')
+    changeTrackOrEnd = (forwardOrBackward) => {
+        this.setState({ //First, by default, just set isPlaying to false, totalSeconds to 0 and hasEnded to true. If the track needs to change those will all be set again when componentDidUpdate calls this.handlePlayer('play')
             isPlaying: false,
             totalSeconds: 0,
             hasEnded: true
@@ -34,8 +36,11 @@ class AudioPlayer extends React.PureComponent {
 
         const trackNumber = tempAllTitles.indexOf(this.state.currentTrack[0]) //The trackNumber of the track that just played is the indexOf this.state.currentTrack[0] in tempAllTitles
 
-        if (trackNumber < tempAllTitles.length - 1) { //If the track that just played wasn't the final track call the this.props.selectTrack method in App.js and pass the next track to it.
+        if (forwardOrBackward === 'forward' && trackNumber < tempAllTitles.length - 1) { //If forwardOrBackward === 'forward' and the track that just played wasn't the final track call the this.props.selectTrack method in App.js and pass the next track to it.
             this.props.selectTrack(this.props.allTracks[trackNumber + 1])
+        }
+        if (forwardOrBackward === 'backward' && trackNumber > 0) { //If forwardOrBackward === 'backward' and a track number is set that is at least 1 call the this.props.selectTrack method in App.js and pass the previous track to it (track numbers, of course, start at 0).
+            this.props.selectTrack(this.props.allTracks[trackNumber - 1])
         }
     }
 
@@ -52,7 +57,11 @@ class AudioPlayer extends React.PureComponent {
                 setTimeout(() => this.autoUpdatePlaybackTime(), 0) //Don't wait the <= 1000ms for the playback counter to go back to 0, just do it now.
             }
             if (type === 'play') {
-                this.setState({
+
+                if (this.state.currentTrack.length === 0) { //If no track is currently loaded in, i.e. the app has just loaded, just call this.changeTrackOrEnd('forward') which will end up playing the first track.
+                    this.changeTrackOrEnd('forward')
+                }
+                this.setState({ //Regardless, set isPlaying to true and hasEnded to false 
                     isPlaying: true,
                     hasEnded: false
                 })
@@ -61,6 +70,12 @@ class AudioPlayer extends React.PureComponent {
                 this.setState({
                     isPlaying: false
                 })
+            }
+            if (type === 'forward') {
+                this.changeTrackOrEnd('forward')
+            }
+            if (type === 'backward') {
+                this.changeTrackOrEnd('backward')
             }
         }
     }
@@ -119,7 +134,7 @@ class AudioPlayer extends React.PureComponent {
         let bottom = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .05 : this.props.screenWidth * .05
         let sliderBoxShadowSpread = (this.props.veilOpacity - .3) * 18 //Only interesting thing here was that transition uses box-shadow property instead of boxShadow
         let sliderBoxShadowRgbaOpacity = (this.props.veilOpacity - .3) * .5 //Only interesting thing here was that transition uses box-shadow property instead of boxShadow
-        let fontSize = this.props.canvasHeight / 30
+        let fontSize = this.props.canvasHeight / 25
         let totalTimeStringTextShadowSpread = (this.props.veilOpacity - .3) * 40 //Only interesting thing here was that transition uses text-shadow property instead of textShadow
         let totalTimeStringTextShadowRgbaOpacity = (this.props.veilOpacity - .3) //Only interesting thing here was that transition uses text-shadow property instead of textShadow
         let iconDiameter =  this.props.canvasHeight * .05
@@ -133,12 +148,15 @@ class AudioPlayer extends React.PureComponent {
             <div style={{position: 'absolute', width: containerWidth, height: containerHeight, left: left, bottom: bottom}}>
 
                 <div style={{display: 'flex', flexDirection: 'row', position: 'absolute'}}>
+                    <i onClick={()=>this.handlePlayer('backward')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(40,40,1,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-chevron-circle-left"></i>
                     <i onClick={()=>this.handlePlayer('play')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,1,30,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-play-circle"></i>
-                    <i onClick={()=>this.handlePlayer('stop')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(30,1,1,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-stop-circle"></i>
                     <i onClick={()=>this.handlePlayer('pause')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,30,1,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-pause-circle"></i>
+                    <i onClick={()=>this.handlePlayer('stop')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(30,1,1,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-stop-circle"></i>
+                    <i onClick={()=>this.handlePlayer('forward')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(40,40,1,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-chevron-circle-right"></i>
+
                 </div>
 
-                <p style={{position: 'absolute', margin: 0, right: 0, fontSize: fontSize, textShadow: performanceBoost ? null : `0px 0px ${totalTimeStringTextShadowSpread}px rgba(255,255,255,${totalTimeStringTextShadowRgbaOpacity})`, color: 'rgba(30,1,1,.75)', transition: performanceBoost ? null : 'text-shadow 2.5s linear'}}>{this.state.totalTimeString}</p> {/* Need a fontFamily here */}
+                <p style={{position: 'absolute', margin: 0, right: 0, fontFamily: config.appFont, fontSize: fontSize, textShadow: performanceBoost ? null : `0px 0px ${totalTimeStringTextShadowSpread}px rgba(255,255,255,${totalTimeStringTextShadowRgbaOpacity})`, color: 'rgba(30,1,1,.75)', transition: performanceBoost ? null : 'text-shadow 2.5s linear'}}>{this.state.totalTimeString}</p> {/* Need a fontFamily here */}
 
                 <input style={{marginTop: containerHeight, boxShadow: performanceBoost ? null : `0px 0px ${sliderBoxShadowSpread}px rgba(255,255,255,${sliderBoxShadowRgbaOpacity})`, transition: performanceBoost ? null : 'box-shadow 2.5s linear'}} className='slider' type='range' min='0' max={this.state.trackLength} value={this.state.totalSeconds} onChange={this.slidePlaybackAndUpdatePlaybackTime}/>
 
@@ -148,7 +166,7 @@ class AudioPlayer extends React.PureComponent {
                     playing={this.state.isPlaying}
                     progressInterval={1000}
                     onProgress={this.autoUpdatePlaybackTime}
-                    onEnded={this.advanceTrackOrEnd}
+                    onEnded={() => this.changeTrackOrEnd('forward')}
                     onDuration={(duration) => this.setState({trackLength: duration})}
                     />
             </div>
