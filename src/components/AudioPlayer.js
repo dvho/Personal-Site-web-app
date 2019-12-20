@@ -4,9 +4,7 @@ import '../App.css'
 import config from '../config'
 
 //Need to track onLoad and only play if onLoad has completed
-//Add forward and back buttons that simply call advanceTrackOrEnd, and make advanceTrackOrEnd take an argument to handle those
 //May have to ditch all the drop shadows and go with a box around the interface that appears with veilOpacity because it's straining GPU
-//Choose font and fix the colors/opacities
 
 class AudioPlayer extends React.PureComponent {
     constructor() {
@@ -45,38 +43,31 @@ class AudioPlayer extends React.PureComponent {
     }
 
     handlePlayer = (type) => { //Handle the 3 buttons with one function (Play, stop, pause)
-
-        if (this.state.currentTrack !== null) { //Don't let any controls be active unless there's a track cued in to this.state
-            if (type === 'stop') {
-                this.setState({
-                    totalSeconds: 0,
-                    isPlaying: false,
-                    hasEnded: true
-                })
-                this.player.seekTo(0) //If stop, reset internal track to 0 as well.
-                setTimeout(() => this.autoUpdatePlaybackTime(), 0) //Don't wait the <= 1000ms for the playback counter to go back to 0, just do it now.
-            }
-            if (type === 'play') {
-
-                if (this.state.currentTrack.length === 0) { //If no track is currently loaded in, i.e. the app has just loaded, just call this.changeTrackOrEnd('forward') which will end up playing the first track.
-                    this.changeTrackOrEnd('forward')
-                }
-                this.setState({ //Regardless, set isPlaying to true and hasEnded to false 
-                    isPlaying: true,
-                    hasEnded: false
-                })
-            }
-            if (type === 'pause') {
-                this.setState({
-                    isPlaying: false
-                })
-            }
-            if (type === 'forward') {
-                this.changeTrackOrEnd('forward')
-            }
-            if (type === 'backward') {
-                this.changeTrackOrEnd('backward')
-            }
+        if (type === 'stop') {
+            this.setState({
+                totalSeconds: 0,
+                isPlaying: false,
+                hasEnded: true
+            })
+            this.player.seekTo(0) //If stop, reset internal track to 0 as well.
+            setTimeout(() => this.autoUpdatePlaybackTime(), 0) //Don't wait the <= 1000ms for the playback counter to go back to 0, just do it now.
+        }
+        if (type === 'play') {
+            this.setState({ //Regardless, set isPlaying to true and hasEnded to false
+                isPlaying: true,
+                hasEnded: false
+            })
+        }
+        if (type === 'pause') {
+            this.setState({
+                isPlaying: false
+            })
+        }
+        if (type === 'forward') {
+            this.changeTrackOrEnd('forward')
+        }
+        if (type === 'backward') {
+            this.changeTrackOrEnd('backward')
         }
     }
 
@@ -125,40 +116,33 @@ class AudioPlayer extends React.PureComponent {
     }
 
     render() {
-
-        let performanceBoost = this.props.performanceBoost
         //Variables below are all calculated dynamically with each render and are based on App.js state properties canvasHeight, canvasWidth, screenWidth, margin, and veilOpacity
+        let rgbaOpacity = (this.props.veilOpacity - .3) * .25 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.
         let containerHeight = this.props.canvasHeight * .07
-        let containerWidth = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth * .8 : this.props.screenWidth * .8
+        let padding = containerHeight * .5
+        let borderRadius = containerHeight * .25
+        let containerWidth = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth * .8 - padding * 2 : this.props.screenWidth * .8 - padding * 2
         let left = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .10 + this.props.margin : this.props.screenWidth * .10
         let bottom = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .05 : this.props.screenWidth * .05
-        let sliderBoxShadowSpread = (this.props.veilOpacity - .3) * 18 //Only interesting thing here was that transition uses box-shadow property instead of boxShadow
-        let sliderBoxShadowRgbaOpacity = (this.props.veilOpacity - .3) * .5 //Only interesting thing here was that transition uses box-shadow property instead of boxShadow
         let fontSize = this.props.canvasHeight / 25
-        let totalTimeStringTextShadowSpread = (this.props.veilOpacity - .3) * 40 //Only interesting thing here was that transition uses text-shadow property instead of textShadow
-        let totalTimeStringTextShadowRgbaOpacity = (this.props.veilOpacity - .3) //Only interesting thing here was that transition uses text-shadow property instead of textShadow
         let iconDiameter =  this.props.canvasHeight * .05
         let iconMarginRight = iconDiameter * .15
-        let iconDropShadowSpread = (this.props.veilOpacity - .3) * 50
-        let iconDropShadowRgbaOpacity = (this.props.veilOpacity - .3) * .7
-
 
         return(
 
-            <div style={{position: 'absolute', width: containerWidth, height: containerHeight, left: left, bottom: bottom}}>
+            <div style={{position: 'absolute', width: containerWidth, height: containerHeight, left: left, bottom: bottom, backgroundColor: `rgba(255,255,255,${rgbaOpacity})`, transition: 'background-color 2s linear', padding: padding, borderRadius: borderRadius}}>
 
                 <div style={{display: 'flex', flexDirection: 'row', position: 'absolute'}}>
-                    <i onClick={()=>this.handlePlayer('backward')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(40,40,1,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-chevron-circle-left"></i>
-                    <i onClick={()=>this.handlePlayer('play')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,1,30,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-play-circle"></i>
-                    <i onClick={()=>this.handlePlayer('pause')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,30,1,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-pause-circle"></i>
-                    <i onClick={()=>this.handlePlayer('stop')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(30,1,1,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-stop-circle"></i>
-                    <i onClick={()=>this.handlePlayer('forward')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(40,40,1,.75)', filter: performanceBoost ? null : `drop-shadow(0px 0px ${iconDropShadowSpread}px rgba(255,255,255,${iconDropShadowRgbaOpacity})`, transition: performanceBoost ? null : 'filter 2.5s linear'}} className="fa fa-chevron-circle-right"></i>
-
+                    <i onClick={()=>this.handlePlayer('backward')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(40,40,1,.75)'}} className="fa fa-chevron-circle-left"></i>
+                    <i onClick={()=>this.handlePlayer('play')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,1,30,.75)'}} className="fa fa-play-circle"></i>
+                    <i onClick={()=>this.handlePlayer('pause')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,30,1,.75)'}} className="fa fa-pause-circle"></i>
+                    <i onClick={()=>this.handlePlayer('stop')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(30,1,1,.75)'}} className="fa fa-stop-circle"></i>
+                    <i onClick={()=>this.handlePlayer('forward')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(40,40,1,.75)'}} className="fa fa-chevron-circle-right"></i>
                 </div>
 
-                <p style={{position: 'absolute', margin: 0, right: 0, fontFamily: config.appFont, fontSize: fontSize, textShadow: performanceBoost ? null : `0px 0px ${totalTimeStringTextShadowSpread}px rgba(255,255,255,${totalTimeStringTextShadowRgbaOpacity})`, color: 'rgba(30,1,1,.75)', transition: performanceBoost ? null : 'text-shadow 2.5s linear'}}>{this.state.totalTimeString}</p> {/* Need a fontFamily here */}
+                <p style={{position: 'absolute', margin: 0, right: padding, fontFamily: config.appFont, fontSize: fontSize, color: 'rgba(30,1,1,.75)'}}>{this.state.totalTimeString}</p>
 
-                <input style={{marginTop: containerHeight, boxShadow: performanceBoost ? null : `0px 0px ${sliderBoxShadowSpread}px rgba(255,255,255,${sliderBoxShadowRgbaOpacity})`, transition: performanceBoost ? null : 'box-shadow 2.5s linear'}} className='slider' type='range' min='0' max={this.state.trackLength} value={this.state.totalSeconds} onChange={this.slidePlaybackAndUpdatePlaybackTime}/>
+                <input style={{marginTop: containerHeight}} className='slider' type='range' min='0' max={this.state.trackLength} value={this.state.totalSeconds} onChange={this.slidePlaybackAndUpdatePlaybackTime}/>
 
                 <ReactPlayer
                     ref={this.ref}
