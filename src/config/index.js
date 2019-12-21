@@ -84,11 +84,11 @@ export default {
         "How Could You Say That": 'https://freesound.org/data/previews/387/387978_6221013-lq.mp3',
         "Fire and Acid Rain": 'https://freesound.org/data/previews/467/467096_520316-lq.mp3',
         "I Wish it were Raining": 'https://freesound.org/data/previews/345/345852_387219-lq.mp3',
-        "Forgive": 'https://freesound.org/data/previews/392/392181_4515510-lq.mp3',
-        "Bad Place": 'https://freesound.org/data/previews/398/398736_5923045-lq.mp3',
+        "Forgive (placeholder)": 'https://freesound.org/data/previews/398/398736_5923045-lq.mp3', //Eventually this will be "Forgive"
+        "Bad Place": 'https://freesound.org/data/previews/392/392181_4515510-lq.mp3',
         "Highest Mountain": 'https://freesound.org/data/previews/432/432534_5497893-lq.mp3',
         "Baby Elephant": 'https://freesound.org/data/previews/184/184870_3153523-lq.mp3',
         "Driving and Crying": 'https://freesound.org/data/previews/266/266380_2454586-lq.mp3',
-        "I'm Just Standing Here": 'https://freesound.org/data/previews/242/242490_4289480-lq.mp3'
+        "Here (placeholder)": 'https://freesound.org/data/previews/169/169128_1495114-lq.mp3' //Eventually this will be "I'm Just Standing Here"
     }
 }

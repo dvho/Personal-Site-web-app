@@ -5,6 +5,7 @@ import PerformanceButton from './PerformanceButton'
 import AudioPlayer from './AudioPlayer'
 import Track from './Track'
 import Ripple from './Ripple'
+import ContactForm from './ContactForm'
 
 export {
     Cloud,
@@ -13,5 +14,6 @@ export {
     PerformanceButton,
     AudioPlayer,
     Track,
-    Ripple
+    Ripple,
+    ContactForm
 }
