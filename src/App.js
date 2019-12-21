@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import config from './config'
-import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple} from './components'
+import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm } from './components'
 
 //NOTE: Needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
 //Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
@@ -357,6 +357,8 @@ class App extends React.PureComponent {
                 <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginRight: this.state.titlesColumnsMargin, right: 0}}>
                     {this.state.rightColumnTracks}
                 </div>
+
+                <ContactForm />
 
                 { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }
 
