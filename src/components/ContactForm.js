@@ -12,8 +12,8 @@ class ContactForm extends React.PureComponent {
     render() {
 
         return(
-            <div style={{position: 'absolute', height: 500, width: 500, backgroundColor: 'rgba(255,255,255,.3)'}}>
-                <form action='../../php/contactform.php' method='post'>
+            <div style={{position: 'absolute', height: 500, width: 500, backgroundColor: 'rgba(255,2,2,.3)'}}>
+                <form action='https://github.com/dvho/dh/blob/master/php/contactform.php' method='post'>
                     <input type='text' name='name' placeholder='Full Name'/>
                     <input type='text' name='mail' placeholder='Email'/>
                     <input type='text' name='subject' placeholder='Subject'/>
