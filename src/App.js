@@ -11,6 +11,16 @@ import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, Conta
 //https://medium.com/employbl/launch-a-website-with-a-custom-url-using-github-pages-and-google-domains-3dd8d90cc33b
 //https://help.github.com/en/github/working-with-github-pages/managing-a-custom-domain-for-your-github-pages-site#configuring-a-records-with-your-dns-provider
 
+// --Setting up email--
+//https://blog.mailtrap.io/react-send-email/
+
+
+//https://www.youtube.com/watch?v=Is2KaVtg0F4
+
+
+//https://www.youtube.com/watch?v=4q0gYjAVonI
+//https://www.youtube.com/watch?v=Iay9ce5saxc
+
 class App extends React.PureComponent {
     constructor() {
         super()
@@ -358,7 +368,7 @@ class App extends React.PureComponent {
                     {this.state.rightColumnTracks}
                 </div>
 
-                <ContactForm />
+                <ContactForm/>
 
                 { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }
 
