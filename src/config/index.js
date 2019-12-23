@@ -79,6 +79,7 @@ export default {
         }
     },
     appFont: 'Nothing You Could Do, cursive',
+    formFont: 'Cormorant Garamond, serif',
     tracks: {
         "Believe in You": 'https://freesound.org/data/previews/135/135834_1050391-lq.mp3',
         "How Could You Say That": 'https://freesound.org/data/previews/387/387978_6221013-lq.mp3',

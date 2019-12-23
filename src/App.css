@@ -77,6 +77,46 @@ body {
     /* For some reason, placing  " transition: 'all .25s' "  here in .title:hover  gets the transition in but not out */
 }
 
+.formFields {
+    font-size: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    margin: 1px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    background-color: rgba(255,255,255,.85);
+    transition: all .3s ease;
+}
+.formFields::placeholder {
+    color: rgba(0,0,0,.3);
+}
+.formFields:hover {
+    background-color: rgba(238,238,255,.95);
+}
+
+.formFields.message::placeholder {
+    font-style: italic;
+}
+
+.button {
+    font-size: 13px;
+    background-color: rgba(0,170,170,.95);
+}
+.formFields.button:hover {
+    background-color: rgba(245,245,215,.85);
+}
+
+.buttonText {
+    font-family: 'Nothing You Could Do', cursive;
+    color: rgba(255,255,255,1);
+    transition: all .3s ease;
+}
+.formFields.button:hover .buttonText {
+    color: rgba(1,1,40,1);
+    font-weight: 800;
+}
+
+
 /* Would've had to import a seperate library like "glamorous" to have been able to pass pseudo selectors as inline styles (in AudioPlayer.js, which I would have used to make the slider thumb below scale with canvasHeight). Also important to note that I wouldn't want slider thumb to scale very much as it would've be grabbable/useable. Against one of my goals for this project, to make all rendering fluidly dynamic without use of media breakpoints, in this particular case it was the optimal solution. Incidentally, when I decided I wanted to tether color and opacity of the audio interface with veilOpacity, I did import the emotion library and for some reason, though fully integrated without its syntax crashing anything, it didn't work. */
 @media only screen and (max-height: 400px) {
   .slider::-webkit-slider-thumb {
