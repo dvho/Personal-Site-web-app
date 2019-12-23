@@ -4,7 +4,6 @@ import '../App.css'
 import config from '../config'
 
 //Need to track onLoad and only play if onLoad has completed
-//May have to ditch all the drop shadows and go with a box around the interface that appears with veilOpacity because it's straining GPU
 
 class AudioPlayer extends React.PureComponent {
     constructor() {
@@ -116,8 +115,9 @@ class AudioPlayer extends React.PureComponent {
     }
 
     render() {
+        let veilOpacity = this.props.veilOpacity > .9 ? .9 : this.props.veilOpacity //If this.props.veilOpacity > .9 (rare, but it happens especially on narrower screens) fix it at .9
         //Variables below are all calculated dynamically with each render and are based on App.js state properties canvasHeight, canvasWidth, screenWidth, margin, and veilOpacity
-        let rgbaOpacity = (this.props.veilOpacity - .3) * .25 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.
+        let rgbaOpacity = (veilOpacity - .3) * .15 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.
         let containerHeight = this.props.canvasHeight * .07
         let padding = containerHeight * .5
         let borderRadius = containerHeight * .25

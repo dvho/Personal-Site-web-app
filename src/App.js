@@ -6,20 +6,10 @@ import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, Conta
 //NOTE: Needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
 //Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
 
-// --Seting up a custom domain--
+// --Setting up a custom domain--
 //https://www.youtube.com/watch?v=mPGi1IHQxFM
 //https://medium.com/employbl/launch-a-website-with-a-custom-url-using-github-pages-and-google-domains-3dd8d90cc33b
 //https://help.github.com/en/github/working-with-github-pages/managing-a-custom-domain-for-your-github-pages-site#configuring-a-records-with-your-dns-provider
-
-// --Setting up email--
-//https://blog.mailtrap.io/react-send-email/
-
-
-//https://www.youtube.com/watch?v=Is2KaVtg0F4
-
-
-//https://www.youtube.com/watch?v=4q0gYjAVonI
-//https://www.youtube.com/watch?v=Iay9ce5saxc
 
 class App extends React.PureComponent {
     constructor() {
