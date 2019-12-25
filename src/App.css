@@ -77,8 +77,21 @@ body {
     /* For some reason, placing  " transition: 'all .25s' "  here in .title:hover  gets the transition in but not out */
 }
 
+.formContainer {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%) translateX(0%) scaleX(.7);
+    transform-origin: right;
+    opacity: 0;
+    transition: all .3s ease;
+}
+.formContainerRevealed {
+    transform: translateY(-50%) translateX(-20%) scaleX(1);
+    opacity: 1;
+    transition: all .3s ease;
+}
 .formFields {
-    font-size: 16px;
+    font-size: 19px;
     font-family: 'Cormorant Garamond', serif;
     margin: 1px;
     padding: 5px 10px;
@@ -91,7 +104,7 @@ body {
     color: rgba(0,0,0,.3);
 }
 .formFields:hover {
-    background-color: rgba(238,238,255,.95);
+    background-color: rgba(228,228,255,.95);
 }
 
 .formFields.message::placeholder {
@@ -99,7 +112,7 @@ body {
 }
 
 .button {
-    font-size: 13px;
+    font-size: 16px;
     background-color: rgba(0,170,170,.95);
 }
 .formFields.button:hover {

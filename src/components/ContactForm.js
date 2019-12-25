@@ -1,9 +1,8 @@
 import React from 'react'
+import emailValidator from 'email-validator'
 import '../App.css'
-import config from '../config'
 
-//import stylesheet, style and annotate this component
-//Need email validator npm package, or just write my own
+//Annotate this component
 
 // --Setting up email--
 //https://blog.mailtrap.io/react-send-email/
@@ -13,6 +12,9 @@ class ContactForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            firstNameValid: null,
+            lastNameValid: null,
+            emailValid: null,
             firstName: '',
             lastName: '',
             email: '',
@@ -24,6 +26,9 @@ class ContactForm extends React.Component {
 
     resetForm = () => {
         this.setState({
+            firstNameValid: null,
+            lastNameValid: null,
+            emailValid: null,
             firstName: '',
             lastName: '',
             email: '',
@@ -32,45 +37,62 @@ class ContactForm extends React.Component {
         })
     }
 
+
     handleSubmit = (e) => {
         e.preventDefault()
 
-        const { firstName, lastName, email, subject, message } = this.state
+        let firstNameValid = /^[A-Z]+$/i.test(this.state.firstName)
+        let lastNameValid = /^[A-Z]+$/i.test(this.state.lastName)
+        let emailValid = emailValidator.validate(this.state.email)
 
-        let templateParams = {
-            from_email: email,
-            from_firstName: firstName,
-            from_lastName: lastName,
-            subject: subject,
-            message_html: message
+        if (firstNameValid && lastNameValid && emailValid) {
+
+            let templateParams = {
+                from_email: this.state.email,
+                from_firstName: this.state.firstName,
+                from_lastName: this.state.lastName,
+                subject: this.state.subject,
+                message_html: this.state.message
+            }
+
+            window.emailjs.send(
+                'gmail',
+                'template_QecxrK0s',
+                templateParams,
+                'user_3NxAPAZEoJuAjalpGeSTP'
+            )
+
+            this.resetForm()
+        } else {
+            this.setState({
+                firstNameValid,
+                lastNameValid,
+                emailValid
+            })
         }
-
-        window.emailjs.send(
-            'gmail',
-            'template_QecxrK0s',
-            templateParams,
-            'user_3NxAPAZEoJuAjalpGeSTP'
-        )
-
-        this.resetForm()
     }
 
     handleChange = (params, e) => {
         this.setState({ [params]: e.target.value})
     }
 
-    render() { //Column flexbox the contents of this
+    render() {
 
-        return (
-            <div style={{position: 'absolute'}}>
+        let right = this.props.state.canvasWidth < this.props.state.screenWidth ? this.props.state.margin : 0
+        let revealContactForm = this.props.state.revealContactForm
+
+
+
+        return(
+            <div className={revealContactForm ? "formContainer" : "formContainer formContainerRevealed"} style={{right: right}}>
 
                 <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={this.handleSubmit}>
 
-                    <input className='formFields' type='text' name='firstName' value={this.state.firstName} onChange={this.handleChange.bind(this, 'firstName')} placeholder='First Name'/>
+                    <input className='formFields' type='text' name='firstName' value={this.state.firstName} onChange={this.handleChange.bind(this, 'firstName')} placeholder='First Name' style={{backgroundColor: this.state.firstNameValid !== null ? (this.state.firstNameValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
 
-                    <input className='formFields' type='text' name='lastName' value={this.state.lastName} onChange={this.handleChange.bind(this, 'lastName')} placeholder='Last Name'/>
+                    <input className='formFields' type='text' name='lastName' value={this.state.lastName} onChange={this.handleChange.bind(this, 'lastName')} placeholder='Last Name' style={{backgroundColor: this.state.lastNameValid !== null ? (this.state.lastNameValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
 
-                    <input className='formFields' type='email' name='email' value={this.state.email} onChange={this.handleChange.bind(this, 'email')} placeholder='Email'/>
+                    <input className='formFields' type='email' name='email' value={this.state.email} onChange={this.handleChange.bind(this, 'email')} placeholder='Email' style={{backgroundColor: this.state.emailValid !== null ? (this.state.emailValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
 
                     <input className='formFields' type='text' name='subject' value={this.state.subject} onChange={this.handleChange.bind(this, 'subject')} placeholder='Subject'/>
 
