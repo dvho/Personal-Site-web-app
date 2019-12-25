@@ -37,7 +37,6 @@ class ContactForm extends React.Component {
         })
     }
 
-
     handleSubmit = (e) => {
         e.preventDefault()
 
@@ -78,13 +77,11 @@ class ContactForm extends React.Component {
 
     render() {
 
-        let right = this.props.state.canvasWidth < this.props.state.screenWidth ? this.props.state.margin : 0
-        let revealContactForm = this.props.state.revealContactForm
-
-
+        let right = this.props.canvasWidth < this.props.screenWidth ? this.props.margin : 0
+        let revealContactForm = this.props.revealContactForm
 
         return(
-            <div className={revealContactForm ? "formContainer" : "formContainer formContainerRevealed"} style={{right: right}}>
+            <div className={revealContactForm ? "formContainer formContainerRevealed" : "formContainer"} style={{right: right}}>
 
                 <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={this.handleSubmit}>
 
