@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import config from './config'
-import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm } from './components'
+import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm, Social } from './components'
 
 //NOTE: Needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
 //Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
@@ -33,12 +33,19 @@ class App extends React.PureComponent {
             allTracks: [],
             currentTrack: [], //This data shape is an array where the first element is the track title and the second is the url
             cloudNumber: 1,
+            revealContactForm: false,
             veilOpacity: .3,
             blinkActive: false,
             eyesJustSwitched: false,
             faceFrame: config.images.eyePosition.faceEmpty,
             t: null
         }
+    }
+
+    toggleContactForm = () => {
+        this.setState({
+            revealContactForm: !this.state.revealContactForm
+        })
     }
 
     selectTrack = (currentTrack) => {
@@ -327,7 +334,7 @@ class App extends React.PureComponent {
             allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} dimVeil={this.dimVeil} performanceBoost={this.state.performanceBoost}/>)
         }
 
-        return (
+        return(
             <div className="canvas-parent">
 
                 <img alt={"back"} src={config.images.canvas.back} className="canvas" id="back-image"/>
@@ -358,7 +365,9 @@ class App extends React.PureComponent {
                     {this.state.rightColumnTracks}
                 </div>
 
-                <ContactForm/>
+                <ContactForm state={this.state}/>
+
+                <Social toggleContactForm={this.toggleContactForm}/>
 
                 { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }
 
