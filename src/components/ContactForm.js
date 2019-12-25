@@ -12,6 +12,7 @@ class ContactForm extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
+            formSend: false,
             firstNameValid: null,
             lastNameValid: null,
             emailValid: null,
@@ -24,17 +25,24 @@ class ContactForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
-    resetForm = () => {
+    animateAndResetForm = () => {
         this.setState({
+            formSend: true,
             firstNameValid: null,
             lastNameValid: null,
-            emailValid: null,
-            firstName: '',
-            lastName: '',
-            email: '',
-            subject: '',
-            message: ''
+            emailValid: null
         })
+        setTimeout(() => {
+            this.setState({
+                formSend: false,
+                firstName: '',
+                lastName: '',
+                email: '',
+                subject: '',
+                message: ''
+            })
+            this.props.toggleContactForm()
+        }, 2500)
     }
 
     handleSubmit = (e) => {
@@ -54,15 +62,19 @@ class ContactForm extends React.Component {
                 message_html: this.state.message
             }
 
-            window.emailjs.send(
-                'gmail',
-                'template_QecxrK0s',
-                templateParams,
-                'user_3NxAPAZEoJuAjalpGeSTP'
-            )
+            // Uncomment this out when I'm ready to launch
 
-            this.resetForm()
+            // window.emailjs.send(
+            //     'gmail',
+            //     'template_QecxrK0s',
+            //     templateParams,
+            //     'user_3NxAPAZEoJuAjalpGeSTP'
+            // )
+
+            this.animateAndResetForm()
+
         } else {
+
             this.setState({
                 firstNameValid,
                 lastNameValid,
@@ -77,11 +89,13 @@ class ContactForm extends React.Component {
 
     render() {
 
+        console.log(this.state.formSend)
+
         let right = this.props.canvasWidth < this.props.screenWidth ? this.props.margin : 0
         let revealContactForm = this.props.revealContactForm
 
         return(
-            <div className={revealContactForm ? "formContainer formContainerRevealed" : "formContainer"} style={{right: right}}>
+            <div className={revealContactForm ? (this.state.formSend ? "formContainer formContainerRevealed formSendAnimation" : "formContainer formContainerRevealed") : "formContainer"} style={{right: right}}>
 
                 <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={this.handleSubmit}>
 
@@ -95,7 +109,7 @@ class ContactForm extends React.Component {
 
                     <textarea className='formFields message' type='textarea' name='message' value={this.state.message} onChange={this.handleChange.bind(this, 'message')} placeholder='(Message)'/>
 
-                    <button className='formFields button' type="button" value="Send" onClick={this.handleSubmit}><span className='buttonText'>Send</span></button>
+                    <button className='formFields button' type="button" value="Send" onClick={this.handleSubmit}><span className='buttonText'>{this.state.formSend ? 'Sending now...' : 'Send'}</span></button>
 
                 </form>
 
