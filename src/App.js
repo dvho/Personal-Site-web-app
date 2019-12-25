@@ -365,7 +365,7 @@ class App extends React.PureComponent {
                     {this.state.rightColumnTracks}
                 </div>
 
-                <ContactForm revealContactForm={this.state.revealContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
+                <ContactForm toggleContactForm={this.toggleContactForm} revealContactForm={this.state.revealContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
 
                 <Social toggleContactForm={this.toggleContactForm}/>
 

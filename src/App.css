@@ -78,6 +78,7 @@ body {
 }
 
 .formContainer {
+    visibility: hidden;
     position: absolute;
     top: 50%;
     transform: translateY(-50%) translateX(0%) scaleX(.7);
@@ -86,9 +87,15 @@ body {
     transition: all .3s ease;
 }
 .formContainerRevealed {
+    visibility: visible;
     transform: translateY(-50%) translateX(-20%) scaleX(1);
     opacity: 1;
     transition: all .3s ease;
+}
+.formSendAnimation {
+    transform: translateY(-120%) translateX(-250%) skew(-.06turn, -35deg) scale(.1);
+    opacity: 0;
+    transition: all 1.5s cubic-bezier(.4,0,1,.9) 1s;
 }
 .formFields {
     font-size: 19px;
