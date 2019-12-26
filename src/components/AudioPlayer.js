@@ -118,21 +118,22 @@ class AudioPlayer extends React.PureComponent {
         let veilOpacity = this.props.veilOpacity > .9 ? .9 : this.props.veilOpacity //If this.props.veilOpacity > .9 (rare, but it happens especially on narrower screens) fix it at .9
         //Variables below are all calculated dynamically with each render and are based on App.js state properties canvasHeight, canvasWidth, screenWidth, margin, and veilOpacity
         let rgbaOpacity = (veilOpacity - .3) * .15 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.
-        let containerHeight = this.props.canvasHeight * .07
+        let containerHeight = this.props.canvasHeight * .1
         let padding = containerHeight * .5
+        let marginTop = containerHeight * -.15
         let borderRadius = containerHeight * .25
-        let containerWidth = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth * .8 - padding * 2 : this.props.screenWidth * .8 - padding * 2
-        let left = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .10 + this.props.margin : this.props.screenWidth * .10
-        let bottom = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .05 : this.props.screenWidth * .05
-        let fontSize = this.props.canvasHeight / 25
-        let iconDiameter =  this.props.canvasHeight * .05
+        let containerWidth = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth * .95 - padding * 2 : this.props.screenWidth * .95 - padding * 2
+        let left = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .025 + this.props.margin : this.props.screenWidth * .025
+        let bottom = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .025 : this.props.screenWidth * .025
+        let fontSize = this.props.canvasHeight / 18
+        let iconDiameter =  this.props.canvasHeight * .07
         let iconMarginRight = iconDiameter * .15
 
         return(
 
             <div style={{position: 'absolute', width: containerWidth, height: containerHeight, left: left, bottom: bottom, backgroundColor: `rgba(255,255,255,${rgbaOpacity})`, transition: 'background-color 2s linear', padding: padding, borderRadius: borderRadius}}>
 
-                <div style={{display: 'flex', flexDirection: 'row', position: 'absolute'}}>
+                <div style={{marginTop: marginTop, display: 'flex', flexDirection: 'row', position: 'absolute'}}>
                     <i onClick={()=>this.handlePlayer('backward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(40,40,1)'}} className="fa fa-chevron-circle-left audioIcon"></i>
                     <i onClick={()=>this.handlePlayer('play')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(1,1,30)'}} className="fa fa-play-circle audioIcon"></i>
                     <i onClick={()=>this.handlePlayer('pause')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(1,30,1)'}} className="fa fa-pause-circle audioIcon"></i>
@@ -140,7 +141,7 @@ class AudioPlayer extends React.PureComponent {
                     <i onClick={()=>this.handlePlayer('forward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(40,40,1)'}} className="fa fa-chevron-circle-right audioIcon"></i>
                 </div>
 
-                <p style={{position: 'absolute', margin: 0, right: padding, fontFamily: config.appFont, fontSize: fontSize, color: 'rgba(30,1,1,.75)'}}>{this.state.totalTimeString}</p>
+                <p style={{position: 'absolute', margin: 0, marginTop: marginTop, right: padding, fontFamily: config.appFont, fontSize: fontSize, color: 'rgba(30,1,1,.75)'}}>{this.state.totalTimeString}</p>
 
                 <input style={{marginTop: containerHeight}} className='slider' type='range' min='0' max={this.state.trackLength} value={this.state.totalSeconds} onChange={this.slidePlaybackAndUpdatePlaybackTime}/>
 
