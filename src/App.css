@@ -172,7 +172,7 @@ body {
     display: flex;
     flex-direction: row;
     width: 60px;
-    height: 136px;
+    height: 164px;
     top: 50%;
     transform: translateY(-50%) translateX(0%) scaleX(1);
 }
@@ -194,35 +194,31 @@ body {
 /* Can do transition all for mail:hover, github:hover and npm:hover, but not for mail, github and npm because it interferes with the CLOSING of socialIconsColumn, so the net effect is when unhovering, the colors (merely the alpha channel of the rgba in these cases) toggle abruptly but the transform scale toggles as normal which generally smoothens the whole experience so that it's not noticeable */
 .mail {
     padding-top: 8px;
-    color: rgba(40,120,0,1);
+    color: rgb(40,120,0);
+    cursor: pointer;
+    transition: transform .3s ease;
+}
+.resume {
+    color: rgb(150,120,0,1);
     cursor: pointer;
     transition: transform .3s ease;
 }
 .github {
-    color: rgba(124,14,124,1);
+    color: rgb(124,14,124);
     cursor: pointer;
     transition: transform .3s ease;
 }
 .npm {
-    color: rgba(201,8,19,1);
+    color: rgb(201,8,19);
     cursor: pointer;
     transition: transform .3s ease;
 }
-.mail:hover {
-    color: rgba(40,120,0,.6);
+.social-icon:hover {
+    color: rgba(0,170,170,.95);
     transform: scale(1.1);
     transition: all .3s ease;
 }
-.github:hover {
-    color: rgba(124,14,124,.6);
-    transform: scale(1.1);
-    transition: all .3s ease;
-}
-.npm:hover {
-    color: rgba(201,8,19,.6);
-    transform: scale(1.1);
-    transition: all .3s ease;
-}
+
 
 .pullArrowColumn {
     display: flex;
