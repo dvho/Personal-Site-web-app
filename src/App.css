@@ -92,8 +92,13 @@ body {
     opacity: 1;
     transition: all .3s ease;
 }
-.formSendAnimation {
-    transform: translateY(-120%) translateX(-250%) skew(-.06turn, -35deg) scale(.1);
+.formSendNarrowAnimation {
+    transform: translateY(-120%) translateX(-200%) skew(-.06turn, -35deg) scale(.1);
+    opacity: 0;
+    transition: all 1.5s cubic-bezier(.4,0,1,.9) 1s;
+}
+.formSendWideAnimation {
+    transform: translateY(-120%) translateX(-375%) skew(-.06turn, -35deg) scale(.1);
     opacity: 0;
     transition: all 1.5s cubic-bezier(.4,0,1,.9) 1s;
 }

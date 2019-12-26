@@ -2,8 +2,6 @@ import React from 'react'
 import emailValidator from 'email-validator'
 import '../App.css'
 
-//Annotate this component
-
 // --Setting up email--
 //https://blog.mailtrap.io/react-send-email/
 //https://medium.com/@eesh.t/send-email-using-emailjs-and-react-form-9993bb6929d8
@@ -25,14 +23,14 @@ class ContactForm extends React.Component {
         this.handleSubmit = this.handleSubmit.bind(this)
     }
 
-    animateAndResetForm = () => {
+    animateAndResetForm = () => { //Change any red fields back to white, set this.state.formSend to true for the purposes of a) triggering the inline ternary which changes the className to include either formSendWideAnimation or formSendNarrowAnimation (which are both 2.5s long), and b) displaying the word "Sending..." on the button.
         this.setState({
             formSend: true,
             firstNameValid: null,
             lastNameValid: null,
             emailValid: null
         })
-        setTimeout(() => {
+        setTimeout(() => { //Then after 2500ms reset the form to its original state...
             this.setState({
                 formSend: false,
                 firstName: '',
@@ -41,18 +39,18 @@ class ContactForm extends React.Component {
                 subject: '',
                 message: ''
             })
-            this.props.toggleContactForm()
+            this.props.toggleContactForm() //...and toggle the state of revealContactForm in App.js (back to false)
         }, 2500)
     }
 
     handleSubmit = (e) => {
         e.preventDefault()
 
-        let firstNameValid = /^[A-Z]+$/i.test(this.state.firstName)
-        let lastNameValid = /^[A-Z]+$/i.test(this.state.lastName)
-        let emailValid = emailValidator.validate(this.state.email)
+        let firstNameValid = /^[A-Z]+$/i.test(this.state.firstName) //Evaluates to either true or false when this.state.firstName is tested in a regex that makes sure there is at least one letter and no non letter characters in the string
+        let lastNameValid = /^[A-Z]+$/i.test(this.state.lastName) //Evaluates to either true or false when this.state.firstName is tested in a regex that makes sure there is at least one letter and no non letter characters in the string
+        let emailValid = emailValidator.validate(this.state.email) //Evaluates to either true or false when this.state.email is tested in a method on npm package 'email-validator,' which checks for valid email structure
 
-        if (firstNameValid && lastNameValid && emailValid) {
+        if (firstNameValid && lastNameValid && emailValid) { //If all three of these fields test as valid then set the templateParams and pass them to window.emailjs.send(), which sends them to the EmailJS account associated with the app in the head of index.html...
 
             let templateParams = {
                 from_email: this.state.email,
@@ -71,9 +69,9 @@ class ContactForm extends React.Component {
             //     'user_3NxAPAZEoJuAjalpGeSTP'
             // )
 
-            this.animateAndResetForm()
+            this.animateAndResetForm() // ...then animate the sending of the form and reset it.
 
-        } else {
+        } else { //else setState with the true/false values for each of the three fields which need to be validated which, in turn, displays the field in red if it is invalid.
 
             this.setState({
                 firstNameValid,
@@ -83,19 +81,17 @@ class ContactForm extends React.Component {
         }
     }
 
-    handleChange = (params, e) => {
+    handleChange = (params, e) => { //Binded (bound) locally so as to maintain dynamicism, allowing for both event (character string) and param name
         this.setState({ [params]: e.target.value})
     }
 
     render() {
 
-        console.log(this.state.formSend)
-
         let right = this.props.canvasWidth < this.props.screenWidth ? this.props.margin : 0
-        let revealContactForm = this.props.revealContactForm
+        let className = this.props.revealContactForm ? (this.state.formSend ? (this.props.screenWidth > this.props.canvasWidth ? "formContainer formContainerRevealed formSendWideAnimation" : "formContainer formContainerRevealed formSendNarrowAnimation") : "formContainer formContainerRevealed") : "formContainer" //Triple nested ternary just for fun: "If this.props.revealContactForm is true, then if this.state.formSend is true, if the screenWidth is more than the canvasWidth run the formSendWideAnimation or else run the formSendNarrowAnimation, else if this.state.formSend is false, just show the form, else if this.props.revealContactForm is false, don't show the form at all."
 
         return(
-            <div className={revealContactForm ? (this.state.formSend ? "formContainer formContainerRevealed formSendAnimation" : "formContainer formContainerRevealed") : "formContainer"} style={{right: right}}>
+            <div className={className} style={{right: right}}>
 
                 <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={this.handleSubmit}>
 
