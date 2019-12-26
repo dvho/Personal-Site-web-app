@@ -6,7 +6,7 @@ import AudioPlayer from './AudioPlayer'
 import Track from './Track'
 import Ripple from './Ripple'
 import ContactForm from './ContactForm'
-import Social from './Social'
+import SocialMenu from './SocialMenu'
 
 export {
     Cloud,
@@ -17,5 +17,5 @@ export {
     Track,
     Ripple,
     ContactForm,
-    Social
+    SocialMenu
 }

@@ -133,11 +133,11 @@ class AudioPlayer extends React.PureComponent {
             <div style={{position: 'absolute', width: containerWidth, height: containerHeight, left: left, bottom: bottom, backgroundColor: `rgba(255,255,255,${rgbaOpacity})`, transition: 'background-color 2s linear', padding: padding, borderRadius: borderRadius}}>
 
                 <div style={{display: 'flex', flexDirection: 'row', position: 'absolute'}}>
-                    <i onClick={()=>this.handlePlayer('backward')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(40,40,1,.75)'}} className="fa fa-chevron-circle-left"></i>
-                    <i onClick={()=>this.handlePlayer('play')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,1,30,.75)'}} className="fa fa-play-circle"></i>
-                    <i onClick={()=>this.handlePlayer('pause')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(1,30,1,.75)'}} className="fa fa-pause-circle"></i>
-                    <i onClick={()=>this.handlePlayer('stop')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(30,1,1,.75)'}} className="fa fa-stop-circle"></i>
-                    <i onClick={()=>this.handlePlayer('forward')} style={{cursor: 'pointer', paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgba(40,40,1,.75)'}} className="fa fa-chevron-circle-right"></i>
+                    <i onClick={()=>this.handlePlayer('backward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(40,40,1)'}} className="fa fa-chevron-circle-left audioIcon"></i>
+                    <i onClick={()=>this.handlePlayer('play')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(1,1,30)'}} className="fa fa-play-circle audioIcon"></i>
+                    <i onClick={()=>this.handlePlayer('pause')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(1,30,1)'}} className="fa fa-pause-circle audioIcon"></i>
+                    <i onClick={()=>this.handlePlayer('stop')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(30,1,1)'}} className="fa fa-stop-circle audioIcon"></i>
+                    <i onClick={()=>this.handlePlayer('forward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(40,40,1)'}} className="fa fa-chevron-circle-right audioIcon"></i>
                 </div>
 
                 <p style={{position: 'absolute', margin: 0, right: padding, fontFamily: config.appFont, fontSize: fontSize, color: 'rgba(30,1,1,.75)'}}>{this.state.totalTimeString}</p>

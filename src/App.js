@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import config from './config'
-import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm, Social } from './components'
+import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm, SocialMenu } from './components'
 
 //NOTE: Needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
 //Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
@@ -367,7 +367,7 @@ class App extends React.PureComponent {
 
                 <ContactForm toggleContactForm={this.toggleContactForm} revealContactForm={this.state.revealContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
 
-                <Social toggleContactForm={this.toggleContactForm}/>
+                <SocialMenu toggleContactForm={this.toggleContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
 
                 { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }
 
