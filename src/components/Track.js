@@ -26,7 +26,7 @@ class Track extends React.PureComponent {
             this.props.leftColumn ?
 
             <div style={{position: 'relative', left: leftOrRightPosition}} onClick={() => this.props.selectTrack(this.props.track)}>
-                <h1 style={{color: isSelected ? 'rgba(120,160,192,1)' : 'rgba(255,255,255,.65)', margin: textMargin, fontSize: fontSizeCalc, fontFamily: config.appFont, transition: 'all .10s'}} className='title'>{this.props.trackNumber}. {trackTitle}</h1>
+                <h1 style={{color: isSelected ? 'rgba(0,170,170,.95)' : 'rgba(255,255,255,.65)', margin: textMargin, fontSize: fontSizeCalc, fontFamily: config.appFont, transition: 'all .10s'}} className='title'>{this.props.trackNumber}. {trackTitle}</h1>
             </div>
 
             :
