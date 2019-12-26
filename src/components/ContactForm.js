@@ -60,14 +60,12 @@ class ContactForm extends React.Component {
                 message_html: this.state.message
             }
 
-            // Uncomment this out when I'm ready to launch
-
-            // window.emailjs.send(
-            //     'gmail',
-            //     'template_QecxrK0s',
-            //     templateParams,
-            //     'user_3NxAPAZEoJuAjalpGeSTP'
-            // )
+            window.emailjs.send(
+                'gmail',
+                'template_QecxrK0s',
+                templateParams,
+                'user_3NxAPAZEoJuAjalpGeSTP'
+            )
 
             this.animateAndResetForm() // ...then animate the sending of the form and reset it.
 
@@ -88,7 +86,7 @@ class ContactForm extends React.Component {
     render() {
 
         let right = this.props.canvasWidth < this.props.screenWidth ? this.props.margin : 0
-        let className = this.props.revealContactForm ? (this.state.formSend ? (this.props.screenWidth > this.props.canvasWidth ? "formContainer formContainerRevealed formSendWideAnimation" : "formContainer formContainerRevealed formSendNarrowAnimation") : "formContainer formContainerRevealed") : "formContainer" //Triple nested ternary just for fun: "If this.props.revealContactForm is true, then if this.state.formSend is true, if the screenWidth is more than the canvasWidth run the formSendWideAnimation or else run the formSendNarrowAnimation, else if this.state.formSend is false, just show the form, else if this.props.revealContactForm is false, don't show the form at all."
+        let className = this.props.revealContactForm ? (this.state.formSend ? (this.props.screenWidth > this.props.canvasWidth ? 'formContainer formContainerRevealed formSendWideAnimation' : 'formContainer formContainerRevealed formSendNarrowAnimation') : 'formContainer formContainerRevealed') : 'formContainer' //Triple nested ternary just for fun: "If this.props.revealContactForm is true, then if this.state.formSend is true, if the screenWidth is more than the canvasWidth run the formSendWideAnimation or else run the formSendNarrowAnimation, else if this.state.formSend is false, just show the form, else if this.props.revealContactForm is false, don't show the form at all."
 
         return(
             <div className={className} style={{right: right}}>
