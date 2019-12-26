@@ -20,6 +20,7 @@ class SocialMenu extends React.Component {
 
                 <div className={socialIconsColumnClassName}>
                     <i className={'icon ion-md-mail mail'} onClick={() => this.props.toggleContactForm()}></i>
+                    {/* Add https://ionicons.com/usage#md-paper here and link to resume */}
                     <a className='github' href='https://github.com/dvho' target='_blank'><i className={'icon ion-logo-github github'}></i></a>
                     <a className='npm' href='https://www.npmjs.com/~dvho' target='_blank'><i className={'icon ion-logo-npm npm'}></i></a>
                 </div>
