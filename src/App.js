@@ -3,13 +3,12 @@ import './App.css'
 import config from './config'
 import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm, SocialMenu } from './components'
 
-//NOTE: Needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
-//Deploying a subfolder to GitHub Pages https://gist.github.com/cobyism/4730490
+//NOTE: I needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
+//Method to deploy a subfolder (in this case build folder) to GitHub Pages https://gist.github.com/cobyism/4730490
 
 // --Setting up a custom domain--
-//https://www.youtube.com/watch?v=mPGi1IHQxFM
-//https://medium.com/employbl/launch-a-website-with-a-custom-url-using-github-pages-and-google-domains-3dd8d90cc33b
-//https://help.github.com/en/github/working-with-github-pages/managing-a-custom-domain-for-your-github-pages-site#configuring-a-records-with-your-dns-provider
+//**Up to 4:36 ONLY - https://www.youtube.com/watch?v=mPGi1IHQxFM
+//**AS OF 2019, 12-27th you only need to change the A records in the DNS management of the domain (davidhomyk.com at GoDaddy in this case) to the GitHub custom domain IPs, which can be found in step 4 of this article: https://help.github.com/en/github/working-with-github-pages/managing-a-custom-domain-for-your-github-pages-site , and then edit your GitHub repository's settings. You DO NOT need to create a CNAME file in the root directory of your project with the domain written out, which is convenient because in the case of any react app it would have to be in the build folder which is recompiled each time you do npm run build. So simply change the A records, then go to the settings of the GitHub project, scroll down to GitHub Pages and under Custom Domain type in the custom domain (davidhomyk.com in this case), click save, and check off "Enforce HTTPS."
 
 class App extends React.PureComponent {
     constructor() {
