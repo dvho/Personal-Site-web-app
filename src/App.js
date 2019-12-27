@@ -356,7 +356,7 @@ class App extends React.PureComponent {
 
                 <PerformanceButton performanceBoost={this.state.performanceBoost} performanceButtonDiameter={this.state.performanceButtonDiameter} togglePerformanceBoost={this.togglePerformanceBoost}/>
 
-                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} performanceBoost={this.state.performanceBoost} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack}/>
+                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack}/>
 
                 <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginLeft: this.state.titlesColumnsMargin, left: 0}}>
                     {this.state.leftColumnTracks}
