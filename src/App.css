@@ -27,16 +27,23 @@ body {
 }
 
 
-.performanceButtonContainer {
+.performance-button-container {
     position: absolute;
     top: 0px;
     right: 0px;
     cursor: pointer;
 }
-.performanceButton {
+.performance-button {
     margin: 0;
     opacity: .35;
     border-radius: 50%;
+    background-color: rgb(150,150,255);
+    transition: all .4s ease;
+}
+.performance-button:hover {
+    opacity: 1;
+    background-color: red;
+    transition: all .2s ease;
 }
 
 
@@ -46,14 +53,31 @@ body {
     animation: rippleEffect .41s cubic-bezier(0, 0, 0, 1); /* ripple active time is 200ms and time of animation needs to be just a bit longer than that otherwise there'll be an animation glitch */
 }
 
-.audioIcon {
-    cursor: pointer;
-    opacity: .75;
-    transition: all .2s ease;
+
+.previous-icon {
+    color: rgb(40,40,1);
 }
-.audioIcon:hover {
-    opacity: 1;
-    transform: scale(1.1);
+.play-icon {
+    color: rgb(1,1,30);
+}
+.pause-icon {
+    color: rgb(1,30,1);
+}
+.stop-icon {
+    color: rgb(30,1,1);
+}
+.next-icon {
+    color: rgb(40,40,1);
+}
+.audio-icon {
+    opacity: .75;
+    cursor: pointer;
+    transition: all .4s ease;
+}
+.audio-icon:hover {
+    color: rgb(0,170,170);
+    opacity: .5;
+    transform: scale(1.2);
     transition: all .2s ease;
 }
 .slider {
@@ -71,38 +95,48 @@ body {
   width: 34px;
   height: 17px;
   border-radius: 25%;
-  background: rgba(32,32,1,.75);
+  opacity: .75;
+  background: rgb(32,32,1);
   cursor: pointer;
-  transition: all .2s ease;
+  transition: all .4s ease;
 }
 .slider::-moz-range-thumb {
   width: 34px;
   height: 17px;
   border-radius: 25%;
-  background: rgba(32,32,1,.75);
+  opacity: .75;
+  background: rgb(32,32,1);
   cursor: pointer;
-  transition: all .2s ease;
+  transition: all .4s ease;
 }
 .slider::-webkit-slider-thumb:hover {
-    background: rgba(32,32,1,1);
-    transform: scale(1.1);
+    opacity: .5;
+    background: rgb(0,170,170);
+    transform: scale(1.2);
     transition: all .2s ease;
 }
 .slider::-moz-range-thumb:hover {
-    background: rgba(32,32,1,.75);
-    transform: scale(1.1);
+    opacity: .5;
+    background: rgb(0,170,170);
+    transform: scale(1.2);
     transition: all .2s ease;
 }
 
 
-.title:hover {
-    transform: scale(1.2);
+.title {
+    font-family: Nothing You Could Do, cursive;
+    color: rgba(255,255,255,.65);
     cursor: pointer;
-    /* For some reason, placing  " transition: 'all .25s' "  here in .title:hover  gets the in transition in but not the out */
+    transition: all .4s ease;
+}
+.title:hover {
+    color: rgba(0,170,170,.95);
+    transform: scale(1.2);
+    transition: all .2s ease;
 }
 
 
-.formContainer {
+.form-container {
     visibility: hidden;
     position: absolute;
     top: 50%;
@@ -111,24 +145,24 @@ body {
     opacity: 0;
     transition: all .3s ease;
 }
-.formContainerRevealed {
+.form-container-revealed {
     visibility: visible;
     transform: translateY(-50%) translateX(-20%) scaleX(1);
     opacity: 1;
     transition: all .3s ease;
 }
-.formSendNarrowAnimation {
+.form-send-narrow-animation {
     transform: translateY(-120%) translateX(-200%) skew(-.06turn, -35deg) scale(.1);
     opacity: 0;
     transition: all 1.5s cubic-bezier(.4,0,1,.9) 1s;
 }
-.formSendWideAnimation {
+.form-send-wide-animation {
     transform: translateY(-120%) translateX(-375%) skew(-.06turn, -35deg) scale(.1);
     opacity: 0;
     transition: all 1.5s cubic-bezier(.4,0,1,.9) 1s;
 }
 
-.formFields {
+.form-fields {
     font-size: 19px;
     font-family: 'Cormorant Garamond', serif;
     margin: 1px;
@@ -138,13 +172,13 @@ body {
     background-color: rgba(255,255,255,.85);
     transition: all .3s ease;
 }
-.formFields::placeholder {
+.form-fields::placeholder {
     color: rgba(0,0,0,.3);
 }
-.formFields:hover {
+.form-fields:hover {
     background-color: rgba(228,228,255,.95);
 }
-.formFields.message::placeholder {
+.form-fields.message::placeholder {
     font-style: italic;
 }
 
@@ -152,21 +186,21 @@ body {
     font-size: 16px;
     background-color: rgba(0,170,170,.95);
 }
-.formFields.button:hover {
+.form-fields.button:hover {
     background-color: rgba(245,245,215,.85);
 }
-.buttonText {
+.button-text {
     font-family: 'Nothing You Could Do', cursive;
     color: rgba(255,255,255,1);
     transition: all .3s ease;
 }
-.formFields.button:hover .buttonText {
+.form-fields.button:hover .button-text {
     color: rgba(1,1,40,1);
     font-weight: 800;
 }
 
 
-.socialMenuContainer {
+.social-menu-container {
     visibility: visible;
     position: absolute;
     display: flex;
@@ -176,7 +210,7 @@ body {
     top: 50%;
     transform: translateY(-50%) translateX(0%) scaleX(1);
 }
-.socialIconsColumn {
+.social-icons-column {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -184,7 +218,7 @@ body {
     background-color: rgba(255,255,255,.35);
     transition: all .5s ease;
 }
-.socialIconsColumnOpen {
+.social-icons-column-open {
     flex: 1;
     font-size: 34px;
     padding-left: 4px;
@@ -196,31 +230,31 @@ body {
     padding-top: 8px;
     color: rgb(40,120,0);
     cursor: pointer;
-    transition: transform .3s ease;
+    transition: transform .4s ease;
 }
 .resume {
     color: rgb(150,120,0,1);
     cursor: pointer;
-    transition: transform .3s ease;
+    transition: transform .4s ease;
 }
 .github {
     color: rgb(124,14,124);
     cursor: pointer;
-    transition: transform .3s ease;
+    transition: transform .4s ease;
 }
 .npm {
     color: rgb(201,8,19);
     cursor: pointer;
-    transition: transform .3s ease;
+    transition: transform .4s ease;
 }
 .social-icon:hover {
     color: rgba(0,170,170,.95);
-    transform: scale(1.1);
-    transition: all .3s ease;
+    transform: scale(1.2);
+    transition: all .2s ease;
 }
 
 
-.pullArrowColumn {
+.pull-arrow-column {
     display: flex;
     flex-direction: column;
     /* letting font-size dictate width rather than something like "flex: 1" */
@@ -235,15 +269,15 @@ body {
     padding-right: 3px;
     transition: all .5s ease;
 }
-.pullArrowColumn:hover {
+.pull-arrow-column:hover {
     background-color: rgba(255,0,0,.35);
     transition: all .5s ease;
 }
-.pullArrowColumnOpen {
+.pull-arrow-column-open {
     background-color: rgba(255,255,255,.85);
     transition: all .5s ease;
 }
-.pullArrowColumnOpen:hover {
+.pull-arrow-column-open:hover {
     background-color: rgba(200,200,255,.85);
     transition: all .5s ease;
 }
