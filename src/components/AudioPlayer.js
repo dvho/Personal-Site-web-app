@@ -118,7 +118,7 @@ class AudioPlayer extends React.PureComponent {
         let veilOpacity = this.props.veilOpacity > .9 ? .9 : this.props.veilOpacity //If this.props.veilOpacity > .9 (rare, but it happens especially on narrower screens) fix it at .9
         //Variables below are all calculated dynamically with each render and are based on App.js state properties canvasHeight, canvasWidth, screenWidth, margin, and veilOpacity
         let containerRgbaOpacity = (veilOpacity - .3) * .15 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.
-        let timeStringRgbaOpacity = .25 - containerRgbaOpacity
+        let timeStringRgbaOpacity = .045 - containerRgbaOpacity
         let containerHeight = this.props.canvasHeight * .1
         let padding = containerHeight * .5
         let marginTop = containerHeight * -.15
