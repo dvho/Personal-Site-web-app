@@ -117,7 +117,8 @@ class AudioPlayer extends React.PureComponent {
     render() {
         let veilOpacity = this.props.veilOpacity > .9 ? .9 : this.props.veilOpacity //If this.props.veilOpacity > .9 (rare, but it happens especially on narrower screens) fix it at .9
         //Variables below are all calculated dynamically with each render and are based on App.js state properties canvasHeight, canvasWidth, screenWidth, margin, and veilOpacity
-        let rgbaOpacity = (veilOpacity - .3) * .15 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.
+        let containerRgbaOpacity = (veilOpacity - .3) * .15 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.
+        let timeStringRgbaOpacity = .025 - containerRgbaOpacity
         let containerHeight = this.props.canvasHeight * .1
         let padding = containerHeight * .5
         let marginTop = containerHeight * -.15
@@ -126,22 +127,24 @@ class AudioPlayer extends React.PureComponent {
         let left = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .025 + this.props.margin : this.props.screenWidth * .025
         let bottom = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .025 : this.props.screenWidth * .025
         let fontSize = this.props.canvasHeight / 18
+        let timeStringHorizontalPadding = this.props.canvasHeight / 50
+        let timeStringBorderRadius = timeStringHorizontalPadding * 2
         let iconDiameter =  this.props.canvasHeight * .07
         let iconMarginRight = iconDiameter * .15
 
         return(
 
-            <div style={{position: 'absolute', width: containerWidth, height: containerHeight, left: left, bottom: bottom, backgroundColor: `rgba(255,255,255,${rgbaOpacity})`, transition: 'background-color 2s linear', padding: padding, borderRadius: borderRadius}}>
+            <div style={{position: 'absolute', width: containerWidth, height: containerHeight, left: left, bottom: bottom, backgroundColor: `rgba(255,255,255,${containerRgbaOpacity})`, transition: 'background-color 2s linear', padding: padding, borderRadius: borderRadius}}>
 
                 <div style={{marginTop: marginTop, display: 'flex', flexDirection: 'row', position: 'absolute'}}>
-                    <i onClick={()=>this.handlePlayer('backward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(40,40,1)'}} className="fa fa-chevron-circle-left audioIcon"></i>
-                    <i onClick={()=>this.handlePlayer('play')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(1,1,30)'}} className="fa fa-play-circle audioIcon"></i>
-                    <i onClick={()=>this.handlePlayer('pause')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(1,30,1)'}} className="fa fa-pause-circle audioIcon"></i>
-                    <i onClick={()=>this.handlePlayer('stop')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(30,1,1)'}} className="fa fa-stop-circle audioIcon"></i>
-                    <i onClick={()=>this.handlePlayer('forward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`, color: 'rgb(40,40,1)'}} className="fa fa-chevron-circle-right audioIcon"></i>
+                    <i onClick={()=>this.handlePlayer('backward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className="fa fa-chevron-circle-left previous-icon audio-icon"></i>
+                    <i onClick={()=>this.handlePlayer('play')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className="fa fa-play-circle play-icon audio-icon"></i>
+                    <i onClick={()=>this.handlePlayer('pause')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className="fa fa-pause-circle pause-icon audio-icon"></i>
+                    <i onClick={()=>this.handlePlayer('stop')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className="fa fa-stop-circle stop-icon audio-icon"></i>
+                    <i onClick={()=>this.handlePlayer('forward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className="fa fa-chevron-circle-right next-icon audio-icon"></i>
                 </div>
 
-                <p style={{position: 'absolute', margin: 0, marginTop: marginTop, right: padding, fontFamily: config.appFont, fontSize: fontSize, color: 'rgba(30,1,1,.75)'}}>{this.state.totalTimeString}</p>
+                <p style={{position: 'absolute', margin: 0, borderRadius: timeStringBorderRadius, paddingLeft: timeStringHorizontalPadding, paddingRight: timeStringHorizontalPadding, backgroundColor: `rgba(255,255,255,${timeStringRgbaOpacity})`, transition: 'background-color 2s linear', marginTop: marginTop, right: padding, fontFamily: config.appFont, fontSize: fontSize, color: 'rgba(30,1,1,.75)'}}>{this.state.totalTimeString}</p>
 
                 <input style={{marginTop: containerHeight}} className='slider' type='range' min='0' max={this.state.trackLength} value={this.state.totalSeconds} onChange={this.slidePlaybackAndUpdatePlaybackTime}/>
 

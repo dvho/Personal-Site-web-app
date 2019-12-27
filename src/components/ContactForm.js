@@ -86,24 +86,24 @@ class ContactForm extends React.Component {
     render() {
 
         let right = this.props.canvasWidth < this.props.screenWidth ? this.props.margin : 0
-        let className = this.props.revealContactForm ? (this.state.formSend ? (this.props.screenWidth > this.props.canvasWidth ? 'formContainer formContainerRevealed formSendWideAnimation' : 'formContainer formContainerRevealed formSendNarrowAnimation') : 'formContainer formContainerRevealed') : 'formContainer' //Triple nested ternary just for fun: "If this.props.revealContactForm is true, then if this.state.formSend is true, if the screenWidth is more than the canvasWidth run the formSendWideAnimation or else run the formSendNarrowAnimation, else if this.state.formSend is false, just show the form, else if this.props.revealContactForm is false, don't show the form at all."
+        let className = this.props.revealContactForm ? (this.state.formSend ? (this.props.screenWidth > this.props.canvasWidth ? 'form-container form-container-revealed form-send-wide-animation' : 'form-container form-container-revealed form-send-narrow-animation') : 'form-container form-container-revealed') : 'form-container' //Triple nested ternary just for fun: "If this.props.revealContactForm is true, then if this.state.formSend is true, if the screenWidth is more than the canvasWidth run the formSendWideAnimation or else run the formSendNarrowAnimation, else if this.state.formSend is false, just show the form, else if this.props.revealContactForm is false, don't show the form at all."
 
         return(
             <div className={className} style={{right: right}}>
 
                 <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={this.handleSubmit}>
 
-                    <input className='formFields' type='text' name='firstName' value={this.state.firstName} onChange={this.handleChange.bind(this, 'firstName')} placeholder='First Name' style={{backgroundColor: this.state.firstNameValid !== null ? (this.state.firstNameValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
+                    <input className='form-fields' type='text' name='firstName' value={this.state.firstName} onChange={this.handleChange.bind(this, 'firstName')} placeholder='First Name' style={{backgroundColor: this.state.firstNameValid !== null ? (this.state.firstNameValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
 
-                    <input className='formFields' type='text' name='lastName' value={this.state.lastName} onChange={this.handleChange.bind(this, 'lastName')} placeholder='Last Name' style={{backgroundColor: this.state.lastNameValid !== null ? (this.state.lastNameValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
+                    <input className='form-fields' type='text' name='lastName' value={this.state.lastName} onChange={this.handleChange.bind(this, 'lastName')} placeholder='Last Name' style={{backgroundColor: this.state.lastNameValid !== null ? (this.state.lastNameValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
 
-                    <input className='formFields' type='email' name='email' value={this.state.email} onChange={this.handleChange.bind(this, 'email')} placeholder='Email' style={{backgroundColor: this.state.emailValid !== null ? (this.state.emailValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
+                    <input className='form-fields' type='email' name='email' value={this.state.email} onChange={this.handleChange.bind(this, 'email')} placeholder='Email' style={{backgroundColor: this.state.emailValid !== null ? (this.state.emailValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
 
-                    <input className='formFields' type='text' name='subject' value={this.state.subject} onChange={this.handleChange.bind(this, 'subject')} placeholder='Subject'/>
+                    <input className='form-fields' type='text' name='subject' value={this.state.subject} onChange={this.handleChange.bind(this, 'subject')} placeholder='Subject'/>
 
-                    <textarea className='formFields message' type='textarea' name='message' value={this.state.message} onChange={this.handleChange.bind(this, 'message')} placeholder='(Message)'/>
+                    <textarea className='form-fields message' type='textarea' name='message' value={this.state.message} onChange={this.handleChange.bind(this, 'message')} placeholder='(Message)'/>
 
-                    <button className='formFields button' type="button" value="Send" onClick={this.handleSubmit}><span className='buttonText'>{this.state.formSend ? 'Sending now...' : 'Send'}</span></button>
+                    <button className='form-fields button' type="button" value="Send" onClick={this.handleSubmit}><span className='button-text'>{this.state.formSend ? 'Sending now...' : 'Send'}</span></button>
 
                 </form>
 
