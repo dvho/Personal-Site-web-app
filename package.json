@@ -2,6 +2,7 @@
   "name": "dh",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://davidhomyk.com",
   "dependencies": {
     "email-validator": "^2.0.4",
     "react": "^16.11.0",
