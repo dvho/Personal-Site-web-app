@@ -54,23 +54,23 @@ body {
 }
 
 
-.previous-icon {
-    color: rgb(40,40,1);
+.next-and-previous-icons {
+    color: rgb(60,20,1);
 }
 .play-icon {
     color: rgb(1,1,30);
 }
-.is-playing {
-    color: rgb(200,1,30);
+.play-active {
+    animation: play-icon-pulse 1s infinite; /* add animated property here that lightens color in an infinite pulse*/
 }
 .pause-icon {
     color: rgb(1,30,1);
 }
-.stop-icon {
-    color: rgb(30,1,1);
+.pause-active {
+    animation: pause-icon-pulse .5s infinite; /* add animated property here that lightens color in an infinite pulse*/
 }
-.next-icon {
-    color: rgb(40,40,1);
+.stop-icon {
+    color: rgb(40,1,10);
 }
 .audio-icon {
     opacity: .75;
@@ -267,7 +267,7 @@ body {
     border-bottom-right-radius: 10px;
     padding-left: 2px;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 20px;
     padding-right: 3px;
     animation: pull-arrow-pulse 2s infinite;
     transition: all .5s ease;
@@ -301,6 +301,17 @@ body {
       width: 28px;
       height: 14px;
   }
+}
+
+@keyframes play-icon-pulse {
+    0% {color: rgb(1,1,30)}
+    5% {color: rgb(1,1,150)}
+    100% {color: rgb(1,1,30)}
+}
+@keyframes pause-icon-pulse {
+    0% {color: rgb(1,30,1)}
+    25% {color: rgb(1,60,1)}
+    100% {color: rgb(1,30,1)}
 }
 
 
