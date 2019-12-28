@@ -81,15 +81,15 @@ export default {
     appFont: 'Nothing You Could Do, cursive',
     formFont: 'Cormorant Garamond, serif',
     tracks: {
-        "Believe in You": 'https://freesound.org/data/previews/135/135834_1050391-lq.mp3',
-        "How Could You Say That": 'https://freesound.org/data/previews/387/387978_6221013-lq.mp3',
-        "Fire and Acid Rain": 'https://freesound.org/data/previews/467/467096_520316-lq.mp3',
-        "I Wish it were Raining": 'https://freesound.org/data/previews/345/345852_387219-lq.mp3',
-        "Forgive (placeholder)": 'https://freesound.org/data/previews/398/398736_5923045-lq.mp3', //Eventually this will be "Forgive"
-        "Bad Place": 'https://freesound.org/data/previews/392/392181_4515510-lq.mp3',
-        "Highest Mountain": 'https://freesound.org/data/previews/432/432534_5497893-lq.mp3',
-        "Baby Elephant": 'https://freesound.org/data/previews/184/184870_3153523-lq.mp3',
-        "Driving and Crying": 'https://freesound.org/data/previews/266/266380_2454586-lq.mp3',
-        "Here (placeholder)": 'https://freesound.org/data/previews/169/169128_1495114-lq.mp3' //Eventually this will be "I'm Just Standing Here"
+        "Believe in You": 'https://raw.githubusercontent.com/dvho/dh/master/music/Believe%20in%20You-17.mp3',
+        "How Could You Say That": 'https://raw.githubusercontent.com/dvho/dh/master/music/How%20Could%20You%20Say%20That-08.mp3',
+        "Fire and Acid Rain": 'https://raw.githubusercontent.com/dvho/dh/master/music/Fire%20and%20Acid%20Rain-12.mp3',
+        "I Wish it were Raining": 'https://raw.githubusercontent.com/dvho/dh/master/music/I%20Wish%20It%20Were%20Raining-11.mp3',
+        "Forgive": 'https://raw.githubusercontent.com/dvho/dh/master/music/I%20Will%20Not%20Forgive-11.mp3',
+        "Bad Place (placeholder)": 'https://freesound.org/data/previews/135/135834_1050391-lq.mp3', //Eventually this will be "Bad Place"
+        "Highest Mountain": 'https://raw.githubusercontent.com/dvho/dh/master/music/Highest%20Mountain-11.mp3',
+        "Baby Elephant": 'https://raw.githubusercontent.com/dvho/dh/master/music/Baby%20Elephant-06.mp3',
+        "Driving and Crying": 'https://raw.githubusercontent.com/dvho/dh/master/music/Driving%20and%20Crying-04.mp3',
+        "Here (placeholder)": 'https://freesound.org/data/previews/345/345852_387219-lq.mp3' //Eventually this will be "I'm Just Standing Here"
     }
 }
