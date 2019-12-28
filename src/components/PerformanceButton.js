@@ -17,8 +17,8 @@ class PerformanceButton extends React.PureComponent {
         let backgroundColor = this.props.performanceBoost ? null : 'rgb(255,255,255)'
 
         return(
-            <div className="performance-button-container" style={{width: containerDiameter, height: containerDiameter}} onClick={() => this.props.togglePerformanceBoost()}>
-                <div style={{backgroundColor: backgroundColor, width: buttonDiameter, height: buttonDiameter, margin: margin}} className="performance-button"></div>
+            <div className='performance-button-container' style={{width: containerDiameter, height: containerDiameter}} onClick={() => this.props.togglePerformanceBoost()}>
+                <div style={{backgroundColor: backgroundColor, width: buttonDiameter, height: buttonDiameter, margin: margin}} className='performance-button'></div>
             </div>
         )
     }
