@@ -62,9 +62,9 @@ class ContactForm extends React.Component {
 
             window.emailjs.send(
                 'gmail',
-                'template_QecxrK0s',
+                'template_XwZav7A3',
                 templateParams,
-                'user_3NxAPAZEoJuAjalpGeSTP'
+                'user_cqWwBjugzaX0BXZjXbz8a'
             )
 
             this.animateAndResetForm() // ...then animate the sending of the form and reset it.
