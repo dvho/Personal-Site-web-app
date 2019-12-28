@@ -1,7 +1,7 @@
 # Personal Website
 This is a React app with some of my original piano compositions. It has a contact menu on the left which can be unfurled to view my resume, GitHub and NPM accounts, or to send me an email directly from the app.
 
-<img src="">
+<img src="https://github.com/dvho/Personal-Site-web-app/blob/master/Personal-Site.gif">
 
 _________________________
 
