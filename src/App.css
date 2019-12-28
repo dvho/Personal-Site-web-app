@@ -60,6 +60,9 @@ body {
 .play-icon {
     color: rgb(1,1,30);
 }
+.is-playing {
+    color: rgb(200,1,30);
+}
 .pause-icon {
     color: rgb(1,30,1);
 }
@@ -260,13 +263,13 @@ body {
     /* letting font-size dictate width rather than something like "flex: 1" */
     justify-content: center;
     background-color: rgba(255,255,255,.35);
-    color: rgb(1,1,40);
     border-top-right-radius: 10px;
     border-bottom-right-radius: 10px;
     padding-left: 2px;
     cursor: pointer;
     font-size: 18px;
     padding-right: 3px;
+    animation: pull-arrow-pulse 2s infinite;
     transition: all .5s ease;
 }
 .pull-arrow-column:hover {
@@ -274,6 +277,8 @@ body {
     transition: all .5s ease;
 }
 .pull-arrow-column-open {
+    animation: null;
+    color: rgb(1,1,40);
     background-color: rgba(255,255,255,.85);
     transition: all .5s ease;
 }
@@ -296,6 +301,13 @@ body {
       width: 28px;
       height: 14px;
   }
+}
+
+
+@keyframes pull-arrow-pulse {
+    0% {color: rgb(1,1,40)}
+    5% {color: rgb(170,1,40)}
+    100% {color: rgb(1,1,40)}
 }
 
 

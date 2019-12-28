@@ -103,7 +103,7 @@ class ContactForm extends React.Component {
 
                     <textarea className='form-fields message' type='textarea' name='message' value={this.state.message} onChange={this.handleChange.bind(this, 'message')} placeholder='(Message)'/>
 
-                    <button className='form-fields button' type="button" value="Send" onClick={this.handleSubmit}><span className='button-text'>{this.state.formSend ? 'Sending now...' : 'Send'}</span></button>
+                    <button className='form-fields button' type='button' value='Send' onClick={this.handleSubmit}><span className='button-text'>{this.state.formSend ? 'Sending now...' : 'Send'}</span></button>
 
                 </form>
 

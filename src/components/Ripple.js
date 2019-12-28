@@ -17,7 +17,7 @@ class Ripple extends React.PureComponent {
         let boxShadow = `0 0 ${blur}px ${spread}px #fff, inset 0 0 ${blur}px ${spread}px #fff`
 
         return(
-            <div className="ripple" style={{width: diameter, height: diameter, left: left, top: top, boxShadow: boxShadow}}></div>
+            <div className='ripple' style={{width: diameter, height: diameter, left: left, top: top, boxShadow: boxShadow}}></div>
         )
     }
 }
