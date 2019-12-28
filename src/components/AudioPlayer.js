@@ -52,6 +52,9 @@ class AudioPlayer extends React.PureComponent {
             setTimeout(() => this.autoUpdatePlaybackTime(), 0) //Don't wait the <= 1000ms for the playback counter to go back to 0, just do it now.
         }
         if (type === 'play') {
+            if (this.props.currentTrack.length === 0) { //If type === 'play' and there's no track currently in App.js' state, just play the first track (a way to do that is simply to call this.changeTrackOrEnd and pass 'forward' as a param)
+                this.changeTrackOrEnd('forward')
+            }
             this.setState({ //Regardless, set isPlaying to true and hasEnded to false
                 isPlaying: true,
                 hasEnded: false
@@ -99,7 +102,7 @@ class AudioPlayer extends React.PureComponent {
     }
 
     componentDidUpdate() { //Must use componentDidUpdate, rather than render, to handle checking for changes between this.props.currentTrack and this.state.currentTrack, otherwise face warning in console “Cannot update during an existing state transition (such as within render). Render methods should be a pure function of props and state.”
-        if (this.props.currentTrack !== this.state.currentTrack) { //If the track changed, reset this.state.totalSeconds to -1, because you have to call this.autoUpdatePlaybackTime immediately afterward (from a setTimeout), which will advance this.state.totalSeconds + 1 to 0. Also pass 'play' to this.handlePlayer.
+        if (this.props.currentTrack.length !== 0 && this.props.currentTrack !== this.state.currentTrack) { //If there was a track selected before (i.e this.props.currentTrack.length !== 0) and that track changed, reset this.state.totalSeconds to -1, because you have to call this.autoUpdatePlaybackTime immediately afterward (from a setTimeout), which will advance this.state.totalSeconds + 1 to 0. Also pass 'play' to this.handlePlayer.
             this.setState({
                 totalSeconds: -1,
             })
