@@ -150,7 +150,7 @@ body {
 }
 .form-container-revealed {
     visibility: visible;
-    transform: translateY(-50%) translateX(-20%) scaleX(1);
+    transform: translateY(-50%) translateX(-10%) scaleX(1);
     opacity: 1;
     transition: all .3s ease;
 }
