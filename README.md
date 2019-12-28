@@ -1,12 +1,12 @@
 # Personal Website
-This is a React app with some of my original piano compositions. It has a contact menu on the left which can be unfurled to view my resume, GitHub and NPM accounts, and to send an email directly from the app.
+This is a React app with some of my original piano compositions. It has a contact menu on the left which can be unfurled to view my resume, GitHub and NPM accounts, or to send me an email directly from the app.
 
 <img src="">
 
 _________________________
 
 #### How to Use
-Play any of my songs (still works in progress) from the custom audio player or simply click the titles. When clouds pass in front of the moon they dim light entering the room and reveal my animated face, which you can also interact with by mousemove or touch. The visibility of my phantom face is commensurate with the darkness of the room at any given moment. Click the contact menu on the left to send me an email, view my resume, or check out some of my other projects on GitHub and NPM.
+Play any of my songs (still works in progress) from the custom audio player or simply click the titles. When clouds pass in front of the moon they dim light entering the room and reveal my animated face, which you can also interact with by mousemove or touch. The visibility of my phantom face is commensurate with the darkness of the room at any given moment. Click the contact menu on the left to send me an email, view my resume, or check out some of my other projects on GitHub and NPM. You can toggle the performance button at the top left to render haze around the clouds, the default for which is _off_ since this does add some strain to your GPU.
 _________________________
 
 #### Features
@@ -15,8 +15,9 @@ _________________________
 - Autonomous interactive animation, responds to mousemove or touch
 - Installation art piece of clouds, moon and light play
 - Custom audio player
-- Sleek contact menu with inline email messenger
+- Sleek contact menu with inline email capability (doesn't launch your default mail program)
 - The entire app is _fluidly_ responsive (no jerky media query breakpoints)
+- Toggleable performance button to electively alleviate GPU strain
 _________________________
 
 #### Motivation
