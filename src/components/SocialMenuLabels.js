@@ -11,11 +11,12 @@ class SocialMenuLabels extends React.PureComponent {
 
     render() {
 
+        let color = this.props.screenWidth > this.props.canvasWidth * .55 ? 'rgb(255,255,255)' : `rgb(110,1,1)`
         let left = this.props.canvasWidth < this.props.screenWidth ? this.props.margin + 60 : 60
         let containerClassName = this.props.menuOpen ? 'social-menu-labels-container social-menu-labels-container-visible' : 'social-menu-labels-container social-menu-labels-container-invisible'
 
         return(
-            <div className={containerClassName} style={{left: left}}>
+            <div className={containerClassName} style={{left: left, color: color, transition: 'color 1.5s linear'}}>
                 <div class='social-menu-label-block-mail'>
                     <i class='fa fa-long-arrow-left arrow mail-arrow'></i>
                     <p class='social-text mail-social-text'>Mail</p>
