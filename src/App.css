@@ -309,7 +309,6 @@ body {
 }
 .arrow {
     position: absolute;
-    color: rgb(255,255,255);
     left: -16px;
     font-size: 28px;
 }
@@ -331,7 +330,6 @@ body {
 }
 .social-text {
     position: absolute;
-    color: rgb(255,255,255);
     font-size: 16px;
     font-family: Nothing You Could Do, cursive;
 }
