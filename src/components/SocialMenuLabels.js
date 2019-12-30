@@ -16,7 +16,7 @@ class SocialMenuLabels extends React.PureComponent {
         let containerClassName = this.props.menuOpen ? 'social-menu-labels-container social-menu-labels-container-visible' : 'social-menu-labels-container social-menu-labels-container-invisible'
 
         return(
-            <div className={containerClassName} style={{left: left, color: color, transition: 'color 1.5s linear'}}>
+            <div className={containerClassName} style={{left: left, color: color}}>
                 <div class='social-menu-label-block-mail'>
                     <i class='fa fa-long-arrow-left arrow mail-arrow'></i>
                     <p class='social-text mail-social-text'>Mail</p>
