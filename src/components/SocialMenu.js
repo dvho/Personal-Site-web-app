@@ -1,19 +1,19 @@
 import React from 'react'
 import '../App.css'
 
-class SocialMenu extends React.Component {
+class SocialMenu extends React.PureComponent {
     constructor() {
         super()
         this.state = {
-            menuOpen: false
+
         }
     }
 
     render() {
 
         let left = this.props.canvasWidth < this.props.screenWidth ? this.props.margin : 0
-        let pullTabClassName = this.state.menuOpen ? 'fa fa-angle-double-left pull-arrow-column pull-arrow-column-open' : 'fa fa-angle-double-right pull-arrow-column'
-        let socialIconsColumnClassName = this.state.menuOpen ? 'social-icons-column social-icons-column-open' : 'social-icons-column'
+        let pullTabClassName = this.props.menuOpen ? 'fa fa-angle-double-left pull-arrow-column pull-arrow-column-open' : 'fa fa-angle-double-right pull-arrow-column'
+        let socialIconsColumnClassName = this.props.menuOpen ? 'social-icons-column social-icons-column-open' : 'social-icons-column'
 
         return(
             <div className='social-menu-container' style={{left: left}}>
@@ -25,7 +25,7 @@ class SocialMenu extends React.Component {
                     <a className='npm social-icon' href='https://www.npmjs.com/~dvho' target='_blank' rel='noopener noreferrer'><i className={'icon ion-logo-npm social-icon'}></i></a>
                 </div>
 
-                <i className={pullTabClassName} onClick={() => this.setState({menuOpen: !this.state.menuOpen})}></i>
+                <i className={pullTabClassName} onClick={() => this.props.toggleMenuOpen()}></i>
 
             </div>
         )

@@ -7,6 +7,7 @@ import Track from './Track'
 import Ripple from './Ripple'
 import ContactForm from './ContactForm'
 import SocialMenu from './SocialMenu'
+import SocialMenuLabels from './SocialMenuLabels'
 
 export {
     Cloud,
@@ -17,5 +18,6 @@ export {
     Track,
     Ripple,
     ContactForm,
-    SocialMenu
+    SocialMenu,
+    SocialMenuLabels
 }

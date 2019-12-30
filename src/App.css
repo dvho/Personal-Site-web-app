@@ -142,6 +142,7 @@ body {
 .form-container {
     visibility: hidden;
     position: absolute;
+    width: 200px;
     top: 50%;
     transform: translateY(-50%) translateX(0%) scaleX(.7);
     transform-origin: right;
@@ -193,7 +194,7 @@ body {
     background-color: rgba(245,245,215,.85);
 }
 .button-text {
-    font-family: 'Nothing You Could Do', cursive;
+    font-family: Nothing You Could Do, cursive;
     color: rgba(255,255,255,1);
     transition: all .3s ease;
 }
@@ -225,7 +226,7 @@ body {
     flex: 1;
     font-size: 34px;
     padding-left: 4px;
-    background-color: rgba(255,255,255,.85);
+    background-color: rgba(255,255,255,.65);
     transition: all .5s ease;
 }
 /* Can do transition all for mail:hover, github:hover and npm:hover, but not for mail, github and npm because it interferes with the CLOSING of socialIconsColumn, so the net effect is when unhovering, the colors (merely the alpha channel of the rgba in these cases) toggle abruptly but the transform scale toggles as normal which generally smoothens the whole experience so that it's not noticeable */
@@ -269,7 +270,7 @@ body {
     cursor: pointer;
     font-size: 20px;
     padding-right: 3px;
-    animation: pull-arrow-pulse 2s infinite;
+    animation: pull-arrow-pulse-closed 1.25s infinite;
     transition: all .5s ease;
 }
 .pull-arrow-column:hover {
@@ -279,15 +280,82 @@ body {
 .pull-arrow-column-open {
     animation: null;
     color: rgb(1,1,40);
-    background-color: rgba(255,255,255,.85);
+    background-color: rgba(255,255,255,.65);
+    animation: pull-arrow-pulse-open 1.25s infinite;
     transition: all .5s ease;
 }
 .pull-arrow-column-open:hover {
-    background-color: rgba(200,200,255,.85);
+    background-color: rgba(200,200,255,.65);
     transition: all .5s ease;
 }
 
 
+.social-menu-labels-container {
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    width: 60px;
+    height: 164px;
+    top: 50%;
+    transform: translateY(-50%) translateX(0%) scaleX(1);
+}
+.social-menu-labels-container-visible {
+    opacity: 1;
+    transition: opacity .75s ease .25s;
+}
+.social-menu-labels-container-invisible {
+    opacity: 0;
+    transition: opacity .25s ease;
+}
+.arrow {
+    position: absolute;
+    color: rgb(255,255,255);
+    left: -16px;
+    font-size: 28px;
+}
+.mail-arrow {
+    top: 22px;
+    transform: rotateZ(30deg);
+}
+.resume-arrow {
+    top: 54px;
+    transform: rotateZ(16deg);
+}
+.github-arrow {
+    top: 98px;
+    transform: rotateZ(24deg);
+}
+.npm-arrow {
+    top: 118px;
+    transform: rotateZ(-24deg);
+}
+.social-text {
+    position: absolute;
+    color: rgb(255,255,255);
+    font-size: 16px;
+    font-family: Nothing You Could Do, cursive;
+}
+.mail-social-text {
+    left: 13px;
+    top: 19px;
+}
+.resume-social-text {
+    left: 14px;
+    top: 48px;
+}
+.projects-social-text {
+    left: 14px;
+    top: 96px;
+}
+.social-menu-label-block-mail {
+    animation: label-animation 1.7s infinite;
+}
+.social-menu-label-block-resume {
+    animation: label-animation 1.8s infinite;
+}
+.social-menu-label-block-projects {
+    animation: label-animation 1.9s infinite;
+}
 
 /* Would've had to import a seperate library like "glamorous" to have been able to pass pseudo selectors as inline styles (in AudioPlayer.js, which I would have used to make the slider thumb below scale with canvasHeight). Also important to note that I wouldn't want slider thumb to scale very much as it would've be grabbable/useable. Against one of my goals for this project, to make all rendering fluidly dynamic without use of media breakpoints, in this particular case it was the optimal solution. Incidentally, when I decided I wanted to tether color and opacity of the audio interface with veilOpacity, I did import the emotion library and for some reason, though fully integrated without its syntax crashing anything, it didn't work. */
 @media only screen and (max-height: 400px) {
@@ -302,6 +370,21 @@ body {
       height: 14px;
   }
 }
+@keyframes label-animation {
+    0% {transform: translateX(0px) translateY(0px);}
+    8% {transform: translateX(1px) translateY(1px);}
+    16% {transform: translateX(0px) translateY(2px);}
+    25% {transform: translateX(1px) translateY(1px);}
+    33% {transform: translateX(0px) translateY(0px);}
+    41% {transform: translateX(1px) translateY(1px);}
+    50% {transform: translateX(0px) translateY(2px);}
+    58% {transform: translateX(1px) translateY(1px);}
+    66% {transform: translateX(0px) translateY(0px);}
+    75% {transform: translateX(1px) translateY(1px);}
+    83% {transform: translateX(0px) translateY(2px);}
+    91% {transform: translateX(1px) translateY(1px);}
+    100% {transform: translateX(0px) translateY(0px);}
+}
 
 @keyframes play-icon-pulse {
     0% {color: rgb(1,1,30)}
@@ -315,9 +398,14 @@ body {
 }
 
 
-@keyframes pull-arrow-pulse {
+@keyframes pull-arrow-pulse-closed {
     0% {color: rgb(1,1,40)}
-    5% {color: rgb(170,1,40)}
+    5% {color: rgb(240,1,40)}
+    100% {color: rgb(1,1,40)}
+}
+@keyframes pull-arrow-pulse-open {
+    0% {color: rgb(1,1,40)}
+    5% {color: rgb(1,240,240)}
     100% {color: rgb(1,1,40)}
 }
 
