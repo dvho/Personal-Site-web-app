@@ -233,8 +233,8 @@ class App extends React.PureComponent {
 
     calcAllDimensionsCoordsAndResetClouds = (e) => {
 
-        let screenWidth = window.innerWidth
-        let canvasHeight = window.innerHeight
+        let screenWidth = window.visualViewport === undefined ? window.innerWidth : window.visualViewport.width //Chrome mobile uses window.visualViewport property instead of the window object directly
+        let canvasHeight = window.visualViewport === undefined ? window.innerHeight : window.visualViewport.height //Chrome mobile uses window.visualViewport property instead of the window object directly
         let canvasWidth = Math.round(canvasHeight * 1.323572474377745) //screenWidth < canvasHeight * 1.323572474377745 ? screenWidth : Math.round(canvasHeight * 1.323572474377745)
         let moonDiameter = Math.round(canvasWidth * 0.199121522693997)
         let performanceButtonDiameter = canvasHeight * .025
