@@ -18,18 +18,18 @@ class SocialMenuLabels extends React.PureComponent {
 
         return(
             <div className={containerClassName} style={{left: left, color: color}}>
-                <div class='social-menu-label-block-mail'>
-                    <i class='fa fa-long-arrow-left arrow mail-arrow'></i>
-                    <p class='social-text mail-social-text' style={{transition: 'background-color 1.5s linear', backgroundColor: `rgb(255,255,255,${narrowScreenRgbaOpacity})`}}>&nbsp;Mail&nbsp;</p>
+                <div className='social-menu-label-block-mail'>
+                    <i className='fa fa-long-arrow-left arrow mail-arrow'></i>
+                    <p className='social-text mail-social-text' style={{transition: 'background-color 1.5s linear', backgroundColor: `rgb(255,255,255,${narrowScreenRgbaOpacity})`}}>&nbsp;Mail&nbsp;</p>
                 </div>
-                <div class='social-menu-label-block-resume'>
-                    <i class='fa fa-long-arrow-left arrow resume-arrow'></i>
-                    <p class='social-text resume-social-text' style={{transition: 'background-color 1.5s linear', backgroundColor: `rgb(255,255,255,${narrowScreenRgbaOpacity})`}}>&nbsp;Resume&nbsp;</p>
+                <div className='social-menu-label-block-resume'>
+                    <i className='fa fa-long-arrow-left arrow resume-arrow'></i>
+                    <p className='social-text resume-social-text' style={{transition: 'background-color 1.5s linear', backgroundColor: `rgb(255,255,255,${narrowScreenRgbaOpacity})`}}>&nbsp;Resume&nbsp;</p>
                 </div>
-                <div class='social-menu-label-block-projects'>
-                    <i class='fa fa-long-arrow-left arrow github-arrow'></i>
-                    <i class='fa fa-long-arrow-left arrow npm-arrow'></i>
-                    <p class='social-text projects-social-text' style={{transition: 'background-color 1.5s linear', backgroundColor: `rgb(255,255,255,${narrowScreenRgbaOpacity})`}}>&nbsp;Projects&nbsp;</p>
+                <div className='social-menu-label-block-projects'>
+                    <i className='fa fa-long-arrow-left arrow github-arrow'></i>
+                    <i className='fa fa-long-arrow-left arrow npm-arrow'></i>
+                    <p className='social-text projects-social-text' style={{transition: 'background-color 1.5s linear', backgroundColor: `rgb(255,255,255,${narrowScreenRgbaOpacity})`}}>&nbsp;Projects&nbsp;</p>
                 </div>
             </div>
         )
