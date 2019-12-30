@@ -125,6 +125,7 @@ class AudioPlayer extends React.PureComponent {
         let containerHeight = this.props.canvasHeight * .1
         let padding = containerHeight * .5
         let marginTop = containerHeight * -.15
+        let totalTimeStringMarginTop = this.props.screenWidth / this.props.canvasHeight > .59 ? marginTop : 26
         let borderRadius = containerHeight * .25
         let containerWidth = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth * .95 - padding * 2 : this.props.screenWidth * .95 - padding * 2
         let left = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .025 + this.props.margin : this.props.screenWidth * .025
@@ -149,7 +150,7 @@ class AudioPlayer extends React.PureComponent {
                     <i onClick={() => this.handlePlayer('forward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className='fa fa-chevron-circle-right next-and-previous-icons audio-icon'></i>
                 </div>
 
-                <p style={{position: 'absolute', margin: 0, borderRadius: timeStringBorderRadius, paddingLeft: timeStringHorizontalPadding, paddingRight: timeStringHorizontalPadding, backgroundColor: `rgba(255,255,255,${timeStringRgbaOpacity})`, transition: 'background-color 1.5s linear', marginTop: marginTop, right: padding, fontFamily: config.appFont, fontSize: fontSize, color: 'rgba(30,1,1,.75)'}}>{this.state.totalTimeString}</p>
+                <p style={{position: 'absolute', margin: 0, borderRadius: timeStringBorderRadius, paddingLeft: timeStringHorizontalPadding, paddingRight: timeStringHorizontalPadding, backgroundColor: `rgba(255,255,255,${timeStringRgbaOpacity})`, transition: 'background-color 1.5s linear', marginTop: totalTimeStringMarginTop, right: padding, fontFamily: config.appFont, fontSize: fontSize, color: 'rgba(30,1,1,.75)'}}>{this.state.totalTimeString}</p>
 
                 <input style={{marginTop: containerHeight}} className='slider' type='range' min='0' max={this.state.trackLength} value={this.state.totalSeconds} onChange={this.slidePlaybackAndUpdatePlaybackTime}/>
 
