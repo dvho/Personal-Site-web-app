@@ -28,7 +28,7 @@ class Cloud extends React.PureComponent {
                 className='canvas'
                 style={{
                     opacity: localOpacity,
-                    transition: 'opacity 1.5s ease'
+                    transition: 'opacity 1.5s linear'
                     }}/>
         )
     }
