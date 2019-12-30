@@ -6,7 +6,7 @@ import '../App.css'
 //https://blog.mailtrap.io/react-send-email/
 //https://medium.com/@eesh.t/send-email-using-emailjs-and-react-form-9993bb6929d8
 
-class ContactForm extends React.Component {
+class ContactForm extends React.PureComponent {
     constructor(props) {
         super(props)
         this.state = {

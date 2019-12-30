@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import config from './config'
-import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm, SocialMenu } from './components'
+import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm, SocialMenu, SocialMenuLabels } from './components'
 
 //NOTE: I needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
 //Method to deploy a subfolder (in this case build folder) to GitHub Pages https://gist.github.com/cobyism/4730490
@@ -33,6 +33,7 @@ class App extends React.PureComponent {
             currentTrack: [], //This data shape is an array where the first element is the track title and the second is the url
             cloudNumber: 1,
             revealContactForm: false,
+            menuOpen: true,
             veilOpacity: .3,
             blinkActive: false,
             eyesJustSwitched: false,
@@ -44,6 +45,12 @@ class App extends React.PureComponent {
     toggleContactForm = () => {
         this.setState({
             revealContactForm: !this.state.revealContactForm
+        })
+    }
+
+    toggleMenuOpen = () => {
+        this.setState({
+            menuOpen: !this.state.menuOpen
         })
     }
 
@@ -366,7 +373,9 @@ class App extends React.PureComponent {
 
                 <ContactForm toggleContactForm={this.toggleContactForm} revealContactForm={this.state.revealContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
 
-                <SocialMenu toggleContactForm={this.toggleContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
+                <SocialMenuLabels menuOpen={this.state.menuOpen} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
+
+                <SocialMenu toggleMenuOpen={this.toggleMenuOpen} toggleContactForm={this.toggleContactForm} menuOpen={this.state.menuOpen} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
 
                 { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }
 
