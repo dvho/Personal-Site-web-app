@@ -210,7 +210,7 @@ class App extends React.PureComponent {
         const leftColumnTracks = []
         const rightColumnTracks = []
         const tracksArray = Object.entries(config.tracks) //Object.entries is a method that takes an object and returns an array whose elements are arrays of that object's key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images.eyePosition)[0][1] would return the 1st image, Object.entries(config.images.eyePosition)[2][1] the 3rd, etc.
-        let titlesColumnsMargin = this.state.canvasHeight * .03
+        let titlesColumnsMargin = this.state.canvasHeight * .02
 
         let j
 
@@ -265,7 +265,7 @@ class App extends React.PureComponent {
 
             if (xCoord >= 0 && xCoord <= 1) { //If the xCoord is between 0 and 1
 
-                if (e.type === 'click' || ((e.type === 'mousemove' || e.type === 'touchmove') && (this.state.xCoord !== xCoord || this.state.yCoord !== yCoord))) { //If event type is click or event type is either mousemove or touchmove AND there hasn't been a change in either xCoord nor yCord in state
+                if (e.type === 'click' || ((e.type === 'mousemove' || e.type === 'touchmove') && (this.state.xCoord !== xCoord || this.state.yCoord !== yCoord))) { //If event type is click or event type is either mousemove or touchmove AND there hasn't been a change in either xCoord nor yCoord in state
 
                     this.setState({ //set the new xCoord and yCoord in state
                         margin: margin,

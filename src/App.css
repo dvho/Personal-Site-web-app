@@ -143,7 +143,7 @@ body {
     visibility: hidden;
     position: absolute;
     width: 200px;
-    top: 50%;
+    top: 55%;
     transform: translateY(-50%) translateX(0%) scaleX(.7);
     transform-origin: right;
     opacity: 0;
@@ -211,7 +211,7 @@ body {
     flex-direction: row;
     width: 60px;
     height: 164px;
-    top: 50%;
+    top: 55%;
     transform: translateY(-50%) translateX(0%) scaleX(1);
 }
 .social-icons-column {
@@ -296,7 +296,7 @@ body {
     flex-direction: row;
     width: 60px;
     height: 164px;
-    top: 50%;
+    top: 55%;
     transform: translateY(-50%) translateX(0%) scaleX(1);
 }
 .social-menu-labels-container-visible {

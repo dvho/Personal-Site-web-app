@@ -60,7 +60,7 @@ class AudioPlayer extends React.PureComponent {
                 hasEnded: false
             })
         }
-        if (type === 'pause') {
+        if (type === 'pause' && this.state.currentTrack.length > 0 && !this.state.hasEnded) { //If the 'pause' button is selected and there's a track loaded in that hasn't ended (i.e. the 'stop' button was not pressed) only then will pause work to either pause or unpause the playing track.
             this.setState({
                 isPlaying: !this.state.isPlaying
             })
