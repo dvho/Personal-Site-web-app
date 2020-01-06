@@ -20,7 +20,7 @@ class SocialMenuLabels extends React.PureComponent {
             <div className={containerClassName} style={{left: left, color: color}}>
                 <div className='social-menu-label-block-mail'>
                     <i className='fa fa-long-arrow-left arrow mail-arrow'></i>
-                    <p className='social-text mail-social-text' style={{transition: 'background-color 1.5s linear', backgroundColor: `rgb(255,255,255,${narrowScreenRgbaOpacity})`}}>&nbsp;Mail&nbsp;</p>
+                    <p className='social-text mail-social-text' style={{transition: 'background-color 1.5s linear', backgroundColor: `rgb(255,255,255,${narrowScreenRgbaOpacity})`}}>&nbsp;Email&nbsp;</p>
                 </div>
                 <div className='social-menu-label-block-resume'>
                     <i className='fa fa-long-arrow-left arrow resume-arrow'></i>
