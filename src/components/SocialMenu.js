@@ -20,9 +20,11 @@ class SocialMenu extends React.PureComponent {
 
                 <div className={socialIconsColumnClassName}>
                     <i className={'icon ion-md-mail mail social-icon'} onClick={() => this.props.toggleContactForm()}></i>
+                    <a className='linkedin social-icon' href='https://www.linkedin.com/in/dvho' target='_blank' rel='noopener noreferrer'><i className={'icon ion-logo-linkedin social-icon'}></i></a>
                     <a className='resume social-icon' href='https://dvho.github.io/resume' target='_blank' rel='noopener noreferrer'><i className={'icon ion-md-paper social-icon'}></i></a>
                     <a className='github social-icon' href='https://github.com/dvho' target='_blank' rel='noopener noreferrer'><i className={'icon ion-logo-github social-icon'}></i></a>
                     <a className='npm social-icon' href='https://www.npmjs.com/~dvho' target='_blank' rel='noopener noreferrer'><i className={'icon ion-logo-npm social-icon'}></i></a>
+
                 </div>
 
                 <i className={pullTabClassName} onClick={() => this.props.toggleMenuOpen()}></i>

@@ -134,7 +134,7 @@ body {
 }
 .title:hover {
     color: rgba(0,170,170,.95);
-    transform: scale(1.2);
+    transform: scale(1.15);
     transition: all .2s ease;
 }
 
@@ -210,7 +210,7 @@ body {
     display: flex;
     flex-direction: row;
     width: 60px;
-    height: 164px;
+    height: 210px;
     top: 55%;
     transform: translateY(-50%) translateX(0%) scaleX(1);
 }
@@ -233,6 +233,11 @@ body {
 .mail {
     padding-top: 8px;
     color: rgb(40,120,0);
+    cursor: pointer;
+    transition: transform .4s ease;
+}
+.linkedin {
+    color: rgb(16,116,174);
     cursor: pointer;
     transition: transform .4s ease;
 }
@@ -295,7 +300,7 @@ body {
     display: flex;
     flex-direction: row;
     width: 60px;
-    height: 164px;
+    height: 210px;
     top: 55%;
     transform: translateY(-50%) translateX(0%) scaleX(1);
 }
@@ -317,15 +322,15 @@ body {
     transform: rotateZ(30deg);
 }
 .resume-arrow {
-    top: 54px;
-    transform: rotateZ(16deg);
+    top: 68px;
+    transform: rotateZ(-30deg);
 }
 .github-arrow {
-    top: 98px;
+    top: 140px;
     transform: rotateZ(24deg);
 }
 .npm-arrow {
-    top: 118px;
+    top: 160px;
     transform: rotateZ(-24deg);
 }
 .social-text {
@@ -344,7 +349,7 @@ body {
 }
 .projects-social-text {
     left: 5px;
-    top: 96px;
+    top: 138px;
 }
 .social-menu-label-block-mail {
     animation: label-animation 1.7s infinite;
