@@ -1,5 +1,4 @@
 import React from 'react'
-import '../App.css'
 
 class Track extends React.PureComponent {
     constructor() {

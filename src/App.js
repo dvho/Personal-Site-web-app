@@ -1,7 +1,7 @@
 import React from 'react'
 import './App.css'
 import config from './config'
-import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm, SocialMenu, SocialMenuLabels } from './components'
+import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm, InfoSheet, SocialMenu, SocialMenuLabels } from './components'
 
 //NOTE: I needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
 //Method to deploy a subfolder (in this case build folder) to GitHub Pages https://gist.github.com/cobyism/4730490
@@ -33,6 +33,7 @@ class App extends React.PureComponent {
             currentTrack: [], //This data shape is an array where the first element is the track title and the second is the url
             cloudNumber: 1,
             revealContactForm: false,
+            revealInfoSheet: false,
             menuOpen: true,
             veilOpacity: .3,
             blinkActive: false,
@@ -42,9 +43,17 @@ class App extends React.PureComponent {
         }
     }
 
+    toggleInfoSheet = () => {
+        this.setState({
+            revealInfoSheet: !this.state.revealInfoSheet,
+            revealContactForm: false
+        })
+    }
+
     toggleContactForm = () => {
         this.setState({
-            revealContactForm: !this.state.revealContactForm
+            revealContactForm: !this.state.revealContactForm,
+            revealInfoSheet: false
         })
     }
 
@@ -360,8 +369,6 @@ class App extends React.PureComponent {
                 {/*<h1 style={{fontSize: 50, color: 'blue', position: 'absolute'}}>{this.state.xCoord}</h1>
                 <h1 style={{fontSize: 50, color: 'red', right: 0, position: 'absolute'}}>{this.state.yCoord}</h1> for testing purposes*/}
 
-                <PerformanceButton performanceBoost={this.state.performanceBoost} performanceButtonDiameter={this.state.performanceButtonDiameter} togglePerformanceBoost={this.togglePerformanceBoost}/>
-
                 <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack}/>
 
                 <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginLeft: this.state.titlesColumnsMargin, left: 0}}>
@@ -371,11 +378,15 @@ class App extends React.PureComponent {
                     {this.state.rightColumnTracks}
                 </div>
 
-                <ContactForm toggleContactForm={this.toggleContactForm} revealContactForm={this.state.revealContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
-
                 <SocialMenuLabels menuOpen={this.state.menuOpen} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} veilOpacity={this.state.veilOpacity}/>
 
-                <SocialMenu toggleMenuOpen={this.toggleMenuOpen} toggleContactForm={this.toggleContactForm} menuOpen={this.state.menuOpen} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
+                <ContactForm toggleContactForm={this.toggleContactForm} revealContactForm={this.state.revealContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
+
+                <InfoSheet state={this.state}/>
+
+                <SocialMenu toggleMenuOpen={this.toggleMenuOpen} toggleContactForm={this.toggleContactForm} toggleInfoSheet={this.toggleInfoSheet} menuOpen={this.state.menuOpen} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
+
+                <PerformanceButton performanceBoost={this.state.performanceBoost} performanceButtonDiameter={this.state.performanceButtonDiameter} togglePerformanceBoost={this.togglePerformanceBoost}/>
 
                 { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }
 

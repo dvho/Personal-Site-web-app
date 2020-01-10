@@ -1,5 +1,4 @@
 import React from 'react'
-import '../App.css'
 
 class Ripple extends React.PureComponent {
     constructor(props) {

@@ -1,5 +1,4 @@
 import React from 'react'
-import '../App.css'
 
 class PerformanceButton extends React.PureComponent {
     constructor() {

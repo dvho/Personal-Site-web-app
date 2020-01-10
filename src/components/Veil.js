@@ -1,5 +1,4 @@
 import React from 'react'
-import '../App.css'
 import config from '../config'
 
 //Float point conversion was giving values like '8.9999999999999' hence the verbose localOpacity = `${((Math.round(this.props.opacity * 10))/10).toString()}`
