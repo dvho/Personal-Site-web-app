@@ -382,7 +382,7 @@ class App extends React.PureComponent {
 
                 <ContactForm toggleContactForm={this.toggleContactForm} revealContactForm={this.state.revealContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
 
-                <InfoSheet state={this.state}/>
+                <InfoSheet canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} revealInfoSheet={this.state.revealInfoSheet}/>
 
                 <SocialMenu toggleMenuOpen={this.toggleMenuOpen} toggleContactForm={this.toggleContactForm} toggleInfoSheet={this.toggleInfoSheet} menuOpen={this.state.menuOpen} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
 
