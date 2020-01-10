@@ -4,7 +4,7 @@ import config from './config'
 import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm, InfoSheet, SocialMenu, SocialMenuLabels } from './components'
 
 //NOTE: I needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
-//Method to deploy a subfolder (in this case build folder) to GitHub Pages https://gist.github.com/cobyism/4730490
+//Method to deploy a subfolder (in this case build folder) to GitHub Pages https://gist.github.com/cobyism/4730490 
 
 // --Setting up a custom domain--
 //**Up to 4:36 ONLY - https://www.youtube.com/watch?v=mPGi1IHQxFM
