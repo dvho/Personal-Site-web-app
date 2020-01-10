@@ -1,5 +1,4 @@
 import React from 'react'
-import '../App.css'
 import config from '../config'
 
 class Face extends React.PureComponent {

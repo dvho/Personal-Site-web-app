@@ -6,6 +6,7 @@ import AudioPlayer from './AudioPlayer'
 import Track from './Track'
 import Ripple from './Ripple'
 import ContactForm from './ContactForm'
+import InfoSheet from './InfoSheet'
 import SocialMenu from './SocialMenu'
 import SocialMenuLabels from './SocialMenuLabels'
 
@@ -18,6 +19,7 @@ export {
     Track,
     Ripple,
     ContactForm,
+    InfoSheet,
     SocialMenu,
     SocialMenuLabels
 }

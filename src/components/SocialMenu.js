@@ -1,5 +1,4 @@
 import React from 'react'
-import '../App.css'
 
 class SocialMenu extends React.PureComponent {
     constructor() {
@@ -24,7 +23,7 @@ class SocialMenu extends React.PureComponent {
                     <a className='resume social-icon' href='https://dvho.github.io/resume' target='_blank' rel='noopener noreferrer'><i className={'icon ion-md-paper'}></i></a>
                     <a className='github social-icon' href='https://github.com/dvho' target='_blank' rel='noopener noreferrer'><i className={'icon ion-logo-github'}></i></a>
                     <a className='npm social-icon' href='https://www.npmjs.com/~dvho' target='_blank' rel='noopener noreferrer'><i className={'icon ion-logo-npm'}></i></a>
-                    <i className={'fa fa-info-circle info social-icon'} onClick={() => this.props.toggleContactForm()}></i>
+                    <i className={'fa fa-info-circle info social-icon'} onClick={() => this.props.toggleInfoSheet()}></i>
 
                 </div>
 

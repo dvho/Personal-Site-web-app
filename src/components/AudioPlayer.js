@@ -1,6 +1,5 @@
 import React from 'react'
 import ReactPlayer from 'react-player'
-import '../App.css'
 import config from '../config'
 
 //Need to track onLoad and only play if onLoad has completed
@@ -118,7 +117,7 @@ class AudioPlayer extends React.PureComponent {
     }
 
     render() {
-        let socialMenuDisplacement = this.props.canvasHeight < 500 ? 60 : 0 //If the canvasHeight is less than 500px then displace the audio interface 60px, which allows for narrowing the containerWidth and shifting further left as designated below (to make room for SocialMenu.js).
+        let socialMenuDisplacement = this.props.canvasHeight < 560 ? 60 : 0 //If the canvasHeight is less than 500px then displace the audio interface 60px, which allows for narrowing the containerWidth and shifting further left as designated below (to make room for SocialMenu.js).
         let veilOpacity = this.props.veilOpacity > .9 ? .9 : this.props.veilOpacity //If this.props.veilOpacity > .9 (rare, but it happens especially on narrower screens) fix it at .9
         //Variables below are all calculated dynamically with each render and are based on App.js state properties canvasHeight, canvasWidth, screenWidth, margin, and veilOpacity
         let containerRgbaOpacity = (veilOpacity - .3) * .15 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.

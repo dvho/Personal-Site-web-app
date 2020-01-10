@@ -1,5 +1,4 @@
 import React from 'react'
-import '../App.css'
 
 class SocialMenuLabels extends React.PureComponent {
     constructor() {

@@ -1,6 +1,5 @@
 import React from 'react'
 import emailValidator from 'email-validator'
-import '../App.css'
 
 // --Setting up email--
 //https://blog.mailtrap.io/react-send-email/
