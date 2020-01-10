@@ -210,7 +210,7 @@ body {
     display: flex;
     flex-direction: row;
     width: 60px;
-    height: 210px;
+    height: 220px;
     top: 55%;
     transform: translateY(-50%) translateX(0%) scaleX(1);
 }
@@ -224,25 +224,27 @@ body {
 }
 .social-icons-column-open {
     flex: 1;
-    font-size: 34px;
+    font-size: 32px;
     padding-left: 4px;
     background-color: rgba(255,255,255,.65);
     transition: all .5s ease;
 }
 /* Can do transition all for mail:hover, github:hover and npm:hover, but not for mail, github and npm because it interferes with the CLOSING of socialIconsColumn, so the net effect is when unhovering, the colors (merely the alpha channel of the rgba in these cases) toggle abruptly but the transform scale toggles as normal which generally smoothens the whole experience so that it's not noticeable */
 .mail {
-    padding-top: 8px;
+    margin-top: -3px;
     color: rgb(40,120,0);
     cursor: pointer;
     transition: transform .4s ease;
 }
 .linkedin {
+    margin-top: -2px;
+    margin-bottom: -2px;
     color: rgb(16,116,174);
     cursor: pointer;
     transition: transform .4s ease;
 }
 .resume {
-    color: rgb(150,120,0,1);
+    color: rgb(150,100,0,1);
     cursor: pointer;
     transition: transform .4s ease;
 }
@@ -252,7 +254,14 @@ body {
     transition: transform .4s ease;
 }
 .npm {
+    margin-top: -4px;
+    margin-bottom: -4px;
     color: rgb(201,8,19);
+    cursor: pointer;
+    transition: transform .4s ease;
+}
+.info {
+    color: rgb(145,15,0,1);
     cursor: pointer;
     transition: transform .4s ease;
 }
@@ -263,7 +272,7 @@ body {
 }
 
 
-.pull-arrow-column {
+.pull-chevron-column {
     display: flex;
     flex-direction: column;
     /* letting font-size dictate width rather than something like "flex: 1" */
@@ -275,21 +284,21 @@ body {
     cursor: pointer;
     font-size: 20px;
     padding-right: 3px;
-    animation: pull-arrow-pulse-closed 1.25s infinite;
+    animation: pull-chevron-pulse-closed 1.25s infinite;
     transition: all .5s ease;
 }
-.pull-arrow-column:hover {
+.pull-chevron-column:hover {
     background-color: rgba(255,0,0,.35);
     transition: all .5s ease;
 }
-.pull-arrow-column-open {
+.pull-chevron-column-open {
     animation: null;
     color: rgb(1,1,40);
     background-color: rgba(255,255,255,.65);
-    animation: pull-arrow-pulse-open 1.25s infinite;
+    animation: pull-chevron-pulse-open 1.25s infinite;
     transition: all .5s ease;
 }
-.pull-arrow-column-open:hover {
+.pull-chevron-column-open:hover {
     background-color: rgba(200,200,255,.65);
     transition: all .5s ease;
 }
@@ -314,24 +323,28 @@ body {
 }
 .arrow {
     position: absolute;
-    left: -16px;
+    left: -17px;
     font-size: 28px;
 }
 .mail-arrow {
-    top: 22px;
-    transform: rotateZ(30deg);
+    top: 23px;
+    transform: rotateZ(32deg);
 }
 .resume-arrow {
-    top: 68px;
-    transform: rotateZ(-30deg);
+    top: 64px;
+    transform: rotateZ(-16deg);
 }
 .github-arrow {
-    top: 140px;
-    transform: rotateZ(24deg);
+    top: 117px;
+    transform: rotateZ(12deg);
 }
 .npm-arrow {
-    top: 160px;
-    transform: rotateZ(-24deg);
+    top: 133px;
+    transform: rotateZ(-23deg);
+}
+.info-arrow {
+    top: 162px;
+    transform: rotateZ(-25deg);
 }
 .social-text {
     position: absolute;
@@ -340,16 +353,20 @@ body {
     font-family: Nothing You Could Do, cursive;
 }
 .mail-social-text {
-    left: 4px;
-    top: 19px;
+    left: 2px;
+    top: 22px;
 }
 .resume-social-text {
     left: 5px;
-    top: 48px;
+    top: 49px;
 }
 .projects-social-text {
     left: 5px;
-    top: 138px;
+    top: 113px;
+}
+.info-social-text {
+    left: 5px;
+    top: 144px;
 }
 .social-menu-label-block-mail {
     animation: label-animation 1.7s infinite;
@@ -359,6 +376,9 @@ body {
 }
 .social-menu-label-block-projects {
     animation: label-animation 1.9s infinite;
+}
+.social-menu-label-block-info {
+    animation: label-animation 2s infinite;
 }
 
 /* Would've had to import a seperate library like "glamorous" to have been able to pass pseudo selectors as inline styles (in AudioPlayer.js, which I would have used to make the slider thumb below scale with canvasHeight). Also important to note that I wouldn't want slider thumb to scale very much as it would've be grabbable/useable. Against one of my goals for this project, to make all rendering fluidly dynamic without use of media breakpoints, in this particular case it was the optimal solution. Incidentally, when I decided I wanted to tether color and opacity of the audio interface with veilOpacity, I did import the emotion library and for some reason, though fully integrated without its syntax crashing anything, it didn't work. */
@@ -402,12 +422,12 @@ body {
 }
 
 
-@keyframes pull-arrow-pulse-closed {
+@keyframes pull-chevron-pulse-closed {
     0% {color: rgb(1,1,40)}
     5% {color: rgb(240,1,40)}
     100% {color: rgb(1,1,40)}
 }
-@keyframes pull-arrow-pulse-open {
+@keyframes pull-chevron-pulse-open {
     0% {color: rgb(1,1,40)}
     5% {color: rgb(1,240,240)}
     100% {color: rgb(1,1,40)}
