@@ -118,6 +118,7 @@ class AudioPlayer extends React.PureComponent {
     }
 
     render() {
+        let socialMenuDisplacement = this.props.canvasHeight < 500 ? 60 : 0 //If the canvasHeight is less than 500px then displace the audio interface 60px, which allows for narrowing the containerWidth and shifting further left as designated below (to make room for SocialMenu.js).
         let veilOpacity = this.props.veilOpacity > .9 ? .9 : this.props.veilOpacity //If this.props.veilOpacity > .9 (rare, but it happens especially on narrower screens) fix it at .9
         //Variables below are all calculated dynamically with each render and are based on App.js state properties canvasHeight, canvasWidth, screenWidth, margin, and veilOpacity
         let containerRgbaOpacity = (veilOpacity - .3) * .15 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.
@@ -127,8 +128,8 @@ class AudioPlayer extends React.PureComponent {
         let marginTop = containerHeight * -.15
         let totalTimeStringMarginTop = this.props.screenWidth / this.props.canvasHeight > .59 ? marginTop : 26
         let borderRadius = containerHeight * .25
-        let containerWidth = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth * .95 - padding * 2 : this.props.screenWidth * .95 - padding * 2
-        let left = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .025 + this.props.margin : this.props.screenWidth * .025
+        let containerWidth = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth * .95 - padding * 2 - socialMenuDisplacement : this.props.screenWidth * .95 - padding * 2 - socialMenuDisplacement
+        let left = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .025 + this.props.margin + socialMenuDisplacement : this.props.screenWidth * .025 + socialMenuDisplacement
         let bottom = this.props.screenWidth > this.props.canvasWidth ? this.props.canvasWidth  * .025 : this.props.screenWidth * .025
         let fontSize = this.props.canvasHeight / 18
         let timeStringHorizontalPadding = this.props.canvasHeight / 50

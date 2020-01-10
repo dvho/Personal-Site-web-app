@@ -6,7 +6,7 @@ This is a React app with some of my original piano compositions. It has a contac
 _________________________
 
 #### How to Use
-Play any of my songs (still works in progress) from the custom audio player or simply click the titles. When clouds pass in front of the moon they dim light entering the room and reveal my animated face, which you can also interact with by mousemove or touch. The visibility of my phantom face is commensurate with the darkness of the room at any given moment. Click the contact menu on the left to send me an email, view my resume, or check out some of my other projects on GitHub and NPM. You can toggle the performance button at the top left to render haze around the clouds, the default for which is _off_ since this does add some strain to your GPU.
+Play any of my songs (still works in progress) from the audio interface or simply click the titles. When clouds outside pass in front of the moon they dim light entering the room and reveal my animated face, which you can interact with by mouse or touch. The visibility of my face is commensurate with the darkness of the room at any given moment. Click the contact menu on the left to send me an email, view my resume, or check out some of my other projects on GitHub and NPM. You can toggle the performance button at the top right to render haze around the clouds, the default for which is _off_ since this does strain your GPU.
 _________________________
 
 #### Features
