@@ -118,6 +118,10 @@ class AudioPlayer extends React.PureComponent {
 
     render() {
 
+        if (this.props.screenWidth === 0) { //This prevents the unnecesary render of all the calculations and JSX for the AudioPlayer caused by App.js not yet having its state set in componentDidMount when the first render happens, which was also responsible for the transition of all the audio interface buttons spending .4s transitioning from 0 to their actual calculated iconDiameter. Unlike the function components, an empty div must be returned here, so the extra render happens but it's a much lighter render and averts the unsighly .4s transition of the audio interface buttons, as mentioned.
+            return <div></div>
+        }
+
         let veilOpacity = this.props.veilOpacity > .9 ? .9 : this.props.veilOpacity //If this.props.veilOpacity > .9 (rare, but it happens especially on narrower screens) fix it at .9
         //Variables below are all calculated dynamically with each render and are based on App.js state properties canvasHeight, canvasWidth, screenWidth, wideScreen, margin, and veilOpacity
         let containerRgbaOpacity = (veilOpacity - .3) * .15 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.

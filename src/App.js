@@ -353,7 +353,7 @@ class App extends React.PureComponent {
         })()
     }
 
-    render() {
+    render() { //Placing a rendering condition here to prevent a render until the essential calculations have been set in state at componentDidMount causes a display glitch where the canvas-parent ends up flush left.
 
         const allClouds = []
         let i
@@ -363,7 +363,7 @@ class App extends React.PureComponent {
         } //All this logic has to go here, not in a componentDidUpdate, because then I'd have to setState with a allClouds array and read it from the return and that's causing the "Maximum update depth exceeded" error, probably because, unlike in AudioPlayer.js, setState is being called after and on account of a loop above it. Remedy by not setting allClouds in state, just passing it along to the return from this smaller scope.
 
         return(
-            <div className="canvas-parent">
+            <div className="canvas-parent" style={{opacity: this.state.screenWidth === 0 ? 0 : 1}}> {/* If the componentDidMount hasn't yet set all the initial values in state make the opacity 0, else 1 (.canvas-parent has a nice .3s transition on opacity in App.css) */}
 
                 <img alt={"back"} src={config.images.canvas.back} className="canvas" id="back-image"/>
 
