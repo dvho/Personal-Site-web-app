@@ -10,6 +10,7 @@ body {
 
 .canvas-parent {
     text-align: center;
+    transition: opacity .3s ease;
 }
 .canvas {
     position: absolute;
