@@ -6,7 +6,7 @@ const InfoSheet = props => {
             return
         }
 
-        let left = props.canvasWidth < props.screenWidth ? props.margin + props.canvasWidth - 270 : props.screenWidth - 270
+        let left = props.wideScreen ? props.margin + props.canvasWidth - 270 : props.screenWidth - 270
         let height = props.canvasHeight * .8
         let className = props.revealInfoSheet ? 'info-sheet-container info-sheet-container-revealed' : 'info-sheet-container'
 

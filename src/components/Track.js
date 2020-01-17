@@ -12,8 +12,8 @@ const Track = props => {
 
     let aspectRatio = 1808 / 1366 //Aspect ratio of the canvas (derived from main.png)
     let fontSizeDenom = 40 //Set denominator of fontSize here
-    let fontSizeCalc = props.screenWidth > props.canvasWidth ? props.canvasHeight / fontSizeDenom * aspectRatio : props.screenWidth / fontSizeDenom //Calculate fontSize as a function of either canvasHeight or screenWidth. Factoring in aspectRatio in the first ternary condition smooths the breakpoint between the two conditions.
-    let leftOrRightPosition = props.screenWidth > props.canvasWidth ? props.margin : 0 //Factor in the margin that falls outside the canvas for positioning each the left and right columns, respectively
+    let fontSizeCalc = props.wideScreen ? props.canvasHeight / fontSizeDenom * aspectRatio : props.screenWidth / fontSizeDenom //Calculate fontSize as a function of either canvasHeight or screenWidth. Factoring in aspectRatio in the first ternary condition smooths the breakpoint between the two conditions.
+    let leftOrRightPosition = props.wideScreen ? props.margin : 0 //Factor in the margin that falls outside the canvas for positioning each the left and right columns, respectively
     let textMargin = props.canvasHeight / 40 //Margin around each title as a function of canvasHeight
     let color = isSelected ? 'rgba(255,0,0,.85)' : null
 

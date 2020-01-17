@@ -15,6 +15,7 @@ class App extends React.PureComponent {
     constructor() {
         super()
         this.state = {
+            wideScreen: true,
             screenWidth: 0,
             canvasHeight: 0,
             canvasWidth: 0,
@@ -231,9 +232,9 @@ class App extends React.PureComponent {
         for (j = 0; j < tracksArray.length; j++) {
 
             if (j < 5) {
-                leftColumnTracks.push(<Track key={j} leftColumn={true} trackNumber={j + 1} selectTrack={this.selectTrack} track={tracksArray[j]} currentTrack={this.state.currentTrack} canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin}/>)
+                leftColumnTracks.push(<Track key={j} leftColumn={true} trackNumber={j + 1} selectTrack={this.selectTrack} track={tracksArray[j]} currentTrack={this.state.currentTrack} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin}/>)
             } else {
-                rightColumnTracks.push(<Track key={j} leftColumn={false} trackNumber={j + 1} selectTrack={this.selectTrack} track={tracksArray[j]} currentTrack={this.state.currentTrack} canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin}/>)
+                rightColumnTracks.push(<Track key={j} leftColumn={false} trackNumber={j + 1} selectTrack={this.selectTrack} track={tracksArray[j]} currentTrack={this.state.currentTrack} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin}/>)
             }
         }
 
@@ -250,12 +251,14 @@ class App extends React.PureComponent {
         let screenWidth = window.visualViewport === undefined ? window.innerWidth : window.visualViewport.width //Chrome mobile uses window.visualViewport property instead of the window object directly
         let canvasHeight = window.visualViewport === undefined ? window.innerHeight : window.visualViewport.height //Chrome mobile uses window.visualViewport property instead of the window object directly
         let canvasWidth = Math.round(canvasHeight * 1.323572474377745) //screenWidth < canvasHeight * 1.323572474377745 ? screenWidth : Math.round(canvasHeight * 1.323572474377745)
+        let wideScreen = screenWidth > canvasWidth ? true : false //This simple calculation was happening redundantly in so many components I decided to do it once here and subsequently pass as a prop to any of them that need it
         let moonDiameter = Math.round(canvasWidth * 0.199121522693997)
         let performanceButtonDiameter = canvasHeight * .025
         let margin = ((screenWidth - canvasWidth) / 2)
 
         if (e.type === 'load' || e.type === 'resize') { //Get the sizes of the screen, canvas, moon, performance toggle button, and reset cloudNumber on both load and on resize
             this.setState({
+                wideScreen: wideScreen,
                 screenWidth: screenWidth,
                 canvasHeight: canvasHeight,
                 canvasWidth: canvasWidth,
@@ -374,7 +377,7 @@ class App extends React.PureComponent {
                 {/*<h1 style={{fontSize: 50, color: 'blue', position: 'absolute'}}>{this.state.xCoord}</h1>
                 <h1 style={{fontSize: 50, color: 'red', right: 0, position: 'absolute'}}>{this.state.yCoord}</h1> for testing purposes*/}
 
-                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack}/>
+                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack}/>
 
                 <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginLeft: this.state.titlesColumnsMargin, left: 0}}>
                     {this.state.leftColumnTracks}
@@ -383,17 +386,17 @@ class App extends React.PureComponent {
                     {this.state.rightColumnTracks}
                 </div>
 
-                <SocialMenuLabels menuOpen={this.state.menuOpen} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} veilOpacity={this.state.veilOpacity}/>
+                <SocialMenuLabels menuOpen={this.state.menuOpen} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} veilOpacity={this.state.veilOpacity}/>
 
-                <ContactForm toggleContactForm={this.toggleContactForm} revealContactForm={this.state.revealContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
+                <ContactForm toggleContactForm={this.toggleContactForm} revealContactForm={this.state.revealContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin}/>
 
-                <InfoSheet canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} margin={this.state.margin} revealInfoSheet={this.state.revealInfoSheet}/>
+                <InfoSheet canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} revealInfoSheet={this.state.revealInfoSheet}/>
 
-                <SocialMenu toggleMenuOpen={this.toggleMenuOpen} toggleContactForm={this.toggleContactForm} toggleInfoSheet={this.toggleInfoSheet} menuOpen={this.state.menuOpen} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin}/>
+                <SocialMenu toggleMenuOpen={this.toggleMenuOpen} toggleContactForm={this.toggleContactForm} toggleInfoSheet={this.toggleInfoSheet} menuOpen={this.state.menuOpen} wideScreen={this.state.wideScreen} margin={this.state.margin}/>
 
                 <PerformanceButton performanceBoost={this.state.performanceBoost} performanceButtonDiameter={this.state.performanceButtonDiameter} togglePerformanceBoost={this.togglePerformanceBoost}/>
 
-                { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }
+                { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} wideScreen={this.state.wideScreen} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }
 
            </div>
         )
