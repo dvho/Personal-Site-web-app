@@ -136,6 +136,10 @@ class App extends React.PureComponent {
     }
 
     blink = () => { //blink method sets a blinkDuration which is less than or equal to the repeatRate in blinkControl. The coeffiecients next to blinkDuration in the setTimeouts below go to 1.1, so the max blink duration isn't 250, but 275ms
+        if (this.state.screenWidth === 0) { //this.blink was running before componentDidMount, which sets the screenWidth in state, causing Face.js to unnecessarily render 10 times (with each of the setTimeouts i.e. setStates below) but this prevents that from happening
+            return
+        }
+
         let blinkDuration = 100 + Math.random() * 150
         let blinkStareTimeCoefficient = 300 + Math.random() * 300
         let current = this.state.faceFrame //the current faceFrame, which will eventually be switched around with an eye position method, is saved as "current" and then the setTimeouts are run for the blinks from F to A and back to F again and finally back to current. This way, no arguments need to be passed to blink.
@@ -348,7 +352,7 @@ class App extends React.PureComponent {
 
         for (i = 0; i < this.state.cloudNumber; i++) {
             allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} dimVeil={this.dimVeil} performanceBoost={this.state.performanceBoost}/>)
-        }
+        } //All this logic has to go here, not in a componentDidUpdate, because then I'd have to setState with a allClouds array and read it from the return and that's causing the "Maximum update depth exceeded" error, probably because, unlike in AudioPlayer.js, setState is being called after and on account of a loop above it. Remedy by not setting allClouds in state, just passing it along to the return from this smaller scope.
 
         return(
             <div className="canvas-parent">
@@ -363,7 +367,7 @@ class App extends React.PureComponent {
 
                 <Veil opacity={this.state.veilOpacity} key={'a'}/>
 
-                <Face opacity={(this.state.veilOpacity * .75)} key={'b'} faceFrame={this.state.faceFrame}/>
+                <Face opacity={(this.state.veilOpacity * .75)} key={'b'} faceFrame={this.state.faceFrame} screenWidth={this.state.screenWidth}/>
 
                 <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
 

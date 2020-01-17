@@ -1,36 +1,32 @@
 import React from 'react'
 import config from '../config'
 
-//Float point conversion was giving values like '8.9999999999999' hence the verbose localOpacity = `${((Math.round(this.props.opacity * 10))/10).toString()}`
+//Float point conversion was giving values like '8.9999999999999' hence the verbose localOpacity = `${((Math.round(props.opacity * 10))/10).toString()}`
 
-class Cloud extends React.PureComponent {
-    constructor() {
-        super()
-        this.state = {
+const Veil = props => {
 
-        }
+    if (props.screenWidth === 0) { //After using React.PureComponent, or React.memo now that this is a function component, I wasn't getting the unnecesary render caused by App.js not yet having its state set in componentDidMount when the first render happens, but including this for good measure
+        return
     }
 
-    render() {
-        let localOpacity
-        if (this.props.opacity >= 1) {
-            localOpacity = '.9'
-        } else {
-            localOpacity = `${((Math.round(this.props.opacity * 10))/10).toString()}`
-        }
-
-        return(
-
-            <img
-                alt={'veil'}
-                src={config.images.canvas.veil}
-                className='canvas'
-                style={{
-                    opacity: localOpacity,
-                    transition: 'opacity 1.5s linear'
-                    }}/>
-        )
+    let localOpacity
+    if (props.opacity >= 1) {
+        localOpacity = '.9'
+    } else {
+        localOpacity = `${((Math.round(props.opacity * 10))/10).toString()}`
     }
+
+    return(
+
+        <img
+            alt={'veil'}
+            src={config.images.canvas.veil}
+            className='canvas'
+            style={{
+                opacity: localOpacity,
+                transition: 'opacity 1.5s linear'
+                }}/>
+    )
 }
 
-export default Cloud
+export default React.memo(Veil) //I was getting unnecesary renders here so I'm wrapping the export of the component in React.memo, which does a shallow comparison for function components as React.PureComponent, or the older lifecycle method componentShouldUpdate(), do shallow comparisons to limit unnecessary re-rendering in class components. One could also simply wrap the code block of the component itself in React.memo but I think doing it in the export is cleaner.
