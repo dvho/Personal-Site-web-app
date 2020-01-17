@@ -1,18 +1,14 @@
 import React from 'react'
 
-class InfoSheet extends React.PureComponent {
-    constructor() {
-        super()
-        this.state = {
+const InfoSheet = props => {
 
+        if (props.screenWidth === 0) { //This prevents the unnecesary render caused by App.js not yet having its state set in componentDidMount when the first render happens
+            return
         }
-    }
 
-    render() {
-
-        let left = this.props.canvasWidth < this.props.screenWidth ? this.props.margin + this.props.canvasWidth - 270 : this.props.screenWidth - 270
-        let height = this.props.canvasHeight * .8
-        let className = this.props.revealInfoSheet ? 'info-sheet-container info-sheet-container-revealed' : 'info-sheet-container'
+        let left = props.canvasWidth < props.screenWidth ? props.margin + props.canvasWidth - 270 : props.screenWidth - 270
+        let height = props.canvasHeight * .8
+        let className = props.revealInfoSheet ? 'info-sheet-container info-sheet-container-revealed' : 'info-sheet-container'
 
         return(
             <div className={className} style={{left: left, height: height}}>
@@ -22,7 +18,6 @@ class InfoSheet extends React.PureComponent {
                 <p>Click the contact menu on the left to send me an email, view my resume, or check out some of my other projects on GitHub and NPM. You can toggle the performance button at the top right to add haziness to the clouds, the default for which is off since this does strain your GPU.</p>
             </div>
         )
-    }
 }
 
-export default InfoSheet
+export default React.memo(InfoSheet) //I'm wrapping the export of the component in React.memo, which does a shallow comparison for function components as React.PureComponent, or the older lifecycle method componentShouldUpdate(), do shallow comparisons to limit unnecessary re-rendering in class components. One could also simply wrap the code block of the component itself in React.memo but I think doing it in the export is cleaner.
