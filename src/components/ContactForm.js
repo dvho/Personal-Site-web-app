@@ -84,8 +84,8 @@ class ContactForm extends React.PureComponent {
 
     render() {
 
-        let right = this.props.canvasWidth < this.props.screenWidth ? this.props.margin : 0
-        let className = this.props.revealContactForm ? (this.state.formSend ? (this.props.screenWidth > this.props.canvasWidth ? 'form-container form-container-revealed form-send-wide-animation' : 'form-container form-container-revealed form-send-narrow-animation') : 'form-container form-container-revealed') : 'form-container' //Triple nested ternary just for fun: "If this.props.revealContactForm is true, then if this.state.formSend is true, if the screenWidth is more than the canvasWidth run the formSendWideAnimation or else run the formSendNarrowAnimation, else if this.state.formSend is false, just show the form, else if this.props.revealContactForm is false, don't show the form at all."
+        let right = this.props.wideScreen ? this.props.margin : 0
+        let className = this.props.revealContactForm ? (this.state.formSend ? (this.props.wideScreen ? 'form-container form-container-revealed form-send-wide-animation' : 'form-container form-container-revealed form-send-narrow-animation') : 'form-container form-container-revealed') : 'form-container' //Triple nested ternary just for fun: "If this.props.revealContactForm is true, then if this.state.formSend is true, if the screenWidth is more than the canvasWidth (i.e. if this.props.wideScreen is true) run the formSendWideAnimation or else run the formSendNarrowAnimation, else if this.state.formSend is false, just show the form, else if this.props.revealContactForm is false, don't show the form at all."
 
         return(
             <div className={className} style={{right: right}}>

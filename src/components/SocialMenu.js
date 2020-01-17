@@ -6,7 +6,7 @@ const SocialMenu = props => {
         return
     }
 
-    let left = props.canvasWidth < props.screenWidth ? props.margin : 0
+    let left = props.wideScreen ? props.margin : 0
     let pullTabClassName = props.menuOpen ? 'fa fa-angle-double-left pull-chevron-column pull-chevron-column-open' : 'fa fa-angle-double-right pull-chevron-column'
     let socialIconsColumnClassName = props.menuOpen ? 'social-icons-column social-icons-column-open' : 'social-icons-column'
 

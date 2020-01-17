@@ -5,7 +5,7 @@ const Ripple = props => {
     let diameter = props.canvasHeight / 10
     let blur = props.canvasHeight / 35
     let spread = props.canvasHeight / 20
-    let left = props.screenWidth < props.canvasWidth ? props.screenWidth * props.rippleXCoord - diameter / 2 : props.margin - diameter / 2 + props.canvasWidth * props.rippleXCoord
+    let left = props.wideScreen ? props.screenWidth * props.rippleXCoord - diameter / 2 : props.margin - diameter / 2 + props.canvasWidth * props.rippleXCoord
     let top = props.canvasHeight * props.rippleYCoord - diameter / 2
     let boxShadow = `0 0 ${blur}px ${spread}px #fff, inset 0 0 ${blur}px ${spread}px #fff`
 
