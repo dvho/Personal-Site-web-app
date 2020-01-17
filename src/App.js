@@ -143,7 +143,7 @@ class App extends React.PureComponent {
 
         let blinkDuration = 100 + Math.random() * 150
         let blinkStareTimeCoefficient = 300 + Math.random() * 300
-        let current = this.state.faceFrame //the current faceFrame, which will eventually be switched around with an eye position method, is saved as "current" and then the setTimeouts are run for the blinks from F to A and back to F again and finally back to current. This way, no arguments need to be passed to blink.
+        let currentFaceFrame = this.state.faceFrame //the current faceFrame, which will eventually be switched around with an eye position method, is saved as "currentFaceFrame" and then the setTimeouts are run for the blinks from F to A and back to F again and finally back to currentFaceFrame. This way, no arguments need to be passed to blink.
 
         //First 2 setTimeouts below should be commented out. A blink looks more natural when eyes move rapidly to close and drag more on the way up, and omitting those frames depicted that much better.
         this.setState({blinkActive: true}) //Make blinkActive true
@@ -183,7 +183,12 @@ class App extends React.PureComponent {
             this.setState({faceFrame: config.images.blink.faceBlinkF})
         }, (blinkStareTimeCoefficient + blinkDuration * .92))
         setTimeout(() => {
-            this.setState({faceFrame: current, blinkActive: false}) //Make blinkActive false again
+            if (this.state.xCoord === -1) { //If there's no user input from mouse or touchscreen (i.e. has not been any user input from mouse or touchscreen in the past 10000ms, as per this.autoVsUserTimer) simply set the faceFrame back to currentFaceFrame and blinkActive back to false...
+                this.setState({faceFrame: currentFaceFrame, blinkActive: false})
+            } else { //...else if there has been user input in the past 10000ms don't set the last frame of the blink, just run this.userSwitchEyePosition instead and, of course, make blinkActive false.
+            this.userSwitchEyePosition()
+            this.setState({blinkActive: false})
+            }
         }, (blinkStareTimeCoefficient + blinkDuration * 1.1))
     }
 
@@ -209,8 +214,8 @@ class App extends React.PureComponent {
         }, cloudOut)
     }
 
-    timer = () => {
-        this.setState({ //this.timer is called whenever the mousemove, touchmove, or click events fire, which sets this.state.t to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1. Subsequently, every time this.timer is called, clearTimeout is called on this.state.t, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
+    autoVsUserTimer = () => {
+        this.setState({ //this.autoVsUserTimer is called whenever the mousemove, touchmove, or click events fire, which sets this.state.t to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1. Subsequently, every time this.autoVsUserTimer is called, clearTimeout is called on this.state.t, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
             t: setTimeout(() => {
                 this.setState({
                     xCoord: -1,
@@ -291,7 +296,7 @@ class App extends React.PureComponent {
                     })
 
                     clearTimeout(this.state.t) //clearTimeout of this.state.t
-                    this.timer() //restart the this.state.t timeOut function by calling its parent function, this.timer
+                    this.autoVsUserTimer() //restart the this.state.t setTimeout function by calling its parent function, this.autoVsUserTimer
                     this.userSwitchEyePosition() //call this.userSwitchEyePosition and know that autoSwitchEyePosition isn't being called from either autoSwitchEyePositionControl nor blinkControl because this.state.xCoords would have to === -1 (and, by extention, this.state.yCoords would have to === -1) in order for that to happen.
                 }
 
