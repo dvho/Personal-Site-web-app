@@ -8,6 +8,10 @@ body {
 }
 
 
+.canvas-dev {
+    text-align: center;
+    height: 100vh;
+}
 .canvas-parent {
     text-align: center;
     transition: opacity .3s ease;
