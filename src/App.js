@@ -15,6 +15,7 @@ class App extends React.PureComponent {
     constructor() {
         super()
         this.state = {
+            devTest: false,
             wideScreen: true,
             screenWidth: 0,
             canvasHeight: 0,
@@ -45,6 +46,24 @@ class App extends React.PureComponent {
         }
     }
 
+    toggleDevTest = () => {
+        if (!this.state.devTest) {
+            this.setState({
+                devTest: true,
+                cloudNumber: 1
+            })
+        } else {
+            setTimeout(() => window.location.reload(), 10) //setTimeout needed for Mozilla (not Chrome) per Morteza Ziyae on 2015, 01-27th in https://stackoverflow.com/questions/18967532/window-location-reload-not-working-for-firefox-and-chrome
+        }
+    }
+
+    togglePerformanceBoost = () => {
+        this.setState({
+            performanceBoost: !this.state.performanceBoost,
+            cloudNumber: 1
+        })
+    }
+
     toggleInfoSheet = () => {
         this.setState({
             revealInfoSheet: !this.state.revealInfoSheet,
@@ -70,13 +89,6 @@ class App extends React.PureComponent {
             this.setState({currentTrack: currentTrack})
             setTimeout(() => this.renderTracks(), 0) //Have to call renderTracks again to be able to pass the new this.state.currentTrack, and to do that without it being the penultimate this.state.currentTrack, it must be broken out into a setTimeout of 0ms.
         }
-    }
-
-    togglePerformanceBoost = () => {
-        this.setState({
-            performanceBoost: !this.state.performanceBoost,
-            cloudNumber: 1
-        })
     }
 
     userSwitchEyePosition = () => {
@@ -261,7 +273,7 @@ class App extends React.PureComponent {
         let performanceButtonDiameter = canvasHeight * .025
         let margin = ((screenWidth - canvasWidth) / 2)
 
-        if (e.type === 'load' || e.type === 'resize') { //Get the sizes of the screen, canvas, moon, performance toggle button, and reset cloudNumber on both load and on resize
+        if (e.type === 'load') { //Get the sizes of the screen, canvas, moon, performance toggle button, and reset cloudNumber on load
             this.setState({
                 wideScreen: wideScreen,
                 screenWidth: screenWidth,
@@ -275,7 +287,13 @@ class App extends React.PureComponent {
 
         this.renderTracks() //Now that all the basic dimensions have been set in state render the tracks
 
-        } else if (e.type === 'mousemove' || e.type === 'touchmove' || e.type === 'click') { //Get the X and Y positions on mousemove, touchmove and click. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
+        }
+
+        if (e.type === 'resize') {
+            setTimeout(() => window.location.reload(), 10) //setTimeout needed for Mozilla (not Chrome) per Morteza Ziyae on 2015, 01-27th in https://stackoverflow.com/questions/18967532/window-location-reload-not-working-for-firefox-and-chrome
+        }
+
+        if (e.type === 'mousemove' || e.type === 'touchmove' || e.type === 'click') { //Get the X and Y positions on mousemove, touchmove and click. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
             let yCoord = e.pageY / canvasHeight
             let xCoord
 
@@ -355,6 +373,37 @@ class App extends React.PureComponent {
 
     render() { //Placing a rendering condition here to prevent a render until the essential calculations have been set in state at componentDidMount causes a display glitch where the canvas-parent ends up flush left.
 
+        if (this.state.devTest) {
+            return (
+                <div className="canvas-parent" style={{opacity: this.state.screenWidth === 0 ? 0 : 1}}> {/* If the componentDidMount hasn't yet set all the initial values in state make the opacity 0, else 1 (.canvas-parent has a nice .3s transition on opacity in App.css) */}
+                    <img alt={"back"} src={config.images.canvas.back} className="canvas" id="back-image"/>
+
+                    <img alt={"back trees only"} src={config.images.canvas.backTreesOnly} className="canvas" id="back-trees-only-image"/>
+
+                    <img alt={"main"} src={config.images.canvas.main} className="canvas" id="main-image"/>
+
+                    <Veil opacity={.5} key={'a'}/>
+
+                    <Face opacity={.4} key={'b'} faceFrame={this.state.faceFrame} screenWidth={this.state.screenWidth}/>
+
+                    <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
+
+                    {/*<h1 style={{fontSize: 50, color: 'blue', position: 'absolute'}}>{this.state.xCoord}</h1>
+                    <h1 style={{fontSize: 50, color: 'red', right: 0, position: 'absolute'}}>{this.state.yCoord}</h1> for testing purposes*/}
+
+                    <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack} toggleDevTest={this.toggleDevTest}/>
+
+                    <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginLeft: this.state.titlesColumnsMargin, left: 0}}>
+                        {this.state.leftColumnTracks}
+                    </div>
+                    <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginRight: this.state.titlesColumnsMargin, right: 0}}>
+                        {this.state.rightColumnTracks}
+                    </div>
+
+                </div>
+            )
+        }
+
         const allClouds = []
         let i
 
@@ -362,7 +411,7 @@ class App extends React.PureComponent {
             allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} dimVeil={this.dimVeil} performanceBoost={this.state.performanceBoost}/>)
         } //All this logic has to go here, not in a componentDidUpdate, because then I'd have to setState with a allClouds array and read it from the return and that's causing the "Maximum update depth exceeded" error, probably because, unlike in AudioPlayer.js, setState is being called after and on account of a loop above it. Remedy by not setting allClouds in state, just passing it along to the return from this smaller scope.
 
-        return(
+        return (
             <div className="canvas-parent" style={{opacity: this.state.screenWidth === 0 ? 0 : 1}}> {/* If the componentDidMount hasn't yet set all the initial values in state make the opacity 0, else 1 (.canvas-parent has a nice .3s transition on opacity in App.css) */}
 
                 <img alt={"back"} src={config.images.canvas.back} className="canvas" id="back-image"/>
@@ -382,7 +431,7 @@ class App extends React.PureComponent {
                 {/*<h1 style={{fontSize: 50, color: 'blue', position: 'absolute'}}>{this.state.xCoord}</h1>
                 <h1 style={{fontSize: 50, color: 'red', right: 0, position: 'absolute'}}>{this.state.yCoord}</h1> for testing purposes*/}
 
-                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack}/>
+                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack} toggleDevTest={this.toggleDevTest}/>
 
                 <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginLeft: this.state.titlesColumnsMargin, left: 0}}>
                     {this.state.leftColumnTracks}
