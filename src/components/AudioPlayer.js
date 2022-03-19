@@ -24,18 +24,14 @@ class AudioPlayer extends React.PureComponent {
             hasEnded: true
         })
 
-        const tempAllTitles = []
+        const allSlugs = config.tracks.map(i => i.slug)
 
-        this.props.allTracks.forEach(i => { //Loop through this.props.allTracks and push just the titles to a new temp array
-            tempAllTitles.push(i[0])
-        })
+        const trackNumber = allSlugs.indexOf(this.state.currentTrack.slug) //The trackNumber of the track that just played is the indexOf this.state.currentTrack.slug in allSlugs
 
-        const trackNumber = tempAllTitles.indexOf(this.state.currentTrack[0]) //The trackNumber of the track that just played is the indexOf this.state.currentTrack[0] in tempAllTitles
-
-        if (forwardOrBackward === 'forward' && trackNumber < tempAllTitles.length - 1) { //If forwardOrBackward === 'forward' and the track that just played wasn't the final track call the this.props.selectTrack method in App.js and pass the next track to it.
+        if (forwardOrBackward === 'forward' && trackNumber < allSlugs.length - 1) { //If forwardOrBackward === 'forward' and the track that just played wasn't the final track call the this.props.selectTrack method in Home.js and pass the next track to it.
             this.props.selectTrack(this.props.allTracks[trackNumber + 1])
         }
-        if (forwardOrBackward === 'backward' && trackNumber > 0) { //If forwardOrBackward === 'backward' and a track number is set that is at least 1 call the this.props.selectTrack method in App.js and pass the previous track to it (track numbers, of course, start at 0).
+        if (forwardOrBackward === 'backward' && trackNumber > 0) { //If forwardOrBackward === 'backward' and a track number is set that is at least 1 call the this.props.selectTrack method in Home.js and pass the previous track to it (track numbers, of course, start at 0).
             this.props.selectTrack(this.props.allTracks[trackNumber - 1])
         }
     }
@@ -51,7 +47,7 @@ class AudioPlayer extends React.PureComponent {
             setTimeout(() => this.autoUpdatePlaybackTime(), 0) //Don't wait the <= 1000ms for the playback counter to go back to 0, just do it now.
         }
         if (type === 'play') {
-            if (this.props.currentTrack.length === 0) { //If type === 'play' and there's no track currently in App.js' state, just play the first track (a way to do that is simply to call this.changeTrackOrEnd and pass 'forward' as a param)
+            if (this.props.currentTrack === this.state.currentTrack) { //If type === 'play' and there's no track currently in Home.js' state, i.e. it's an empty object which was subsequently passed to AudioPlayer.js as this.props.currentTrack, it means there will also be no track in AudioPlayer.js' state.currentTrack, i.e. it will also be an empty object, so a way to check this is to simply with this.props.currentTrack === this.state.currentTrack and, if true, play the first track, and a way to play the first track at this point is simply to call this.changeTrackOrEnd and pass 'forward' as a param
                 this.changeTrackOrEnd('forward')
             }
             this.setState({ //Regardless, set isPlaying to true and hasEnded to false
@@ -65,10 +61,28 @@ class AudioPlayer extends React.PureComponent {
             })
         }
         if (type === 'forward') {
-            this.changeTrackOrEnd('forward')
+            if (this.props.allTracks.length > 0) {
+                this.changeTrackOrEnd('forward')
+            } else {
+                this.setState({
+                    totalSeconds: 0,
+                    isPlaying: false,
+                    hasEnded: true
+                })
+                this.player.seekTo(0)
+            }
         }
         if (type === 'backward') {
-            this.changeTrackOrEnd('backward')
+            if (this.props.allTracks.length > 0) {
+                this.changeTrackOrEnd('backward')
+            } else {
+                this.setState({
+                    totalSeconds: 0,
+                    isPlaying: false,
+                    hasEnded: true
+                })
+                this.player.seekTo(0)
+            }
         }
     }
 
@@ -108,7 +122,9 @@ class AudioPlayer extends React.PureComponent {
 
             setTimeout(() => this.autoUpdatePlaybackTime(), 0) //Don't wait the <= 1000ms for the playback counter to go back to 0, just do it now.
 
-            this.handlePlayer('play')
+            if (this.props.allTracks.length > 0) {
+                this.handlePlayer('play')
+            }
         }
 
         this.setState({ //Update this.state.currentTrack to whatever was selected
@@ -118,12 +134,12 @@ class AudioPlayer extends React.PureComponent {
 
     render() {
 
-        if (this.props.screenWidth === 0) { //This prevents the unnecesary render of all the calculations and JSX for the AudioPlayer caused by App.js not yet having its state set in componentDidMount when the first render happens, which was also responsible for the transition of all the audio interface buttons spending .4s transitioning from 0 to their actual calculated iconDiameter. Unlike the function components, an empty div must be returned here, so the extra render happens but it's a much lighter render and averts the unsighly .4s transition of the audio interface buttons, as mentioned.
+        if (this.props.screenWidth === 0) { //This prevents the unnecesary render of all the calculations and JSX for the AudioPlayer caused by Home.js not yet having its state set in componentDidMount when the first render happens, which was also responsible for the transition of all the audio interface buttons spending .4s transitioning from 0 to their actual calculated iconDiameter. Unlike the function components, an empty div must be returned here, so the extra render happens but it's a much lighter render and averts the unsighly .4s transition of the audio interface buttons, as mentioned.
             return <div></div>
         }
 
         let veilOpacity = this.props.veilOpacity > .9 ? .9 : this.props.veilOpacity //If this.props.veilOpacity > .9 (rare, but it happens especially on narrower screens) fix it at .9
-        //Variables below are all calculated dynamically with each render and are based on App.js state properties canvasHeight, canvasWidth, screenWidth, wideScreen, margin, and veilOpacity
+        //Variables below are all calculated dynamically with each render and are based on Home.js state properties canvasHeight, canvasWidth, screenWidth, wideScreen, margin, and veilOpacity
         let containerRgbaOpacity = (veilOpacity - .3) * .15 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.
         let timeStringRgbaOpacity = .045 - containerRgbaOpacity
         let containerHeight = this.props.canvasHeight * .1
@@ -144,7 +160,7 @@ class AudioPlayer extends React.PureComponent {
 
         return(
 
-            <div style={{position: 'absolute', width: containerWidth, height: containerHeight, left: left, bottom: bottom, backgroundColor: `rgba(255,255,255,${containerRgbaOpacity})`, transition: 'background-color 1.5s linear', padding: padding, borderRadius: borderRadius}}>
+            <div style={{position: 'absolute', width: containerWidth, height: containerHeight, left: left, bottom: bottom, backgroundColor: `rgba(${this.props.allTracks.length > 0 ? '255,255,255' : '0,0,0'},${containerRgbaOpacity})`, transition: 'background-color 1.5s linear', padding: padding, borderRadius: borderRadius}}>
 
                 <div style={{marginTop: marginTop, display: 'flex', flexDirection: 'row', position: 'absolute'}}>
                     <i onClick={() => this.handlePlayer('backward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className='fa fa-chevron-circle-left next-and-previous-icons audio-icon'></i>
@@ -160,7 +176,7 @@ class AudioPlayer extends React.PureComponent {
 
                 <ReactPlayer
                     ref={this.ref}
-                    url={this.state.currentTrack[1]}
+                    url={this.state.currentTrack.url}
                     playing={this.state.isPlaying}
                     progressInterval={1000}
                     onProgress={this.autoUpdatePlaybackTime}
