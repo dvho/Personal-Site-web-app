@@ -1,3 +1,5 @@
+import lyrics from '../assets/lyrics'
+
 export default {
     images: {
         canvas: {
@@ -80,16 +82,67 @@ export default {
     },
     appFont: 'Nothing You Could Do, cursive',
     formFont: 'Cormorant Garamond, serif',
-    tracks: {
-        "Believe in You": require('../assets/music/Believe in You-35.mp3'),
-        "How Could You Say That": require('../assets/music/How Could You Say That-38.mp3'),
-        "No Answer, No Wonder": require('../assets/music/Fire and Acid Rain-24.mp3'),
-        "I Wish it were Raining": require('../assets/music/I Wish It Were Raining-23.mp3'),
-        "Forgive": require('../assets/music/I Will Not Forgive-18.mp3'),
-        "Bad Place": require('../assets/music/Bad Place-08.mp3'),
-        "Highest Mountain": require('../assets/music/Highest Mountain-18.mp3'),
-        "Baby Elephant": require('../assets/music/Baby Elephant-07.mp3'),
-        "Driving and Crying": require('../assets/music/Driving and Crying-16.mp3'),
-        "Here (placeholder)": 'https://freesound.org/data/previews/345/345852_387219-lq.mp3' //Eventually this will be "I'm Just Standing Here"
-    }
+    tracks: [
+        {
+            title: 'Believe in You',
+            url: require('../assets/music/Believe in You-35.mp3'),
+            slug: 'believe-in-you',
+            lyrics: lyrics.believeInYou
+        },
+        {
+            title: 'I Wish it were Raining',
+            url: require('../assets/music/I Wish It Were Raining-23.mp3'),
+            slug: 'i-wish-it-were-raining',
+            lyrics: lyrics.iWishItWereRaining
+        },
+        {
+            title: 'How Could You Say That',
+            url: require('../assets/music/How Could You Say That-38.mp3'),
+            slug: 'how-could-you-say-that',
+            lyrics: lyrics.howCouldYouSayThat
+        },
+        {
+            title: 'No Answer, No Wonder',
+            url: require('../assets/music/Fire and Acid Rain-24.mp3'),
+            slug: 'no-answer-no-wonder',
+            lyrics: lyrics.noAnswerNoWonder
+        },
+        {
+            title: 'Forgive',
+            url: require('../assets/music/I Will Not Forgive-18.mp3'),
+            slug: 'forgive',
+            lyrics: lyrics.forgive
+        },
+        {
+            title: 'Highest Mountain',
+            url: require('../assets/music/Highest Mountain-18.mp3'),
+            slug: 'highest-mountain',
+            lyrics: lyrics.highestMountain
+        },
+        {
+            title: 'Driving and Crying',
+            url: require('../assets/music/Driving and Crying-16.mp3'),
+            slug: 'driving-and-crying',
+            lyrics: lyrics.drivingAndCrying
+        },
+        {
+            title: 'Baby Elephant',
+            url: require('../assets/music/Baby Elephant-07.mp3'),
+            slug: 'baby-elephant',
+            lyrics: lyrics.babyElephant
+        },
+        {
+            title: 'Bad Place',
+            url: require('../assets/music/Bad Place-08.mp3'),
+            slug: 'bad-place',
+            lyrics: lyrics.badPlace
+        },
+        {
+            title: 'I\'m Just Standing Here',
+            url: 'https://freesound.org/data/previews/345/345852_387219-lq.mp3', //Eventually this will be "I'm Just Standing Here",
+            slug: 'im-just-standing-here',
+            lyrics: lyrics.imJustStandingHere
+        }
+    ]
+
 }

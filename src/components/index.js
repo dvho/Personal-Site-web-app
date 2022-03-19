@@ -9,6 +9,7 @@ import ContactForm from './ContactForm'
 import InfoSheet from './InfoSheet'
 import SocialMenu from './SocialMenu'
 import SocialMenuLabels from './SocialMenuLabels'
+import SingleTrack from './SingleTrack'
 
 export {
     Cloud,
@@ -21,5 +22,6 @@ export {
     ContactForm,
     InfoSheet,
     SocialMenu,
-    SocialMenuLabels
+    SocialMenuLabels,
+    SingleTrack
 }
