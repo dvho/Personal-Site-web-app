@@ -1,7 +1,7 @@
 import lyrics from '../assets/lyrics'
 
 export default {
-    
+
     images: {
         canvas: {
             backTreesOnly: require('../assets/images/back-trees-only.png'),
@@ -140,7 +140,7 @@ export default {
         },
         {
             title: 'I\'m Just Standing Here',
-            url: 'https://freesound.org/data/previews/345/345852_387219-lq.mp3', //Eventually this will be "I'm Just Standing Here",
+            url: 'https://freesound.org/data/previews/345/345852_387219-lq.mp3', //Eventually this will be "I'm Just Standing Here"
             slug: 'im-just-standing-here',
             lyrics: lyrics.imJustStandingHere
         }
