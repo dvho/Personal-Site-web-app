@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
+import { HashRouter, Route, Routes } from 'react-router-dom'
 
 
 import Home from './Home'
@@ -9,23 +9,23 @@ import config from './config'
 
 const App = () => {
 
-    let paths, index, path, track
+    let hashes, index, path, track
 
-    paths = config.tracks.map(i => `/${i.slug}`)
-    index = paths.indexOf(window.location.pathname)
+    hashes = config.tracks.map(i => `#/${i.slug}`)
+    index = hashes.indexOf(window.location.hash)
 
-    if (config.tracks.filter(i => `/${i.slug}` === window.location.pathname).length > 0) {
-        path = window.location.pathname
+    if (config.tracks.filter(i => `#/${i.slug}` === window.location.hash).length > 0) {
+        path = window.location.hash.replace('#', '')
         track = config.tracks[index]
     }
 
     return (
-        <BrowserRouter>
+        <HashRouter>
             <Routes>
                 <Route path='*' element={<Home />} />
-                <Route exact path={path} element={<SingleTrack track={track}/>}/>
+                <Route path={path} element={<SingleTrack track={track}/>}/>
             </Routes>
-        </BrowserRouter>
+        </HashRouter>
     )
 }
 

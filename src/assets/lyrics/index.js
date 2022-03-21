@@ -519,17 +519,141 @@ export default {
 
                 `,
 
+
     babyElephant: `
-                babyElephant
+
+                Roaming on the plains</br>
+                Open as a grave</br>
+                Shots ring through the haze</br>
+                Meet my captor</br>
+
+                </br>
+
+                How long</br>
+                How long</br>
+
+                </br>
+
+                We’re so much the same</br>
+                Brown eyes shimmering</br>
+                Beat me through the cage</br>
+                Meet my captor</br>
+
+                </br>
+
+                How long</br>
+                How long</br>
+                How long</br>
+
+                </br>
+
+                Cherish your prisoner</br>
+                Open the cage</br>
+                Shatter the chains that bind me</br>
+                Or throw me away</br>
+
+                </br>
+
+                Ancient are the days</br>
+                Patient as a slave</br>
+                A face without a name</br>
+                Meet my captor</br>
+
+                </br>
+
+                How long</br>
+                How long</br>
+                How long</br>
+
+                </br>
+
+                </br></br></br>
+
                 `,
 
+
     badPlace: `
-                badPlace
+
+                Falling hard for the final time</br>
+                Holding on til the pain goes by</br>
+                Truth is soft but it’s far too loud</br>
+                So open wide and bite the ground</br>
+
+                </br>
+
+                You’re in a</br>
+                You’re in a bad place</br>
+                You’re in a bad place</br>
+
+                </br>
+
+                Tears that fix your honest eyes</br>
+                Contradict that smart disguise</br>
+                Take it off and it breaks the skin</br>
+                You climbed so high just to fall back in</br>
+
+                </br>
+
+                You’re in a</br>
+                You’re in a bad place</br>
+                You’re in a bad place</br>
+                You’re in a bad place</br>
+                You’re in a bad place</br>
+
+                </br></br></br>
+
                 `,
 
 
     imJustStandingHere: `
-                imJustStandingHere
+
+                Lately I’ve never been so alone</br>
+                Washed up with the stones and leaves</br>
+                Just blowing me away</br>
+
+                </br>
+
+                Lately I’m never on time</br>
+                I’m just standing here</br>
+                With everybody running around</br>
+                And I’m just standing here</br>
+
+                </br>
+
+                Sunshine come and rain down on me</br>
+                I can’t let go</br>
+                I’m just standing here</br>
+
+                </br>
+
+                Lately I’m feeling so far away</br>
+                But so close that I touch</br>
+                Touch the darkness deep inside</br>
+
+                </br>
+
+                So I just hold on</br>
+                Holding on to life</br>
+                I’m just standing here</br>
+                With everybody running around</br>
+                And I’m just standing here</br>
+
+                </br>
+
+                And I’m just standing here</br>
+                Sunshine come and rain down on me</br>
+                I can’t let go</br>
+                I’m just standing here</br>
+
+                </br>
+
+                Sunshine come and rain down on me</br>
+                I can’t let go</br>
+                I’m just standing here</br>
+
+                </br></br></br>
+
                 `
+
 
 }
