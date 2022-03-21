@@ -1,6 +1,7 @@
 import lyrics from '../assets/lyrics'
 
 export default {
+    
     images: {
         canvas: {
             backTreesOnly: require('../assets/images/back-trees-only.png'),
