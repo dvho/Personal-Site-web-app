@@ -36,8 +36,10 @@ class SingleTrack extends React.PureComponent {
     componentDidMount() {
         //Fire up event listeners when SingleTrack.js mounts
         ['load', 'resize'].forEach(i => window.addEventListener(i, this.calcAllDimensions))
+        const title = document.getElementById('title')
         const lyrics = document.getElementById('lyrics')
-        lyrics.innerHTML = this.props.track.lyrics
+        title.innerHTML = `"${this.props.track.title}"`
+        lyrics.innerHTML = lyrics.innerHTML + this.props.track.lyrics
     }
 
     componentWillUnmount() {
@@ -47,8 +49,10 @@ class SingleTrack extends React.PureComponent {
     render() {
         return (
             <div className='singleTrackPage' style={{width: this.state.screenWidth}}>
-                <div id='lyrics'></div>
-
+                <div id='lyrics'>
+                    <h1 id='title'/>
+                    <h2 id='author'>by David Homyk</h2><br/>
+                </div>
                 <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} veilOpacity={.6} currentTrack={this.props.track} allTracks={[]} selectTrack={() => {}}/>
 
             </div>
