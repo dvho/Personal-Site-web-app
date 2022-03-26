@@ -27,14 +27,14 @@ const Track = props => {
 
     let t
     let onHold = e => {
-        if (e.type === 'mousedown') {
+        if (e.type === 'mousedown' || e.type === 'touchstart') {
             t = setTimeout(() => {
                 let slug = props.track.slug
                 navigate(slug)
                 window.location.reload() //If you don't call this here the path will change in your browser's address bar but the app won't navigate
             }, 1500)
         }
-        if (e.type === 'mouseup') {
+        if (e.type === 'mouseup' || e.type === 'touchend') {
             clearTimeout(t)
         }
     }
@@ -42,13 +42,13 @@ const Track = props => {
     return(
         props.leftColumn ?
 
-        <div style={{position: 'relative', left: leftOrRightPosition}} onClick={e => onClick(e)} onMouseDown={e => onHold(e)} onMouseUp={e => onHold(e)}>
+        <div style={{position: 'relative', left: leftOrRightPosition}} onClick={e => onClick(e)} onMouseDown={e => onHold(e)} onMouseUp={e => onHold(e)} onTouchStart={e => onHold(e)} onTouchEnd={e => onClick(e)}>
             <h1 style={{color: color, transform: isSelected ? 'scale(1.2)' : null, margin: textMargin, fontSize: fontSizeCalc}} className='title'>{props.trackNumber}. {trackTitle}</h1>
         </div>
 
         :
 
-        <div style={{position: 'relative', right: leftOrRightPosition}} onClick={e => onClick(e)} onMouseDown={e => onHold(e)} onMouseUp={e => onHold(e)}>
+        <div style={{position: 'relative', right: leftOrRightPosition}} onClick={e => onClick(e)} onMouseDown={e => onHold(e)} onMouseUp={e => onHold(e)} onTouchStart={e => onHold(e)} onTouchEnd={e => onClick(e)}>
             <h1 style={{color: color, transform: isSelected ? 'scale(1.2)' : null, margin: textMargin, fontSize: fontSizeCalc}} className='title'>{props.trackNumber}. {trackTitle}</h1>
         </div>
     )
