@@ -46,8 +46,9 @@ body {
 
 
 .singleTrackPage {
-    background-color: #fff;
     height: 100vh;
+    background-color: rgb(255,255,255);
+    animation: fadeInSingleTrackPage 1s ease;
 }
 
 
@@ -455,6 +456,10 @@ body {
       width: 28px;
       height: 14px;
   }
+}
+@keyframes fadeInSingleTrackPage {
+    0% {background-color: rgb(1,1,20);}
+    100% {background-color: rgb(255,255,255);}
 }
 @keyframes label-animation { /* There is a bug in CSS3 itself, or in React's interpretation of CSS3, wherein the rotate property has to be set to 0 in each of the keyframes of this animation in order to make the social-menu-label-block-projects class visible on mobile browsers (specifically Safari and Chrome, which were the ones I was testing) when mobile devices are held horizontally. (ONLY the social-menu-label-block-projects class for some reason, not the social-menu-label-block-resume nor social-menu-label-block-mail classes, and ONLY on mobile browsers when devices are held horizontally). Don't even ask me how I debugged this and figured it out. */
     0% {transform: translateX(0px) translateY(0px) rotate(0deg);}

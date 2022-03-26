@@ -27,6 +27,7 @@ const Track = props => {
 
     let t
     let onHold = e => {
+        //Because the default is onClick you don't want to e.preventDefault here
         if (e.type === 'mousedown' || e.type === 'touchstart') {
             t = setTimeout(() => {
                 let slug = props.track.slug
@@ -42,13 +43,13 @@ const Track = props => {
     return(
         props.leftColumn ?
 
-        <div style={{position: 'relative', left: leftOrRightPosition}} onClick={e => onClick(e)} onMouseDown={e => onHold(e)} onMouseUp={e => onHold(e)} onTouchStart={e => onHold(e)} onTouchEnd={e => onClick(e)}>
+        <div style={{position: 'relative', left: leftOrRightPosition}} onClick={e => onClick(e)} onMouseDown={e => onHold(e)} onMouseUp={e => onHold(e)} onTouchStart={e => onHold(e)} onTouchEnd={e => onHold(e)}>
             <h1 style={{color: color, transform: isSelected ? 'scale(1.2)' : null, margin: textMargin, fontSize: fontSizeCalc}} className='title'>{props.trackNumber}. {trackTitle}</h1>
         </div>
 
         :
 
-        <div style={{position: 'relative', right: leftOrRightPosition}} onClick={e => onClick(e)} onMouseDown={e => onHold(e)} onMouseUp={e => onHold(e)} onTouchStart={e => onHold(e)} onTouchEnd={e => onClick(e)}>
+        <div style={{position: 'relative', right: leftOrRightPosition}} onClick={e => onClick(e)} onMouseDown={e => onHold(e)} onMouseUp={e => onHold(e)} onTouchStart={e => onHold(e)} onTouchEnd={e => onHold(e)}>
             <h1 style={{color: color, transform: isSelected ? 'scale(1.2)' : null, margin: textMargin, fontSize: fontSizeCalc}} className='title'>{props.trackNumber}. {trackTitle}</h1>
         </div>
     )

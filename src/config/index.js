@@ -91,10 +91,10 @@ export default {
             lyrics: lyrics.believeInYou
         },
         {
-            title: 'I Wish it were Raining',
+            title: 'I Wish it Was Raining',
             url: require('../assets/music/I Wish It Were Raining-23.mp3'),
-            slug: 'i-wish-it-were-raining',
-            lyrics: lyrics.iWishItWereRaining
+            slug: 'i-wish-it-was-raining',
+            lyrics: lyrics.iWishItWasRaining
         },
         {
             title: 'How Could You Say That',
