@@ -67,7 +67,7 @@ export default {
                 `,
 
 
-    iWishItWereRaining: `
+    iWishItWasRaining: `
 
                 I open my arms</br>
                 Falling from a high beam</br>
@@ -397,7 +397,7 @@ export default {
 
                 </br>
 
-                Now is the time</br>
+                Now is our time</br>
                 To celebrate and rejoice</br>
                 For so long we’ve been waiting</br>
                 All of our lives for this day</br>
@@ -428,7 +428,7 @@ export default {
 
                 </br>
 
-                Now is the time</br>
+                Now is our time</br>
                 To celebrate and rejoice</br>
                 For so long we’ve been waiting</br>
                 All of our lives for this day</br>
