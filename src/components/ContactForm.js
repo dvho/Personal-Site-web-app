@@ -1,9 +1,10 @@
 import React from 'react'
 import emailValidator from 'email-validator'
+import emailjs from '@emailjs/browser'
 
 // --Setting up email--
-//https://blog.mailtrap.io/react-send-email/
-//https://medium.com/@eesh.t/send-email-using-emailjs-and-react-form-9993bb6929d8
+//https://github.com/emailjs-com/emailjs-sdk
+//https://www.emailjs.com/docs/sdk/send/
 
 class ContactForm extends React.PureComponent {
     constructor(props) {
@@ -49,7 +50,7 @@ class ContactForm extends React.PureComponent {
         let lastNameValid = /^[A-Z]+$/i.test(this.state.lastName) //Evaluates to either true or false when this.state.firstName is tested in a regex that makes sure there is at least one letter and no non letter characters in the string
         let emailValid = emailValidator.validate(this.state.email) //Evaluates to either true or false when this.state.email is tested in a method on npm package 'email-validator,' which checks for valid email structure
 
-        if (firstNameValid && lastNameValid && emailValid) { //If all three of these fields test as valid then set the templateParams and pass them to window.emailjs.send(), which sends them to the EmailJS account associated with the app in the head of index.html...
+        if (firstNameValid && lastNameValid && emailValid) { //If all three of these fields test as valid then set the templateParams and pass them to emailjs.send()
 
             let templateParams = {
                 from_email: this.state.email,
@@ -59,12 +60,19 @@ class ContactForm extends React.PureComponent {
                 message_html: this.state.message
             }
 
-            window.emailjs.send(
-                'gmail',
-                'template_XwZav7A3',
-                templateParams,
-                'user_cqWwBjugzaX0BXZjXbz8a'
-            )
+            emailjs.send('service_j0tuddh','template_XwZav7A3', templateParams, 'user_cqWwBjugzaX0BXZjXbz8a')
+            	.then((response) => {
+            	   console.log('SUCCESS!', response.status, response.text)
+            	}, (err) => {
+            	   console.log('FAILED...', err)
+            	})
+
+            // window.emailjs.send( //Old emailjs API's send method worked with the below params and the EmailJS account was linked in the head of index.html
+            //     'gmail',
+            //     'template_XwZav7A3',
+            //     templateParams,
+            //     'user_cqWwBjugzaX0BXZjXbz8a'
+            // )
 
             this.animateAndResetForm() // ...then animate the sending of the form and reset it.
 
