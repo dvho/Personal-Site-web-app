@@ -229,7 +229,7 @@ class Home extends React.PureComponent {
     }
 
     autoVsUserTimer = () => {
-        this.setState({ //this.autoVsUserTimer is called whenever the mousemove, touchmove, or click events fire, which sets this.state.t to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1. Subsequently, every time this.autoVsUserTimer is called, clearTimeout is called on this.state.t, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
+        this.setState({ //this.autoVsUserTimer is called whenever the pointermove or click events fire, which sets this.state.t to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1. Subsequently, every time this.autoVsUserTimer is called, clearTimeout is called on this.state.t, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
             t: setTimeout(() => {
                 this.setState({
                     xCoord: -1,
@@ -291,11 +291,11 @@ class Home extends React.PureComponent {
 
         }
 
-        if (e.type === 'resize') {
+        if (e.type === 'resize' && !navigator.userAgent.includes('iPhone')) { //Unfortunately I have to prevent this from working on iOS Safari because as of iOS 14 the new bottom address bar, which now dynamically appears on touchstart, also always fires the resize event
             setTimeout(() => window.location.reload(), 10) //setTimeout needed for Mozilla (not Chrome) per Morteza Ziyae on 2015, 01-27th in https://stackoverflow.com/questions/18967532/window-location-reload-not-working-for-firefox-and-chrome
         }
 
-        if (e.type === 'mousemove' || e.type === 'touchmove' || e.type === 'click') { //Get the X and Y positions on mousemove, touchmove and click. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
+        if (e.type === 'pointermove' || e.type === 'click') { //Get the X and Y positions on pointermove and on click. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
             let yCoord = e.pageY / canvasHeight
             let xCoord
 
@@ -307,7 +307,7 @@ class Home extends React.PureComponent {
 
             if (xCoord >= 0 && xCoord <= 1) { //If the xCoord is between 0 and 1
 
-                if (e.type === 'click' || ((e.type === 'mousemove' || e.type === 'touchmove') && (this.state.xCoord !== xCoord || this.state.yCoord !== yCoord))) { //If event type is click or event type is either mousemove or touchmove AND there hasn't been a change in either xCoord nor yCoord in state
+                if (e.type === 'click' || (e.type === 'pointermove' && (this.state.xCoord !== xCoord || this.state.yCoord !== yCoord))) { //If event type is click or event type is pointermove AND there hasn't been a change in either xCoord nor yCoord in state
 
                     this.setState({ //set the new xCoord and yCoord in state
                         margin: margin,
@@ -338,7 +338,7 @@ class Home extends React.PureComponent {
 
     componentDidMount() {
         //Fire up event listeners when Home.js mounts
-        ['load', 'resize', 'mousemove', 'touchmove', 'click', 'onmousedown', 'onmouseup', 'touchstart', 'touchend'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds)) //onmousedown and onmouseup are needed for the onHold function used in Track.js
+        ['load', 'resize', 'pointermove', 'click', 'onmousedown', 'onmouseup', 'touchstart', 'touchend'].forEach(i => window.addEventListener(i, this.calcAllDimensionsCoordsAndResetClouds)) //onmousedown and onmouseup are needed for the onHold function used in Track.js
 
         //Fire up the cloud's "game loop" as a controller that calls itself randomly between 1 and 9s and, in the interim, increases the cloudNumber by 1
         let cloudControl
@@ -354,7 +354,7 @@ class Home extends React.PureComponent {
         let blinkControl
         (blinkControl = () => {
             let repeatRate = this.state.xCoord === -1 ? (5000 + Math.random() * 5000) : (875 + Math.random() * 3000) //Repeat rate of blinkControl must be more than the max time it would take to blink, which is blinkStareTimeCoefficient + blinkDuration * 1.1 in the blink method, which is called below. If this.state.xCoord === -1, i.e. the user is not firing events, it should be shorter than if the user is firing events.
-            if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then blink, and if this.state.xCoord === -1, which means it's been longer than 10000ms since mousemove, touchmove or click event has fired, switch eye position again.
+            if (!this.state.eyesJustSwitched) { //If eyesJustSwitched is false (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms, since eye position has switched) then blink, and if this.state.xCoord === -1, which means it's been longer than 10000ms since pointermove or click event has fired, switch eye position again.
                 if (this.state.xCoord === -1) {
                     this.autoSwitchEyePosition()
                 }
@@ -366,7 +366,7 @@ class Home extends React.PureComponent {
         let autoSwitchEyePositionControl
         (autoSwitchEyePositionControl = () => {
             let repeatRate = 1000 + Math.random() * 2000
-            if (!this.state.blinkActive && !this.state.eyesJustSwitched && this.state.xCoord === -1) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) and this.state.xCoord === -1, which means it's been longer than 10000ms since mousemove, touchmove or click events have fired, only then can you run autoSwitchEyePosition. Note, autoSwitchEyePosition can run from blinkControl as well so the condition !this.state.eyesJustSwitched must be reiterated here even through repeatRate for autoSwitchEyePositionControl is greater than 1000ms.
+            if (!this.state.blinkActive && !this.state.eyesJustSwitched && this.state.xCoord === -1) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) and this.state.xCoord === -1, which means it's been longer than 10000ms since pointermove or click events have fired, only then can you run autoSwitchEyePosition. Note, autoSwitchEyePosition can run from blinkControl as well so the condition !this.state.eyesJustSwitched must be reiterated here even through repeatRate for autoSwitchEyePositionControl is greater than 1000ms.
                 this.autoSwitchEyePosition()
             }
             setTimeout(autoSwitchEyePositionControl, repeatRate)
