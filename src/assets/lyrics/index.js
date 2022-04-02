@@ -411,7 +411,7 @@ export default {
 
                 </br>
 
-                Joy and laugher</br>
+                Joy and laughter</br>
                 Forever after</br>
 
                 </br>
@@ -442,9 +442,9 @@ export default {
 
                 </br>
 
-                Joy and laugher</br>
+                Joy and laughter</br>
                 Forever after</br>
-                Joy and laugher</br>
+                Joy and laughter</br>
                 Forever after</br>
 
                 </br>
@@ -465,9 +465,9 @@ export default {
 
                 </br>
 
-                Joy and laugher</br>
+                Joy and laughter</br>
                 Forever after</br>
-                Joy and laugher</br>
+                Joy and laughter</br>
                 Forever after</br>
 
                 </br></br></br>
