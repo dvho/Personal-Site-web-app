@@ -55,7 +55,7 @@ class AudioPlayer extends React.PureComponent {
                 hasEnded: false
             })
         }
-        if (type === 'pause' && this.state.currentTrack.length > 0 && !this.state.hasEnded) { //If the 'pause' button is selected and there's a track loaded in that hasn't ended (i.e. the 'stop' button was not pressed) only then will pause work to either pause or unpause the playing track.
+        if (type === 'pause' && this.state.currentTrack && !this.state.hasEnded) { //If the 'pause' button is selected and there's a track loaded in that hasn't ended (i.e. the 'stop' button was not pressed) only then will pause work to either pause or unpause the playing track.
             this.setState({
                 isPlaying: !this.state.isPlaying
             })
@@ -115,7 +115,7 @@ class AudioPlayer extends React.PureComponent {
     }
 
     componentDidUpdate() { //Must use componentDidUpdate, rather than render, to handle checking for changes between this.props.currentTrack and this.state.currentTrack, otherwise face warning in console “Cannot update during an existing state transition (such as within render). Render methods should be a pure function of props and state.”
-        if (this.props.currentTrack.length !== 0 && this.props.currentTrack !== this.state.currentTrack) { //If there was a track selected before (i.e this.props.currentTrack.length !== 0) and that track changed, reset this.state.totalSeconds to -1, because you have to call this.autoUpdatePlaybackTime immediately afterward (from a setTimeout), which will advance this.state.totalSeconds + 1 to 0. Also pass 'play' to this.handlePlayer.
+        if (this.props.currentTrack && this.props.currentTrack !== this.state.currentTrack) { //If there was a track selected before (i.e this.props.currentTrack exists) and that track changed, reset this.state.totalSeconds to -1, because you have to call this.autoUpdatePlaybackTime immediately afterward (from a setTimeout), which will advance this.state.totalSeconds + 1 to 0. Also pass 'play' to this.handlePlayer.
             this.setState({
                 totalSeconds: -1,
             })
@@ -133,6 +133,8 @@ class AudioPlayer extends React.PureComponent {
     }
 
     render() {
+
+        console.log(this.props);
 
         if (this.props.screenWidth === 0) { //This prevents the unnecesary render of all the calculations and JSX for the AudioPlayer caused by Home.js not yet having its state set in componentDidMount when the first render happens, which was also responsible for the transition of all the audio interface buttons spending .4s transitioning from 0 to their actual calculated iconDiameter. Unlike the function components, an empty div must be returned here, so the extra render happens but it's a much lighter render and averts the unsighly .4s transition of the audio interface buttons, as mentioned.
             return <div></div>
