@@ -35,7 +35,7 @@ body {
 }
 .canvas-parent {
     text-align: center;
-    transition: opacity .3s ease;
+    transition: opacity .3s ease .4s; /* Wait .4s because all the icons have a transition time of .4s  */
 }
 .canvas {
     position: absolute;
@@ -57,26 +57,6 @@ body {
     width: 100%;
     height: 100vh;
     position: absolute;
-}
-
-
-.performance-button-container {
-    position: absolute;
-    top: 0px;
-    right: 0px;
-    cursor: pointer;
-}
-.performance-button {
-    margin: 0;
-    opacity: .35;
-    border-radius: 50%;
-    background-color: rgb(150,150,255);
-    transition: all .4s ease;
-}
-.performance-button:hover {
-    opacity: 1;
-    background-color: red;
-    transition: all .2s ease;
 }
 
 
@@ -268,7 +248,7 @@ body {
 }
 
 
-.social-menu-container {
+.social-menu-container-open {
     visibility: visible;
     position: absolute;
     display: flex;
@@ -277,22 +257,31 @@ body {
     height: 230px;
     top: 55%;
     transform: translateY(-50%) translateX(0%) scaleX(1);
+    transition: all .5s ease;
+}
+.social-menu-container-open-wide {
+    width: 120px;
+    transition: all .5s ease;
 }
 .social-icons-column {
     display: flex;
     flex-direction: column;
     justify-content: center;
     font-size: 0px;
-    background-color: rgba(255,255,255,.35);
+    background-color: rgba(255,255,255,.65);
     transition: all .5s ease;
 }
 .social-icons-column-open {
     flex: 1;
     font-size: 32px;
     padding-left: 4px;
-    background-color: rgba(255,255,255,.65);
     transition: all .5s ease;
 }
+.social-icons-column-open-left-gradient {
+    background-image: linear-gradient(to right, rgba(255,255,215,.5) , transparent);
+    transition: all .5s ease;
+}
+
 /* Can do transition all for mail:hover, github:hover and npm:hover, but not for mail, github and npm because it interferes with the CLOSING of socialIconsColumn, so the net effect is when unhovering, the colors (merely the alpha channel of the rgba in these cases) toggle abruptly but the transform scale toggles as normal which generally smoothens the whole experience so that it's not noticeable */
 .mail {
     margin-top: -3px;
@@ -308,7 +297,7 @@ body {
     transition: transform .4s ease;
 }
 .resume {
-    color: rgb(150,100,0,1);
+    color: rgb(150,100,0);
     cursor: pointer;
     transition: transform .4s ease;
 }
@@ -325,15 +314,39 @@ body {
     transition: transform .4s ease;
 }
 .info {
-    color: rgb(145,15,0,1);
+    color: rgb(145,15,0);
     cursor: pointer;
     transition: transform .4s ease;
 }
+.cloud {
+    cursor: pointer;
+    transition: transform .4s ease;
+    margin: 6px -8px 12px 0;
+}
+.cloud-haze {
+    cursor: pointer;
+    transition: transform .4s ease;
+    transform: translateX(6px); /* Would be ideal if this didn't need to use transform and could use margin like .cloud and .hand (in the case of this .cloud-haze icon it would be    margin: 0 -12px 4px 0;    ) but the negative margin cuts off the color and everything 12 pixels to the right ends up being rgb(255,255,255) for some reason. As a result we can't use .social-icon as a class to get the :hover pseudo-class because it's already using the transform prop so .cloud-haze:hover has to be the pseudo-class which is the same as .social-icon:hover except its transform prop includes the translateX(6px) */
+}
+.hand {
+    cursor: pointer;
+    transition: transform .4s ease;
+    margin: 8px -8px 20px 0;
+}
+
+
+
 .social-icon:hover {
     color: rgba(0,170,170,.95);
     transform: scale(1.2);
     transition: all .2s ease;
 }
+.cloud-haze:hover {
+    transform: scale(1.2) translateX(6px);
+    transition: all .2s ease;
+}
+
+
 
 
 .pull-chevron-column {
@@ -346,7 +359,7 @@ body {
     border-bottom-right-radius: 10px;
     padding-left: 2px;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 13px;
     padding-right: 3px;
     animation: pull-chevron-pulse-closed 1.25s infinite;
     transition: all .5s ease;
@@ -366,7 +379,11 @@ body {
     background-color: rgba(200,200,255,.65);
     transition: all .5s ease;
 }
-
+.pull-chevron-column-hand-controller-specific {
+    position: absolute;
+    width: 16px;
+    height: 32px;
+}
 
 .social-menu-labels-container {
     position: absolute;
@@ -379,7 +396,12 @@ body {
 }
 .social-menu-labels-container-visible {
     opacity: 1;
-    transition: opacity .75s ease .25s;
+    transition: all .5s ease;
+}
+.social-menu-labels-container-wide {
+    transform: translateY(-50%) translateX(60px) scaleX(1);
+    opacity: 1;
+    transition: all .5s ease;
 }
 .social-menu-labels-container-invisible {
     opacity: 0;

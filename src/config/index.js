@@ -1,6 +1,6 @@
 import lyrics from '../assets/lyrics'
 
-export default {
+const config = {
 
     images: {
         canvas: {
@@ -147,3 +147,5 @@ export default {
     ]
 
 }
+
+export default config

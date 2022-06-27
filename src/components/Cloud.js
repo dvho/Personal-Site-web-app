@@ -16,7 +16,7 @@ const Cloud = props => {
     let size = props.canvasHeight / (3 + Math.random() * 3)
     let opacity = .3 + Math.random() * .6
     let cloudHaze = size / 4
-    let zIndex = Math.random() * 9000
+    let zIndex = Math.random() * -900
     let travelDuration = 24 + Math.random() * 24 //Ideally, travelDuration would be a function of canvas width (inversely proportional to it), which is already a function of canvas height. "18000 / props.canvasHeight + Math.random() * props.canvasHeight / 18000" works perfectly but takes too long for clouds to enter the screen on small devices.
     let animationNumber = Math.ceil(Math.random() * 32)
 
@@ -36,7 +36,7 @@ const Cloud = props => {
                 style={{
                     fontSize: `${size}px`,
                     color: `hsla(${color}, 100%, 96%, ${opacity})`,
-                    filter: props.performanceBoost ? null : `drop-shadow(0px 0px ${cloudHaze}px hsla(${color}, 100%, 96%, 1)`,
+                    filter: !props.cloudHazeOn ? null : `drop-shadow(0px 0px ${cloudHaze}px hsla(${color}, 100%, 96%, 1)`,
                     position: 'absolute',
                     zIndex: `${zIndex}`,
                     animation: `motionSizeAndFlip${animationNumber} ${travelDuration}s linear forwards`

@@ -3,10 +3,10 @@
 import React from 'react'
 import './App.css'
 import config from './config'
-import { Cloud, Veil, Face, PerformanceButton, AudioPlayer, Track, Ripple, ContactForm, InfoSheet, SocialMenu, SocialMenuLabels } from './components'
+import { Cloud, Veil, Face, AudioPlayer, Track, Ripple, ContactForm, InfoSheet, SocialMenu, SocialMenuLabels, HandController } from './components'
 
 //NOTE: I needed to manually add "homepage": ".", to package.json in order get build/index.html to work.
-//Local network: System Preferences > Network > "Wi-Fi is connected to [name] and has the IP address [Local network]"
+//To run app over local network on mobile device use local network IP and port, i.e. replace localhost: with < local network IP :> like 123.456.7.8:3000 and if camera is needed you'll get "getUserMedia() not supported" error on both Android Chrome and iOS Safari. As of iOS 15.5 this can't be bypassed on the latter but per Shantanu Tripathi on 2020, 04-28th in    https://stackoverflow.com/questions/34215937/getusermedia-not-supported-in-chrome    go to chrome://flags/#unsafely-treat-insecure-origin-as-secure    and as pointed out by     Akhil S    on 2020, 11-25th    make sure the IP is prefixed by http:// like    http://123.456.7.8:3000    (and add    http://123.456.7.8    for good measure). Note, your local network IP is at    System Preferences > Network > "Wi-Fi is connected to < Wi-Fi name > and has the IP address < Local network IP >"
 
 // --Setting up a custom domain--
 // ** Up to 4:36 ONLY - https://www.youtube.com/watch?v=mPGi1IHQxFM
@@ -19,53 +19,72 @@ class Home extends React.PureComponent {
     constructor() {
         super()
         this.state = {
-            devTest: false,
+            //Component visibility and performance features
+            cloudsOn: true,
+            cloudHazeOn: false,
+            handControllerOn: false,
+            revealContactForm: false,
+            revealInfoSheet: false,
+            menuPosition: 2,
+            //Dimensions
             wideScreen: true,
             screenWidth: 0,
             canvasHeight: 0,
             canvasWidth: 0,
             moonDiameter: 0,
-            performanceButtonDiameter: 0,
-            performanceBoost: true,
             margin: 0,
+            //Tracks
+            allTracks: [],
+            currentTrack: {},
             leftColumnTracks: [],
             rightColumnTracks: [],
             titlesColumnsMargin: 0,
+            //Coords and controllers
             xCoord: -1,
             yCoord: -1,
+            isPointing: false,
+            isPointingPermitted: true,
+            autoVsUserTimer: null,
             rippleXCoord: -1,
             rippleYCoord: -1,
             rippleActive: false,
-            allTracks: [],
-            currentTrack: {},
-            cloudNumber: 1,
-            revealContactForm: false,
-            revealInfoSheet: false,
-            menuOpen: true,
-            veilOpacity: .3,
+            //Eyes and main display
             blinkActive: false,
             eyesJustSwitched: false,
             faceFrame: config.images.eyePosition.faceEmpty,
-            t: null
+            cloudNumber: 1,
+            veilOpacity: .45
         }
     }
 
-    toggleDevTest = () => {
-        if (!this.state.devTest) {
+    limitPointing = rateLimit => {
+        this.setState({isPointingPermitted: false})
+        setTimeout(() => {this.setState({isPointingPermitted: true})}, rateLimit)
+    }
+
+    toggleCloudsOn = () => { //Used to use window.location.reload() in a conditional statement within this function when toggling clouds off as a solution to having numerous setTimeouts going that needed to be reset so that veilOpacity wouldn't change when no clouds were passing in front of the moon. After expanding SocialMenu to make the toggleable options more available, more specifically toggleCloudHazeOn, I got rid of the conditional statement because it would have also needed to have been in toggleCloudHazeOn for which one can't use window.location.reload() to stop the setTimeouts while maintaining the state of cloudHazeOn without caching user preferences. Perhaps I'll cache user preferences as part of a bigger update but for now it's fine to work like this.
+        setTimeout(() => {
             this.setState({
-                devTest: true,
-                cloudNumber: 1
+                cloudsOn: !this.state.cloudsOn
             })
-        } else {
-            setTimeout(() => window.location.reload(), 10) //setTimeout needed for Mozilla (not Chrome) per Morteza Ziyae on 2015, 01-27th in https://stackoverflow.com/questions/18967532/window-location-reload-not-working-for-firefox-and-chrome
-        }
+        }, 100) //same justification as for toggleMenuPosition
     }
 
-    togglePerformanceBoost = () => {
-        this.setState({
-            performanceBoost: !this.state.performanceBoost,
-            cloudNumber: 1
-        })
+    toggleCloudHazeOn = () => {
+        setTimeout(() => {
+            this.setState({
+                cloudsOn: true, //cloudsOn should always become true when toggling cloudHazeOn
+                cloudHazeOn: !this.state.cloudHazeOn
+            })
+        }, 100) //same justification as for toggleMenuPosition
+    }
+
+    toggleHandControllerOn = () => {
+        setTimeout(() => {
+            this.setState({
+                handControllerOn: !this.state.handControllerOn
+            })
+        }, 100) //same justification as for toggleMenuPosition
     }
 
     toggleInfoSheet = () => {
@@ -82,10 +101,12 @@ class Home extends React.PureComponent {
         })
     }
 
-    toggleMenuOpen = () => {
-        this.setState({
-            menuOpen: !this.state.menuOpen
-        })
+    toggleMenuPosition = () => { //Unlike state setting from the other menu toggle functions (e.g. toggleContactForm, toggleInfoSheet) if setting state on menuPosition isn't wrapped in a setTimeout of at least 100ms the operation will happen faster than this.limitPointing can set the state on isPointingPermitted from the handControllerUtils.js
+        setTimeout(() => {
+            this.setState({
+                menuPosition: (this.state.menuPosition + 1) % 4
+            })
+        }, 100)
     }
 
     selectTrack = currentTrack => {
@@ -199,7 +220,7 @@ class Home extends React.PureComponent {
             this.setState({faceFrame: config.images.blink.faceBlinkF})
         }, (blinkStareTimeCoefficient + blinkDuration * .92))
         setTimeout(() => {
-            if (this.state.xCoord === -1) { //If there's no user input from mouse or touchscreen (i.e. has not been any user input from mouse or touchscreen in the past 10000ms, as per this.autoVsUserTimer) simply set the faceFrame back to currentFaceFrame and blinkActive back to false...
+            if (this.state.xCoord === -1) { //If there's no user input from mouse, hand or touchscreen (i.e. has not been any user input from mouse or touchscreen in the past 10000ms, as per this.setAutoVsUserTimer) simply set the faceFrame back to currentFaceFrame and blinkActive back to false...
                 this.setState({faceFrame: currentFaceFrame, blinkActive: false})
             } else { //...else if there has been user input in the past 10000ms don't set the last frame of the blink, just run this.userSwitchEyePosition instead and, of course, make blinkActive false.
             this.userSwitchEyePosition()
@@ -230,9 +251,9 @@ class Home extends React.PureComponent {
         }, cloudOut)
     }
 
-    autoVsUserTimer = () => {
-        this.setState({ //this.autoVsUserTimer is called whenever the pointermove or click events fire, which sets this.state.t to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1. Subsequently, every time this.autoVsUserTimer is called, clearTimeout is called on this.state.t, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
-            t: setTimeout(() => {
+    setAutoVsUserTimer = () => {
+        this.setState({ //this.setAutoVsUserTimer is called whenever the pointermove, handmove or click events fire, which set this.state.autoVsUserTimer to the function that, in turn, sets this.state.xCoords and this.state.yCoords to -1 after 10000ms. Subsequently, every time this.setAutoVsUserTimer is called, clearTimeout is called on this.state.autoVsUserTimer, which is accessible from this.calcAllDimensionsCoordsAndResetClouds because it is simply a key in state.
+            autoVsUserTimer: setTimeout(() => {
                 this.setState({
                     xCoord: -1,
                     yCoord: -1
@@ -267,17 +288,16 @@ class Home extends React.PureComponent {
         })
     }
 
-    calcAllDimensionsCoordsAndResetClouds = (e) => {
+    calcAllDimensionsCoordsAndResetClouds = e => {
 
         let screenWidth = window.visualViewport === undefined ? window.innerWidth : window.visualViewport.width //Chrome mobile uses window.visualViewport property instead of the window object directly
         let canvasHeight = window.visualViewport === undefined ? window.innerHeight : window.visualViewport.height //Chrome mobile uses window.visualViewport property instead of the window object directly
         let canvasWidth = Math.round(canvasHeight * 1.323572474377745) //screenWidth < canvasHeight * 1.323572474377745 ? screenWidth : Math.round(canvasHeight * 1.323572474377745)
         let wideScreen = screenWidth > canvasWidth ? true : false //This simple calculation was happening redundantly in so many components I decided to do it once here and subsequently pass as a prop to any of them that need it
         let moonDiameter = Math.round(canvasWidth * 0.199121522693997)
-        let performanceButtonDiameter = canvasHeight * .025
         let margin = ((screenWidth - canvasWidth) / 2)
 
-        if (e.type === 'load') { //Get the sizes of the screen, canvas, moon, performance toggle button, and reset cloudNumber on load
+        if (e.type === 'load') { //Get the sizes of the screen, canvas, moon, and reset cloudNumber on load
             this.setState({
                 wideScreen: wideScreen,
                 screenWidth: screenWidth,
@@ -285,8 +305,7 @@ class Home extends React.PureComponent {
                 canvasWidth: canvasWidth,
                 moonDiameter: moonDiameter,
                 margin: margin,
-                cloudNumber: 1,
-                performanceButtonDiameter: performanceButtonDiameter
+                cloudNumber: 1
             })
 
         this.renderTracks() //Now that all the basic dimensions have been set in state render the tracks
@@ -297,28 +316,36 @@ class Home extends React.PureComponent {
             setTimeout(() => window.location.reload(), 10) //setTimeout needed for Mozilla (not Chrome) per Morteza Ziyae on 2015, 01-27th in https://stackoverflow.com/questions/18967532/window-location-reload-not-working-for-firefox-and-chrome
         }
 
-        if (e.type === 'pointermove' || e.type === 'click') { //Get the X and Y positions on pointermove and on click. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
-            let yCoord = e.pageY / canvasHeight
-            let xCoord
+        if (e.type === 'pointermove' || e.type === 'click' || e.type === 'handmove') { //Get the X and Y positions on pointermove and on click. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
+            let xCoord, yCoord, isPointing
 
-            if (margin > 0) { //If there's a margin, calculate the xCoord of just the event over the canvasWidth
-                xCoord = (e.pageX - margin) / canvasWidth
+            if (e.type === 'click' || e.type === 'pointermove') {
+                yCoord = e.pageY / canvasHeight
+
+                if (margin > 0) { //If there's a margin, calculate the xCoord of just the event over the canvasWidth
+                    xCoord = (e.pageX - margin) / canvasWidth
+                } else {
+                    xCoord = e.pageX / screenWidth //else if there's no margin the visible canvasWidth is the same as the screenWidth
+                }
             } else {
-                xCoord = e.pageX / screenWidth //else if there's no margin the visible canvasWidth is the same as the screenWidth
+                xCoord = e.pageX
+                yCoord = e.pageY
+                isPointing = e.isPointing
             }
 
             if (xCoord >= 0 && xCoord <= 1) { //If the xCoord is between 0 and 1
 
-                if (e.type === 'click' || (e.type === 'pointermove' && (this.state.xCoord !== xCoord || this.state.yCoord !== yCoord))) { //If event type is click or event type is pointermove AND there hasn't been a change in either xCoord nor yCoord in state
+                if (e.type === 'click' || ((e.type === 'pointermove' || e.type === 'handmove') && (this.state.xCoord !== xCoord || this.state.yCoord !== yCoord))) { //If event type is click or event type is pointermove AND there hasn't been a change in either xCoord nor yCoord in state
 
                     this.setState({ //set the new xCoord and yCoord in state
                         margin: margin,
                         xCoord: xCoord,
-                        yCoord: yCoord
+                        yCoord: yCoord,
+                        isPointing: this.state.isPointingPermitted ? isPointing : false
                     })
 
-                    clearTimeout(this.state.t) //clearTimeout of this.state.t
-                    this.autoVsUserTimer() //restart the this.state.t setTimeout function by calling its parent function, this.autoVsUserTimer
+                    clearTimeout(this.state.autoVsUserTimer) //clearTimeout of this.state.autoVsUserTimer
+                    this.setAutoVsUserTimer() //restart the this.state.autoVsUserTimer setTimeout function by calling its parent function, this.setAutoVsUserTimer
                     this.userSwitchEyePosition() //call this.userSwitchEyePosition and know that autoSwitchEyePosition isn't being called from either autoSwitchEyePositionControl nor blinkControl because this.state.xCoords would have to === -1 (and, by extention, this.state.yCoords would have to === -1) in order for that to happen.
                 }
 
@@ -346,7 +373,7 @@ class Home extends React.PureComponent {
         let cloudControl
 
         (cloudControl = () => {
-            let repeatRate = 3500000 / this.state.screenWidth //* Math.random() //Repeat rate of cloudControl is a function of screen width (inversely proporional), since regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
+            let repeatRate = 7000000 / this.state.screenWidth //* Math.random() //Repeat rate of cloudControl is a function of screen width (inversely proporional), since regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
             this.setState({
                 cloudNumber: this.state.cloudNumber + 1
             })
@@ -377,65 +404,37 @@ class Home extends React.PureComponent {
 
     render() { //Placing a rendering condition here to prevent a render until the essential calculations have been set in state at componentDidMount causes a display glitch where the canvas-parent ends up flush left.
 
-        if (this.state.devTest) {
-            return (
-                <div className="canvas-parent" style={{opacity: this.state.screenWidth === 0 ? 0 : 1}}> {/* If the componentDidMount hasn't yet set all the initial values in state make the opacity 0, else 1 (.canvas-parent has a nice .3s transition on opacity in App.css) */}
-                    <img alt={"back"} src={config.images.canvas.back} className="canvas" id="back-image"/>
-
-                    <img alt={"back trees only"} src={config.images.canvas.backTreesOnly} className="canvas" id="back-trees-only-image"/>
-
-                    <img alt={"main"} src={config.images.canvas.main} className="canvas" id="main-image"/>
-
-                    <Veil opacity={.5} key={'a'}/>
-
-                    <Face opacity={.4} key={'b'} faceFrame={this.state.faceFrame} screenWidth={this.state.screenWidth}/>
-
-                    <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
-
-                    {/*<h1 style={{fontSize: 50, color: 'blue', position: 'absolute'}}>{this.state.xCoord}</h1>
-                    <h1 style={{fontSize: 50, color: 'red', right: 0, position: 'absolute'}}>{this.state.yCoord}</h1> for testing purposes*/}
-
-                    <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack} toggleDevTest={this.toggleDevTest}/>
-
-                    <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginLeft: this.state.titlesColumnsMargin, left: 0}}>
-                        {this.state.leftColumnTracks}
-                    </div>
-                    <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginRight: this.state.titlesColumnsMargin, right: 0}}>
-                        {this.state.rightColumnTracks}
-                    </div>
-
-                </div>
-            )
-        }
-
         const allClouds = []
-        let i
 
-        for (i = 0; i < this.state.cloudNumber; i++) {
-            allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} dimVeil={this.dimVeil} performanceBoost={this.state.performanceBoost}/>)
-        } //All this logic has to go here, not in a componentDidUpdate, because then I'd have to setState with a allClouds array and read it from the return and that's causing the "Maximum update depth exceeded" error, probably because, unlike in AudioPlayer.js, setState is being called after and on account of a loop above it. Remedy by not setting allClouds in state, just passing it along to the return from this smaller scope.
+        if (this.state.cloudsOn) {
+            for (let i = 0; i < this.state.cloudNumber; i++) {
+                allClouds.push(<Cloud key={i} canvasHeight={this.state.canvasHeight} dimVeil={this.dimVeil} cloudHazeOn={this.state.cloudHazeOn}/>)
+            } //All this logic has to go here, not in a componentDidUpdate, because then I'd have to setState with a allClouds array and read it from the return and that's causing the "Maximum update depth exceeded" error, probably because, unlike in AudioPlayer.js, setState is being called after and on account of a loop above it. Remedy by not setting allClouds in state, just passing it along to the return from this smaller scope.
+        }
 
         return (
             <div className="canvas-parent" style={{opacity: this.state.screenWidth === 0 ? 0 : 1}}> {/* If the componentDidMount hasn't yet set all the initial values in state make the opacity 0, else 1 (.canvas-parent has a nice .3s transition on opacity in App.css) */}
 
                 <img alt={"back"} src={config.images.canvas.back} className="canvas" id="back-image"/>
 
-                {allClouds}
+                { !this.state.cloudsOn ? null : allClouds }
 
                 <img alt={"back trees only"} src={config.images.canvas.backTreesOnly} className="canvas" id="back-trees-only-image"/>
 
                 <img alt={"main"} src={config.images.canvas.main} className="canvas" id="main-image"/>
 
-                <Veil opacity={this.state.veilOpacity} key={'a'}/>
+                <Veil opacity={!this.state.cloudsOn ? .5 : this.state.veilOpacity} key={'a'}/>
 
-                <Face opacity={(this.state.veilOpacity * .75)} key={'b'} faceFrame={this.state.faceFrame} screenWidth={this.state.screenWidth}/>
+                <Face opacity={!this.state.cloudsOn ? .4 : this.state.veilOpacity * .75} key={'b'} faceFrame={this.state.faceFrame} screenWidth={this.state.screenWidth}/>
 
                 <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
+
+                { !this.state.handControllerOn ? null : <HandController canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} calcAllDimensionsCoordsAndResetClouds={this.calcAllDimensionsCoordsAndResetClouds} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} /> }
 
                 {/*<h1 style={{fontSize: 50, color: 'blue', position: 'absolute'}}>{this.state.xCoord}</h1>
                 <h1 style={{fontSize: 50, color: 'red', right: 0, position: 'absolute'}}>{this.state.yCoord}</h1> for testing purposes*/}
 
-                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack} toggleDevTest={this.toggleDevTest}/>
+                <AudioPlayer canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} veilOpacity={this.state.veilOpacity} currentTrack={this.state.currentTrack} allTracks={this.state.allTracks} selectTrack={this.selectTrack} xCoord={this.state.xCoord} yCoord={this.state.yCoord} isPointing={this.state.isPointing} limitPointing={this.limitPointing}/>
 
                 <div style={{position: 'absolute', marginTop: this.state.titlesColumnsMargin, marginLeft: this.state.titlesColumnsMargin, left: 0}}>
                     {this.state.leftColumnTracks}
@@ -444,15 +443,13 @@ class Home extends React.PureComponent {
                     {this.state.rightColumnTracks}
                 </div>
 
-                <SocialMenuLabels menuOpen={this.state.menuOpen} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} veilOpacity={this.state.veilOpacity}/>
+                <SocialMenuLabels menuPosition={this.state.menuPosition} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} veilOpacity={this.state.veilOpacity}/>
 
                 <ContactForm toggleContactForm={this.toggleContactForm} revealContactForm={this.state.revealContactForm} canvasWidth={this.state.canvasWidth} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin}/>
 
                 <InfoSheet canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} revealInfoSheet={this.state.revealInfoSheet}/>
 
-                <SocialMenu toggleMenuOpen={this.toggleMenuOpen} toggleContactForm={this.toggleContactForm} toggleInfoSheet={this.toggleInfoSheet} menuOpen={this.state.menuOpen} wideScreen={this.state.wideScreen} margin={this.state.margin}/>
-
-                <PerformanceButton performanceBoost={this.state.performanceBoost} performanceButtonDiameter={this.state.performanceButtonDiameter} togglePerformanceBoost={this.togglePerformanceBoost}/>
+                <SocialMenu toggleMenuPosition={this.toggleMenuPosition} menuPosition={this.state.menuPosition} toggleContactForm={this.toggleContactForm} toggleInfoSheet={this.toggleInfoSheet} cloudHazeOn={this.state.cloudHazeOn} toggleCloudHazeOn={this.toggleCloudHazeOn} cloudsOn={this.state.cloudsOn} toggleCloudsOn={this.toggleCloudsOn} handControllerOn={this.state.handControllerOn} toggleHandControllerOn={this.toggleHandControllerOn} canvasWidth={this.state.canvasWidth} canvasHeight={this.state.canvasHeight} screenWidth={this.state.screenWidth} wideScreen={this.state.wideScreen} margin={this.state.margin} xCoord={this.state.xCoord} yCoord={this.state.yCoord} isPointing={this.state.isPointing} limitPointing={this.limitPointing}/>
 
                 { this.state.rippleActive ? <Ripple canvasHeight={this.state.canvasHeight} canvasWidth={this.state.canvasWidth} wideScreen={this.state.wideScreen} screenWidth={this.state.screenWidth} margin={this.state.margin} rippleXCoord={this.state.rippleXCoord} rippleYCoord={this.state.rippleYCoord}/> : null }
 
