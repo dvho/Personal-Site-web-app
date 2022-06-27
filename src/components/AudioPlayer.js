@@ -1,12 +1,24 @@
 import React from 'react'
 import ReactPlayer from 'react-player'
+import { handControllerUtils } from './handControllerUtils'
+
 import config from '../config'
 
 //Need to track onLoad and only play if onLoad has completed
 
 class AudioPlayer extends React.PureComponent {
+
     constructor() {
+
         super()
+
+        this.reactPlayerRef = React.createRef()
+        this.playButtonRef = React.createRef()
+        this.stopButtonRef = React.createRef()
+        this.pauseButtonRef = React.createRef()
+        this.forwardButtonRef = React.createRef()
+        this.backwardButtonRef = React.createRef()
+
         this.state = {
             currentTrack: [], //This data shape is an array where the first element is the track title and the second is the url
             trackLength: 0,
@@ -43,7 +55,7 @@ class AudioPlayer extends React.PureComponent {
                 isPlaying: false,
                 hasEnded: true
             })
-            this.player.seekTo(0) //If stop, reset internal track to 0 as well.
+            this.reactPlayerRef.seekTo(0) //If stop, reset internal track to 0 as well.
             setTimeout(() => this.autoUpdatePlaybackTime(), 0) //Don't wait the <= 1000ms for the playback counter to go back to 0, just do it now.
         }
         if (type === 'play') {
@@ -57,31 +69,31 @@ class AudioPlayer extends React.PureComponent {
         }
         if (type === 'pause' && this.state.currentTrack && !this.state.hasEnded) { //If the 'pause' button is selected and there's a track loaded in that hasn't ended (i.e. the 'stop' button was not pressed) only then will pause work to either pause or unpause the playing track.
             this.setState({
-                isPlaying: !this.state.isPlaying
+                isPlaying: false //I used to have this as    isPlaying: !this.state.isPlaying    so that the pause button could toggle but once handControllerUtils.handleHand    was integrated tapping pause with the HandController crashed the app with "Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops."
             })
         }
         if (type === 'forward') {
             if (this.props.allTracks.length > 0) {
-                this.changeTrackOrEnd('forward')
+                setTimeout(() => this.changeTrackOrEnd('forward'), 50) //I used to have this without the setTimeout but once handControllerUtils.handleHand    was integrated tapping forward with the HandController always brought the focused track to the last track with warnings for each of the tracks in between: "<track name> is being deferred until the player has loaded." At 10ms the error was occasionally still happening so I bumped it up to 50ms.
             } else {
                 this.setState({
                     totalSeconds: 0,
                     isPlaying: false,
                     hasEnded: true
                 })
-                this.player.seekTo(0)
+                this.reactPlayerRef.seekTo(0)
             }
         }
         if (type === 'backward') {
             if (this.props.allTracks.length > 0) {
-                this.changeTrackOrEnd('backward')
+                setTimeout(() => this.changeTrackOrEnd('backward'), 50) //I used to have this without the setTimeout but once handControllerUtils.handleHand    was integrated tapping backward with the HandController always brought the focused track to the first track with warnings for each of the tracks in between: "<track name> is being deferred until the player has loaded." At 10ms the error was occasionally still happening so I bumped it up to 50ms.
             } else {
                 this.setState({
                     totalSeconds: 0,
                     isPlaying: false,
                     hasEnded: true
                 })
-                this.player.seekTo(0)
+                this.reactPlayerRef.seekTo(0)
             }
         }
     }
@@ -89,7 +101,7 @@ class AudioPlayer extends React.PureComponent {
     slidePlaybackAndUpdatePlaybackTime = (e) => { //This is called onChange from the range input (i.e. slider) who's max is set to this.state.trackLength, which is set from onDuration={(duration) => this.setState({trackLength: duration})} in <ReactPlayer/>.
 
         let totalSeconds = e.target.value //Value between min and max (i.e., 0 and this.state.trackLength)
-        this.player.seekTo(totalSeconds) //ReactPlayer method that takes seconds as an argument and updates internal position on the track
+        this.reactPlayerRef.seekTo(totalSeconds) //ReactPlayer method that takes seconds as an argument and updates internal position on the track
 
         let displaySeconds = totalSeconds % 60 < 10 ? `0${totalSeconds % 60}` : `${totalSeconds % 60}` //Calc seconds to display as a string
         let displayMinutes = Math.floor(totalSeconds / 59).toString() //Calc minutes to display as a string
@@ -110,8 +122,28 @@ class AudioPlayer extends React.PureComponent {
         })
     }
 
-    ref = player => { //Must be included here so that this.player.seekTo(totalSeconds) can be called in slidePlaybackAndUpdatePlaybackTime function
+    reactPlayerRef = player => { //Must be included here so that this.reactPlayerRef.seekTo(totalSeconds) can be called in slidePlaybackAndUpdatePlaybackTime function
         this.player = player
+    }
+
+    playButtonRef = playButton => {
+        this.playButton = playButton
+    }
+
+    stopButtonRef = stopButton => {
+        this.stopButton = stopButton
+    }
+
+    pauseButtonRef = pauseButton => {
+        this.pauseButton = pauseButton
+    }
+
+    fowardButtonRef = fowardButton => {
+        this.fowardButton = fowardButton
+    }
+
+    backwardButtonRef = backwardButton => {
+        this.backwardButton = backwardButton
     }
 
     componentDidUpdate() { //Must use componentDidUpdate, rather than render, to handle checking for changes between this.props.currentTrack and this.state.currentTrack, otherwise face warning in console “Cannot update during an existing state transition (such as within render). Render methods should be a pure function of props and state.”
@@ -130,15 +162,15 @@ class AudioPlayer extends React.PureComponent {
         this.setState({ //Update this.state.currentTrack to whatever was selected
             currentTrack: this.props.currentTrack
         })
+
+        handControllerUtils.handleHand(this.props, this.playButtonRef, () => this.handlePlayer('play'), 300)
+        handControllerUtils.handleHand(this.props, this.stopButtonRef, () => this.handlePlayer('stop'), 300)
+        handControllerUtils.handleHand(this.props, this.pauseButtonRef, () => this.handlePlayer('pause'), 300)
+        handControllerUtils.handleHand(this.props, this.forwardButtonRef, () => this.handlePlayer('forward'), 300)
+        handControllerUtils.handleHand(this.props, this.backwardButtonRef, () => this.handlePlayer('backward'), 300)
     }
 
     render() {
-
-        console.log(this.props);
-
-        if (this.props.screenWidth === 0) { //This prevents the unnecesary render of all the calculations and JSX for the AudioPlayer caused by Home.js not yet having its state set in componentDidMount when the first render happens, which was also responsible for the transition of all the audio interface buttons spending .4s transitioning from 0 to their actual calculated iconDiameter. Unlike the function components, an empty div must be returned here, so the extra render happens but it's a much lighter render and averts the unsighly .4s transition of the audio interface buttons, as mentioned.
-            return <div></div>
-        }
 
         let veilOpacity = this.props.veilOpacity > .9 ? .9 : this.props.veilOpacity //If this.props.veilOpacity > .9 (rare, but it happens especially on narrower screens) fix it at .9
         //Variables below are all calculated dynamically with each render and are based on Home.js state properties canvasHeight, canvasWidth, screenWidth, wideScreen, margin, and veilOpacity
@@ -165,19 +197,19 @@ class AudioPlayer extends React.PureComponent {
             <div style={{position: 'absolute', width: containerWidth, height: containerHeight, left: left, bottom: bottom, backgroundColor: `rgba(${this.props.allTracks.length > 0 ? '255,255,255' : '0,0,0'},${containerRgbaOpacity})`, transition: 'background-color 1.5s linear', padding: padding, borderRadius: borderRadius}}>
 
                 <div style={{marginTop: marginTop, display: 'flex', flexDirection: 'row', position: 'absolute'}}>
-                    { this.props.allTracks.length === 0 ? null : <i onClick={() => this.handlePlayer('backward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className='fa fa-chevron-circle-left next-and-previous-icons audio-icon'></i> }
-                    <i onClick={() => this.handlePlayer('play')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className={playIconClassName}></i>
-                    <i onClick={() => this.handlePlayer('pause')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className={pauseIconClassName}></i>
-                    <i onClick={() => this.handlePlayer('stop')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className='fa fa-stop-circle stop-icon audio-icon'></i>
-                    { this.props.allTracks.length === 0 ? null : <i onClick={() => this.handlePlayer('forward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className='fa fa-chevron-circle-right next-and-previous-icons audio-icon'></i> }
+                    { this.props.allTracks.length === 0 ? <i ref={backwardButtonRef => this.backwardButtonRef = backwardButtonRef}/> : <i onClick={() => this.handlePlayer('backward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className='fa fa-chevron-circle-left next-and-previous-icons audio-icon' ref={backwardButtonRef => this.backwardButtonRef = backwardButtonRef}></i> }
+                    <i onClick={() => this.handlePlayer('play')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className={playIconClassName} ref={playButtonRef => this.playButtonRef = playButtonRef}></i>
+                    <i onClick={() => this.handlePlayer('pause')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className={pauseIconClassName} ref={pauseButtonRef => this.pauseButtonRef = pauseButtonRef}></i>
+                    <i onClick={() => this.handlePlayer('stop')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className='fa fa-stop-circle stop-icon audio-icon' ref={stopButtonRef => this.stopButtonRef = stopButtonRef}></i>
+                    { this.props.allTracks.length === 0 ? <i ref={forwardButtonRef => this.forwardButtonRef = forwardButtonRef}/> : <i onClick={() => this.handlePlayer('forward')} style={{paddingRight: `${iconMarginRight}px`, fontSize: `${iconDiameter}px`}} className='fa fa-chevron-circle-right next-and-previous-icons audio-icon' ref={forwardButtonRef => this.forwardButtonRef = forwardButtonRef}></i> }
                 </div>
 
-                <p onClick={this.props.toggleDevTest} style={{position: 'absolute', margin: 0, borderRadius: timeStringBorderRadius, paddingLeft: timeStringHorizontalPadding, paddingRight: timeStringHorizontalPadding, backgroundColor: `rgba(255,255,255,${timeStringRgbaOpacity})`, transition: 'background-color 1.5s linear', marginTop: totalTimeStringMarginTop, right: padding, fontFamily: config.appFont, fontSize: fontSize, color: 'rgba(30,1,1,.75)'}}>{this.state.totalTimeString}</p>
+                <p style={{position: 'absolute', margin: 0, borderRadius: timeStringBorderRadius, paddingLeft: timeStringHorizontalPadding, paddingRight: timeStringHorizontalPadding, backgroundColor: `rgba(255,255,255,${timeStringRgbaOpacity})`, transition: 'background-color 1.5s linear', marginTop: totalTimeStringMarginTop, right: padding, fontFamily: config.appFont, fontSize: fontSize, color: 'rgba(30,1,1,.75)'}}>{this.state.totalTimeString}</p>
 
                 <input style={{marginTop: containerHeight}} className='slider' type='range' min='0' max={this.state.trackLength} value={this.state.totalSeconds} onChange={this.slidePlaybackAndUpdatePlaybackTime}/>
 
                 <ReactPlayer
-                    ref={this.ref}
+                    ref={ref => this.reactPlayerRef = ref}
                     url={this.state.currentTrack.url}
                     playing={this.state.isPlaying}
                     progressInterval={1000}
