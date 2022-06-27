@@ -1,4 +1,4 @@
-export default {
+const lyrics = {
 
     believeInYou: `
 
@@ -657,3 +657,5 @@ export default {
 
 
 }
+
+export default lyrics
