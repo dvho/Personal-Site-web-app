@@ -57,9 +57,9 @@ const HandController = props => {
     }, [onResults])
 
     return (
-        <div style={{transform: 'rotateY(180deg)'}}>
+        <div className={'hand-controller'}>
 
-            <Webcam ref={webcamRef} style={{display: 'none'}} imageSmoothing={false} />
+            <Webcam ref={webcamRef} style={{display: 'none'}} imageSmoothing={false}/>
 
             <canvas ref={canvasRef} style={{position: 'absolute', marginLeft: 'auto', marginRight: 'auto', left: props.wideScreen ? 0 : (props.screenWidth - props.canvasWidth) / 2, right: 0, zIndex: 10000, width: props.canvasWidth, height: props.canvasHeight}} />
 

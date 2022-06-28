@@ -67,6 +67,15 @@ body {
 }
 
 
+.hand-controller { /* This class simply flips the camera horizontally in HandController, since its default isn't mirrored. Ideally I would have passed    videoConstraints={facingMode: "user"}    to the Webcam per the docs at    https://www.npmjs.com/package/react-webcam    but that wasn't working for unknown reasons. My immediate response was to use an inline style on the topmost parent div in    HandController.js    , style={{transform: 'rotateY(180deg)'}}    , which worked to properly flip the canvas in Chrome and Mozilla but which changed the element stacking context in Safari such that if    this.state.cloudsOn    was true in    Home.js    the hand would appear behind the clouds and all proceeding elements unless    this.state.cloudsOn    was turned off in which case it would suddenly appear in its proper place in the stacking context as dictated by    Home.js    . This class, which replaces the inline style,    style={{transform: 'rotateY(180deg)'}}    , solves the problem and is thanks to the answer by    robertc    on    2010, 06-28th    in    https://stackoverflow.com/questions/3129099/how-to-flip-images-horizontally-with-html5 */
+    -moz-transform: scale(-1, 1);
+    -webkit-transform: scale(-1, 1);
+    -o-transform: scale(-1, 1);
+    transform: scale(-1, 1);
+    filter: FlipH;
+}
+
+
 .next-and-previous-icons {
     color: rgb(60,20,1);
 }
