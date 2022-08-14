@@ -6,7 +6,14 @@ This is a React app with some of my original piano compositions. It has a contac
 _________________________
 
 #### How to Use
-Play any of my songs (still works in progress) from the audio interface or simply click the titles. When clouds outside pass in front of the moon they dim the moonlight entering the room and reveal my animated face, which you can interact with by mouse or touch. The visibility of my face is commensurate with the darkness of the room at any given moment. Click the contact menu on the left to send me an email, view my resume, or check out some of my other projects on GitHub and NPM. You can toggle the performance button at the top right to render haze around the clouds, the default for which is _off_ since this does strain your GPU.
+
+Play any of my songs (still works in progress) from the interface below or click on their titles. With mouse or touch hold down on a title to navigate to that song's discrete page with lyrics. With my custom ML Air Hand controller you can control both the audio interface below, the menu to the left and most of its options without touching the screen, keys or mouse.
+
+As for the installation art, when the clouds outside pass in front of the moon they dim the moonlight entering the room and further reveal my animated face, which you can interact with by mouse, touch or Air Hand. The visibility of my face is commensurate with the darkness of the room at any given moment.
+
+Click the options in the menu to the left to send me an email, view my resume, or check out some of my other projects on GitHub and NPM. From there you can also toggle the clouds, cloud haze or Air Hand.
+
+Notes: Cloud haze is turned off by default as it does strain the GPU. Use of the Air Hand with the cloud haze turned on imposes even more strain (which will be evident if you try). It's intentional that toggling the Air Hand on/off can only be done with mouse or touch as turning the Air Hand on with the Air Hand itself is paradoxically impossible.
 _________________________
 
 #### Features
