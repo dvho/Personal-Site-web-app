@@ -13,7 +13,7 @@ As for the installation art, when the clouds outside pass in front of the moon t
 
 Click the options in the menu to the left to send me an email, view my resume, or check out some of my other projects on GitHub and NPM. From there you can also toggle the clouds, cloud haze or Air Hand.
 
-Notes: Cloud haze is turned off by default as it does strain the GPU. Use of the Air Hand with the cloud haze turned on imposes even more strain (which will be evident if you try). It's intentional that toggling the Air Hand on/off can only be done with mouse or touch as turning the Air Hand on with the Air Hand itself is paradoxically impossible.
+Notes: Cloud haze is off by default as it does strain the GPU. Use of the Air Hand with the cloud haze turned on imposes even more strain (which will be evident if you try). It's intentional that toggling the Air Hand on/off can only be done with mouse or touch as turning the Air Hand on with the Air Hand itself is paradoxically impossible.
 _________________________
 
 #### Features

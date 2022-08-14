@@ -1,7 +1,7 @@
 {
   "files": {
     "main.css": "./static/css/main.55afcef4.css",
-    "main.js": "./static/js/main.b8c5bb35.js",
+    "main.js": "./static/js/main.974e88cc.js",
     "static/media/Fire and Acid Rain-24.mp3": "./static/media/Fire and Acid Rain-24.7b17687656f1e552f49a.mp3",
     "static/media/How Could You Say That-38.mp3": "./static/media/How Could You Say That-38.e4403346d839fbe19bda.mp3",
     "static/media/I Wish It Were Raining-23.mp3": "./static/media/I Wish It Were Raining-23.8be5b7c0f6b2da38ab65.mp3",
@@ -18,10 +18,10 @@
     "static/media/veil.png": "./static/media/veil.f66a7a476165cbf24abc.png",
     "index.html": "./index.html",
     "main.55afcef4.css.map": "./static/css/main.55afcef4.css.map",
-    "main.b8c5bb35.js.map": "./static/js/main.b8c5bb35.js.map"
+    "main.974e88cc.js.map": "./static/js/main.974e88cc.js.map"
   },
   "entrypoints": [
     "static/css/main.55afcef4.css",
-    "static/js/main.b8c5bb35.js"
+    "static/js/main.974e88cc.js"
   ]
 }
