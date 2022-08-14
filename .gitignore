@@ -24,4 +24,4 @@ yarn-debug.log*
 yarn-error.log*
 
 /public/hands
-/assets-in-progress/music
+/assets-in-progress/music/
