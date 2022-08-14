@@ -1,16 +1,7 @@
 {
   "files": {
     "main.css": "./static/css/main.55afcef4.css",
-    "main.js": "./static/js/main.85551dab.js",
-    "static/media/Fire and Acid Rain-24.mp3": "./static/media/Fire and Acid Rain-24.7b17687656f1e552f49a.mp3",
-    "static/media/How Could You Say That-38.mp3": "./static/media/How Could You Say That-38.e4403346d839fbe19bda.mp3",
-    "static/media/I Wish It Were Raining-23.mp3": "./static/media/I Wish It Were Raining-23.8be5b7c0f6b2da38ab65.mp3",
-    "static/media/Highest Mountain-18.mp3": "./static/media/Highest Mountain-18.a51a0a4209d44ad2b51a.mp3",
-    "static/media/Believe in You-35.mp3": "./static/media/Believe in You-35.51101c7e3af0046aaa3f.mp3",
-    "static/media/Baby Elephant-07.mp3": "./static/media/Baby Elephant-07.e300d08ef47e33cab31a.mp3",
-    "static/media/I Will Not Forgive-18.mp3": "./static/media/I Will Not Forgive-18.487bce42c3fd69c4cb10.mp3",
-    "static/media/Driving and Crying-16.mp3": "./static/media/Driving and Crying-16.7bd89bd4a0cd1ca0b328.mp3",
-    "static/media/Bad Place-08.mp3": "./static/media/Bad Place-08.8e645d4ec60e5f425224.mp3",
+    "main.js": "./static/js/main.249408f2.js",
     "static/media/main.png": "./static/media/main.49c3946cbafc57184684.png",
     "static/media/back.png": "./static/media/back.e6bad9ea451459478cb5.png",
     "static/media/face-main.png": "./static/media/face-main.5e0f05b7ce6a0753a5e3.png",
@@ -18,10 +9,10 @@
     "static/media/veil.png": "./static/media/veil.f66a7a476165cbf24abc.png",
     "index.html": "./index.html",
     "main.55afcef4.css.map": "./static/css/main.55afcef4.css.map",
-    "main.85551dab.js.map": "./static/js/main.85551dab.js.map"
+    "main.249408f2.js.map": "./static/js/main.249408f2.js.map"
   },
   "entrypoints": [
     "static/css/main.55afcef4.css",
-    "static/js/main.85551dab.js"
+    "static/js/main.249408f2.js"
   ]
 }
