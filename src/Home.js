@@ -11,7 +11,7 @@ import { Cloud, Veil, Face, AudioPlayer, Track, Ripple, ContactForm, InfoSheet, 
 
 // --History of setting up a custom domain--
 
-// ** As of 2022, 03-29th I'm integrating the npm package    gh-pages    as a dev dependency. To deploy, commit and use custom domain: 1) Run    npm run deploy    2) Commit code to master branch    3) Login to GitHub, go to the project's settings, scroll to the GitHub Pages secton and in the Custom Domain field type and save your custom domain per up to 4:36 ONLY at    https://www.youtube.com/watch?v=mPGi1IHQxFM
+// ** As of 2022, 03-29th I'm integrating the npm package    gh-pages    as a dev dependency. To deploy, commit and use custom domain: 1) Run    npm run deploy    2) Commit code to master branch    3) Login to GitHub, go to the project's settings, scroll to the GitHub Pages secton and in the Custom Domain field type and save your custom domain (see up to 4:36 ONLY at    https://www.youtube.com/watch?v=mPGi1IHQxFM    )
 
 // ** As of 2022, 03-21st in addition to adding GitHub's 4 IP addresses (185.199.108.153, 185.199.109.153, 185.199.110.153 and 185.199.111.153) to your DNS management as A records you also need to add    dvho.github.io    as a CNAME under name    www   in the DNS management otherwise, upon changing your custom domain settings for GitHub Pages, GitHub will get stuck on "Certificate Request Error: Certificate provisioning will retry automatically in a short period, please be patient." and remain at 1 of 3 "TLS certificate is being provisioned. This may take up to 15 minutes to complete." though it won't take 15 mins, it will just remain stuck. Your site will go live almost immediately at   http://davidhomyk.com   but never obtain the SSL certificate.
 
