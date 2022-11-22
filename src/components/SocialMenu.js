@@ -1,8 +1,11 @@
 import React, { useState, useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
 
 import { handControllerUtils } from './handControllerUtils'
 
 const SocialMenu = props => {
+
+    const navigate = useNavigate()
 
     //It would have been ideal to have been able to control the hover vs non hover color of all the toggleable icons right from App.css like for the other icons in SocialMenu but in needing to overwright color from the inline style prop for those icons that ability was relinquished. The solution was to capture onMouseEnter and onMouseLeave for those elements and update state locally in SocialMenu itself. I tried to maintain these states as an object under a single isHoveringOverToggleableIcon hook but response to onMouseLeave and onMouseEnter were incredibly janky and unpredictable.
     const [isHoveringOverCloudHazeIcon, setIsHoveringOverCloudHazeIcon] = useState(false)
@@ -50,9 +53,10 @@ const SocialMenu = props => {
         <div className={socialMenuContainerClasses} style={{left: left}}>
 
             <div className={socialIconsColumn2Classes}>
-                <i className='cloud icon social-icon fa-solid fa-cloud' onMouseEnter={() => setIsHoveringOverCloudIcon(true)} onMouseLeave={() => setIsHoveringOverCloudIcon(false)} style={{color: isHoveringOverCloudIcon ? 'rgba(0,170,170,.95)' : (props.cloudsOn ? 'rgb(192,128,255)' : 'rgb(255,255,255)')}} onClick={() => props.toggleCloudsOn()} ref={ref => cloudsOnRef = ref} />
+                <i className='plane social-icon fa fa-plane-departure' onClick={() => { navigate('journeys'); window.location.reload()}}/> {/* If you don't call window.location.reload here too the path will change in your browser's address bar but the app won't navigate */}
+                <i className='cloud social-icon fa-solid fa-cloud' onMouseEnter={() => setIsHoveringOverCloudIcon(true)} onMouseLeave={() => setIsHoveringOverCloudIcon(false)} style={{color: isHoveringOverCloudIcon ? 'rgba(0,170,170,.95)' : (props.cloudsOn ? 'rgb(192,128,255)' : 'rgb(255,255,255)')}} onClick={() => props.toggleCloudsOn()} ref={ref => cloudsOnRef = ref} />
                 <i className='cloud-haze fi fi-cloudy-gusts' onMouseEnter={() => setIsHoveringOverCloudHazeIcon(true)} onMouseLeave={() => setIsHoveringOverCloudHazeIcon(false)} style={{color: isHoveringOverCloudHazeIcon ? 'rgba(0,170,170,.95)' : (props.cloudHazeOn ? 'rgb(80,80,255)' : 'rgb(255,255,255)')}} onClick={() => props.toggleCloudHazeOn()} ref={ref => cloudHazeOnRef = ref} />
-                <i className='hand icon social-icon fa-solid fa-hand-sparkles' onMouseEnter={() => setIsHoveringOverHandControllerIcon(true)} onMouseLeave={() => setIsHoveringOverHandControllerIcon(false)} style={{color: isHoveringOverHandControllerIcon ? 'rgba(0,170,170,.95)' : (props.handControllerOn ? 'rgb(255,0,0)' : 'rgb(255,255,255)')}} onClick={() => props.toggleHandControllerOn()} />
+                <i className='hand social-icon fa-solid fa-hand-sparkles' onMouseEnter={() => setIsHoveringOverHandControllerIcon(true)} onMouseLeave={() => setIsHoveringOverHandControllerIcon(false)} style={{color: isHoveringOverHandControllerIcon ? 'rgba(0,170,170,.95)' : (props.handControllerOn ? 'rgb(255,0,0)' : 'rgb(255,255,255)')}} onClick={() => props.toggleHandControllerOn()} />
             </div>
 
             <div className={socialIconsColumn1Classes}>
@@ -72,4 +76,4 @@ const SocialMenu = props => {
     )
 }
 
-export default React.memo(SocialMenu) //I was getting unnecesary renders here so I'm wrapping the export of the component in React.memo, which does a shallow comparison for function components as React.PureComponent, or the older lifecycle method componentShouldUpdate(), do shallow comparisons to limit unnecessary re-rendering in class components. One could also simply wrap the code block of the component itself in React.memo but I think doing it in the export is cleaner.
+export default React.memo(SocialMenu) //I was getting unnecesary renders here so I'm wrapping the export of the component in React.memo, which does a shallow comparison for function components as React.PureComponent, or the older lifecycle method componentShouldUpdate(), do shallow comparisons to limit unnecessary re-rendering in class components. One could also simply wrap the code block of the component itself in React.memo but I think doing it in the export is cleaner

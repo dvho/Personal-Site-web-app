@@ -11,6 +11,7 @@ import SocialMenuLabels from './SocialMenuLabels'
 import SingleTrack from './SingleTrack'
 import HandController from './HandController'
 import { handControllerUtils } from './handControllerUtils'
+import TravelPhotos from './TravelPhotos'
 
 export {
     Cloud,
@@ -25,5 +26,6 @@ export {
     SocialMenuLabels,
     SingleTrack,
     HandController,
-    handControllerUtils
+    handControllerUtils,
+    TravelPhotos
 }

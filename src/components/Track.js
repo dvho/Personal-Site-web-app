@@ -32,8 +32,8 @@ const Track = props => {
             t = setTimeout(() => {
                 let slug = props.track.slug
                 navigate(slug)
-                window.location.reload() //If you don't call this here the path will change in your browser's address bar but the app won't navigate
-            }, 1500)
+                window.location.reload() //If you don't call this here the path will change in your browser's address bar but the app won't navigate, and it must be called from a setTimeout otherwise the navigation will not have completed first
+            }, 1000)
         }
         if (e.type === 'mouseup' || e.type === 'touchend') {
             clearTimeout(t)
@@ -55,4 +55,4 @@ const Track = props => {
     )
 }
 
-export default React.memo(Track) //In Track.js I'm not getting any unnecesary re-renders, but for good measure, I'm wrapping the export of the component in React.memo anyway.
+export default React.memo(Track) //In Track.js I'm not getting any unnecesary re-renders, but for good measure, I'm wrapping the export of the component in React.memo anyway
