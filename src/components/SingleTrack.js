@@ -42,7 +42,7 @@ class SingleTrack extends React.PureComponent {
     }
 
     componentWillUnmount() {
-        window.location.reload() //If you don't call this on componentWillUnmount the home page won't reload when you nevigate back
+        window.location.reload() //If you don't call this on componentWillUnmount the home page won't reload when you navigate back
     }
 
     render() {
