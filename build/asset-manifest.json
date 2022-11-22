@@ -1,7 +1,7 @@
 {
   "files": {
-    "main.css": "./static/css/main.55afcef4.css",
-    "main.js": "./static/js/main.974e88cc.js",
+    "main.css": "./static/css/main.3f25668f.css",
+    "main.js": "./static/js/main.b5eecb79.js",
     "static/media/Fire and Acid Rain-24.mp3": "./static/media/Fire and Acid Rain-24.7b17687656f1e552f49a.mp3",
     "static/media/How Could You Say That-38.mp3": "./static/media/How Could You Say That-38.e4403346d839fbe19bda.mp3",
     "static/media/I Wish It Were Raining-23.mp3": "./static/media/I Wish It Were Raining-23.8be5b7c0f6b2da38ab65.mp3",
@@ -17,11 +17,11 @@
     "static/media/back-trees-only.png": "./static/media/back-trees-only.6ffca75058024cf43345.png",
     "static/media/veil.png": "./static/media/veil.f66a7a476165cbf24abc.png",
     "index.html": "./index.html",
-    "main.55afcef4.css.map": "./static/css/main.55afcef4.css.map",
-    "main.974e88cc.js.map": "./static/js/main.974e88cc.js.map"
+    "main.3f25668f.css.map": "./static/css/main.3f25668f.css.map",
+    "main.b5eecb79.js.map": "./static/js/main.b5eecb79.js.map"
   },
   "entrypoints": [
-    "static/css/main.55afcef4.css",
-    "static/js/main.974e88cc.js"
+    "static/css/main.3f25668f.css",
+    "static/js/main.b5eecb79.js"
   ]
 }
