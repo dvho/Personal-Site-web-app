@@ -49,7 +49,7 @@ body {
 .singleTrackPage {
     height: 100vh;
     background-color: rgb(255,255,255);
-    animation: fadeInSingleTrackPage 1s ease;
+    animation: fadeInNewPage 1s ease;
 }
 
 
@@ -327,6 +327,13 @@ body {
     cursor: pointer;
     transition: transform .4s ease;
 }
+.plane {
+    margin-bottom: 6px;
+    margin-left: 8px;
+    color: rgb(160,64,255);
+    cursor: pointer;
+    transition: transform .4s ease;
+}
 .cloud {
     cursor: pointer;
     transition: transform .4s ease;
@@ -476,6 +483,76 @@ body {
     animation: label-animation 2s infinite;
 }
 
+
+
+
+.card-page { /* Ideally I'd have padding bring the content of    card-page    away from the edge but it's cutting off the bottom part of the content as long as    height: 100vh    */
+    height: 100vh;
+    background-color: rgb(255,255,255);
+    animation: fadeInNewPage 1s ease;
+    overflow-y: scroll;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+.thumb-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px;
+}
+.thumb {
+    object-fit: contain;
+    width: 175px;
+    height: 175px;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 3px 4px 8px 3px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+.thumb:hover {
+    width: 180px;
+    height: 180px;
+    margin: 7.5px;
+    box-shadow: 6px 8px 16px 6px rgba(0,0,0,0.3);
+}
+
+.album-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin-bottom: 100px;
+}
+.album-name {
+    width: 275px;
+    text-align: center;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    font-family: Nothing You Could Do, cursive
+}
+.album-cover {
+    object-fit: contain;
+    width: 275px;
+    height: 275px;
+    margin: 10px;
+    padding: 10px;
+    box-shadow: 3px 4px 8px 3px rgba(0,0,0,0.2);
+    transition: 0.3s;
+}
+.album-cover:hover {
+    width: 280px;
+    height: 280px;
+    margin: 7.5px;
+    box-shadow: 6px 8px 16px 6px rgba(0,0,0,0.3);
+}
+
+div.PhotoView-Slider__BannerWrap { /* Only way to override the otherwise immutable PhotoView bar was to find the className (from    react-photo-view/dist/react-photo-view.css    ) in dev tools and override here in my stylesheet, the only property of concern being the obnoxious background-color which would otherwise cover photos. Note that doing this for    PhotoView-Slider__BannerWrap    wouldn't work, it had to be    div.PhotoView-Slider__BannerWrap    */
+    background-color: transparent;
+}
+
+
 /* Would've had to import a seperate library like "glamorous" to have been able to pass pseudo selectors as inline styles (in AudioPlayer.js, which I would have used to make the slider thumb below scale with canvasHeight). Also important to note that I wouldn't want slider thumb to scale very much as it would've be grabbable/useable. Against one of my goals for this project, to make all rendering fluidly dynamic without use of media breakpoints, in this particular case it was the optimal solution. Incidentally, when I decided I wanted to tether color and opacity of the audio interface with veilOpacity, I did import the emotion library and for some reason, though fully integrated without its syntax crashing anything, it didn't work. */
 @media only screen and (max-height: 400px) {
   .slider::-webkit-slider-thumb {
@@ -489,7 +566,7 @@ body {
       height: 14px;
   }
 }
-@keyframes fadeInSingleTrackPage {
+@keyframes fadeInNewPage {
     0% {background-color: rgb(1,1,20);}
     100% {background-color: rgb(255,255,255);}
 }
