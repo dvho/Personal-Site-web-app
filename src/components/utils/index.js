@@ -28,8 +28,8 @@ const utils = {
                             fullArray.map((i, index) => {
                                 return (
                                     <div key={index} className='thumb-container'>
-                                        <PhotoView src={i} alt="">
-                                            <img src={thumbArray[index]} className='thumb' alt=""/>
+                                        <PhotoView src={i} alt=''>
+                                            <img src={thumbArray[index]} className='thumb' alt='' loading='lazy'/>
                                         </PhotoView>
                                     </div>
                                 )
@@ -47,7 +47,7 @@ const utils = {
                             return (
                                 <div key={index} className='album-container'>
                                     <h2 className='album-name'>{i.albumName.substring(16) /* substring(16) simply removes the 16 character date I begin each albumName with in data.js */ }</h2>
-                                    <img src={i.albumCover} className='album-cover' onClick={() => setSet(index)} alt=""/>
+                                    <img src={i.albumCover} className='album-cover' onClick={() => setSet(index)} alt='' loading='lazy'/>
                                 </div>
                             )
                         })

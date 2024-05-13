@@ -2,20 +2,6 @@
   "name": "davidhomyk",
   "version": "0.1.0",
   "private": true,
-  "dependencies": {
-    "@emailjs/browser": "^3.4.0",
-    "@mediapipe/camera_utils": "^0.3.1640029074",
-    "@mediapipe/drawing_utils": "^0.3.1620248257",
-    "@mediapipe/hands": "^0.4.1646424915",
-    "email-validator": "^2.0.4",
-    "react": "^18.1.0",
-    "react-dom": "^18.1.0",
-    "react-photo-view": "^1.2.3",
-    "react-player": "^1.14.2",
-    "react-router-dom": "^6.3.0",
-    "react-scripts": "^5.0.1",
-    "react-webcam": "^7.0.1"
-  },
   "scripts": {
     "predeploy": "npm run build",
     "deploy": "gh-pages -d build",
@@ -40,7 +26,21 @@
       "last 1 safari version"
     ]
   },
+  "dependencies": {
+    "@emailjs/browser": "^4.3.3",
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/drawing_utils": "^0.3.1675466124",
+    "@mediapipe/hands": "^0.4.1675469240",
+    "email-validator": "^2.0.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-photo-view": "^1.2.4",
+    "react-player": "^2.16.0",
+    "react-router-dom": "^6.23.1",
+    "react-scripts": "^5.0.1",
+    "react-webcam": "^7.2.0"
+  },
   "devDependencies": {
-    "gh-pages": "^3.2.3"
+    "gh-pages": "^6.1.1"
   }
 }
