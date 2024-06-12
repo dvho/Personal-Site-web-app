@@ -2,7 +2,9 @@ import React from 'react'
 import ReactPlayer from 'react-player'
 import { handControllerUtils } from './handControllerUtils'
 
-import config from '../config'
+import config from '../_config'
+
+const { screenWidth, canvasHeight, canvasWidth, wideScreen, margin } = config.constants
 
 //Need to track onLoad and only play if onLoad has completed
 
@@ -163,11 +165,11 @@ class AudioPlayer extends React.PureComponent {
             currentTrack: this.props.currentTrack
         })
 
-        handControllerUtils.handleHand(this.props, this.playButtonRef, () => this.handlePlayer('play'), 300)
-        handControllerUtils.handleHand(this.props, this.stopButtonRef, () => this.handlePlayer('stop'), 300)
-        handControllerUtils.handleHand(this.props, this.pauseButtonRef, () => this.handlePlayer('pause'), 300)
-        handControllerUtils.handleHand(this.props, this.forwardButtonRef, () => this.handlePlayer('forward'), 300)
-        handControllerUtils.handleHand(this.props, this.backwardButtonRef, () => this.handlePlayer('backward'), 300)
+        handControllerUtils.handleHand(this.props.isHandPointing, this.props.coords, this.playButtonRef, () => this.handlePlayer('play'), 300)
+        handControllerUtils.handleHand(this.props.isHandPointing, this.props.coords, this.stopButtonRef, () => this.handlePlayer('stop'), 300)
+        handControllerUtils.handleHand(this.props.isHandPointing, this.props.coords, this.pauseButtonRef, () => this.handlePlayer('pause'), 300)
+        handControllerUtils.handleHand(this.props.isHandPointing, this.props.coords, this.forwardButtonRef, () => this.handlePlayer('forward'), 300)
+        handControllerUtils.handleHand(this.props.isHandPointing, this.props.coords, this.backwardButtonRef, () => this.handlePlayer('backward'), 300)
     }
 
     render() {
@@ -176,18 +178,18 @@ class AudioPlayer extends React.PureComponent {
         //Variables below are all calculated dynamically with each render and are based on Home.js state properties canvasHeight, canvasWidth, screenWidth, wideScreen, margin, and veilOpacity
         let containerRgbaOpacity = (veilOpacity - .3) * .15 //Couldn't use regular opacity property because it was changing the opacity of all child elements. Setting it as the alpha channel for backgoundColor was the workaround. Also noteworthy is that the transition takes 'background-color' not 'backgroundColor' as the property in its string.
         let timeStringRgbaOpacity = .045 - containerRgbaOpacity
-        let containerHeight = this.props.canvasHeight * .1
+        let containerHeight = canvasHeight * .1
         let padding = containerHeight * .5
         let marginTop = containerHeight * -.15
-        let totalTimeStringMarginTop = this.props.screenWidth / this.props.canvasHeight > .59 ? marginTop : 26
+        let totalTimeStringMarginTop = screenWidth / canvasHeight > .59 ? marginTop : 26
         let borderRadius = containerHeight * .25
-        let containerWidth = this.props.wideScreen ? this.props.canvasWidth * .95 - padding * 2 : this.props.screenWidth * .95 - padding * 2
-        let left = this.props.wideScreen ? this.props.canvasWidth  * .025 + this.props.margin : this.props.screenWidth * .025
-        let bottom = this.props.wideScreen ? this.props.canvasWidth  * .025 : this.props.screenWidth * .025
-        let fontSize = this.props.canvasHeight / 18
-        let timeStringHorizontalPadding = this.props.canvasHeight / 50
+        let containerWidth = wideScreen ? canvasWidth * .95 - padding * 2 : screenWidth * .95 - padding * 2
+        let left = wideScreen ? canvasWidth  * .025 + margin : screenWidth * .025
+        let bottom = wideScreen ? canvasWidth  * .025 : screenWidth * .025
+        let fontSize = canvasHeight / 18
+        let timeStringHorizontalPadding = canvasHeight / 50
         let timeStringBorderRadius = timeStringHorizontalPadding * 2
-        let iconDiameter =  this.props.canvasHeight * .07
+        let iconDiameter =  canvasHeight * .07
         let iconMarginRight = iconDiameter * .15
         let playIconClassName = this.state.isPlaying ? 'fa fa-play-circle play-active audio-icon' : (!this.state.isPlaying && !this.state.hasEnded ? 'fa fa-play-circle pause-active audio-icon' : 'fa fa-play-circle play-icon audio-icon')
         let pauseIconClassName = !this.state.isPlaying && !this.state.hasEnded ? 'fa fa-pause-circle pause-active audio-icon' : 'fa fa-pause-circle pause-icon audio-icon'

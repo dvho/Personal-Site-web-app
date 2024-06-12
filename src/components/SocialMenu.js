@@ -3,17 +3,20 @@ import { useNavigate } from 'react-router-dom'
 
 import { handControllerUtils } from './handControllerUtils'
 
+import config from '../_config'
+const { wideScreen, margin } = config.constants
+
 const SocialMenu = props => {
 
     const navigate = useNavigate()
 
-    //It would have been ideal to have been able to control the hover vs non hover color of all the toggleable icons right from App.css like for the other icons in SocialMenu but in needing to overwright color from the inline style prop for those icons that ability was relinquished. The solution was to capture onMouseEnter and onMouseLeave for those elements and update state locally in SocialMenu itself. I tried to maintain these states as an object under a single isHoveringOverToggleableIcon hook but response to onMouseLeave and onMouseEnter were incredibly janky and unpredictable.
+    //It would have been ideal to have been able to control the hover vs non hover color of all the toggleable icons right from App.css like for the other icons in SocialMenu but in needing to overwrite color from the inline style prop for those icons that ability was relinquished. The solution was to capture onMouseEnter and onMouseLeave for those elements and update state locally in SocialMenu itself. I tried to maintain these states as an object under a single isHoveringOverToggleableIcon hook but response to onMouseLeave and onMouseEnter were incredibly janky and unpredictable.
     const [isHoveringOverCloudHazeIcon, setIsHoveringOverCloudHazeIcon] = useState(false)
     const [isHoveringOverCloudIcon, setIsHoveringOverCloudIcon] = useState(false)
     const [isHoveringOverHandControllerIcon, setIsHoveringOverHandControllerIcon] = useState(false)
 
     let pullTabRef, contactFormRef, infoSheetRef, cloudsOnRef, cloudHazeOnRef, pullTabClasses, socialIconsColumn1Classes, socialIconsColumn2Classes, socialMenuContainerClasses
-    let left = props.wideScreen ? props.margin : 0
+    let left = wideScreen ? margin : 0
 
     if (props.menuPosition === 1) {
         pullTabClasses = 'fa fa-angle-double-right pull-chevron-column pull-chevron-column-open'
@@ -41,12 +44,12 @@ const SocialMenu = props => {
     }
 
     useEffect(() => {
-        handControllerUtils.handleHand(props, pullTabRef, props.toggleMenuPosition, 500)
-        handControllerUtils.handleHand(props, contactFormRef, props.toggleContactForm, 500)
-        handControllerUtils.handleHand(props, infoSheetRef, props.toggleInfoSheet, 500)
-        handControllerUtils.handleHand(props, cloudsOnRef, props.toggleCloudsOn, 1000)
-        handControllerUtils.handleHand(props, cloudHazeOnRef, props.toggleCloudHazeOn, 1000)
-        //No, you can't use the HandController to turn itself off and not be able to turn it back on again. Would've been okay but getting error "HandController.js:51 Uncaught (in promise) TypeError: Cannot read properties of null (reading 'video'), at Object.onFrame (HandController.js:51:1), at Q (camera_utils.js:22:1), at camera_utils.js:22:1" when turning it off and when turning it back on via mouse or touch a 'ghost' hand appears playing where your hand was when handControllerOn was false
+        handControllerUtils.handleHand(props.isHandPointing, props.coords, pullTabRef, props.toggleMenuPosition, 250)
+        handControllerUtils.handleHand(props.isHandPointing, props.coords, contactFormRef, props.toggleContactForm, 250)
+        handControllerUtils.handleHand(props.isHandPointing, props.coords, infoSheetRef, props.toggleInfoSheet, 250)
+        handControllerUtils.handleHand(props.isHandPointing, props.coords, cloudsOnRef, props.toggleCloudsOn, 250)
+        handControllerUtils.handleHand(props.isHandPointing, props.coords, cloudHazeOnRef, props.toggleCloudHazeOn, 250)
+        //I would have had something like    handControllerUtils.handleHand(props, handControllerRef, props.toggleHandController, <rate>)    so that HandController could turn itself off (and obviously not be able to turn itself back on again). That would've been okay but was getting the error "HandController.js:51 Uncaught (in promise) TypeError: Cannot read properties of null (reading 'video'), at Object.onFrame (HandController.js:51:1), at Q (camera_utils.js:22:1), at camera_utils.js:22:1" when turning it off, and when turning it back on via mouse or touch a 'ghost' hand would appear where one's hand was even though handControllerOn was false
     }, [props, pullTabRef, contactFormRef, infoSheetRef, cloudsOnRef, cloudHazeOnRef])
 
     return(
@@ -54,9 +57,9 @@ const SocialMenu = props => {
 
             <div className={socialIconsColumn2Classes}>
                 <i className='plane social-icon fa fa-plane-departure' onClick={() => { navigate('journeys'); window.location.reload()}}/> {/* If you don't call window.location.reload here too the path will change in your browser's address bar but the app won't navigate */}
-                <i className='cloud social-icon fa-solid fa-cloud' onMouseEnter={() => setIsHoveringOverCloudIcon(true)} onMouseLeave={() => setIsHoveringOverCloudIcon(false)} style={{color: isHoveringOverCloudIcon ? 'rgba(0,170,170,.95)' : (props.cloudsOn ? 'rgb(192,128,255)' : 'rgb(255,255,255)')}} onClick={() => props.toggleCloudsOn()} ref={ref => cloudsOnRef = ref} />
-                <i className='cloud-haze fi fi-cloudy-gusts' onMouseEnter={() => setIsHoveringOverCloudHazeIcon(true)} onMouseLeave={() => setIsHoveringOverCloudHazeIcon(false)} style={{color: isHoveringOverCloudHazeIcon ? 'rgba(0,170,170,.95)' : (props.cloudHazeOn ? 'rgb(80,80,255)' : 'rgb(255,255,255)')}} onClick={() => props.toggleCloudHazeOn()} ref={ref => cloudHazeOnRef = ref} />
-                <i className='hand social-icon fa-solid fa-hand-sparkles' onMouseEnter={() => setIsHoveringOverHandControllerIcon(true)} onMouseLeave={() => setIsHoveringOverHandControllerIcon(false)} style={{color: isHoveringOverHandControllerIcon ? 'rgba(0,170,170,.95)' : (props.handControllerOn ? 'rgb(255,0,0)' : 'rgb(255,255,255)')}} onClick={() => props.toggleHandControllerOn()} />
+                <i className='cloud social-icon fa-solid fa-cloud' onMouseEnter={() => setIsHoveringOverCloudIcon(true)} onMouseLeave={() => setIsHoveringOverCloudIcon(false)} style={{color: isHoveringOverCloudIcon ? 'rgba(0,170,170,.5)' : (props.cloudsOn ? 'rgb(192,128,255)' : 'rgb(255,255,255)')}} onClick={() => props.toggleCloudsOn()} ref={ref => cloudsOnRef = ref} />
+                <i className='cloud-haze fi fi-cloudy-gusts' onMouseEnter={() => setIsHoveringOverCloudHazeIcon(true)} onMouseLeave={() => setIsHoveringOverCloudHazeIcon(false)} style={{color: isHoveringOverCloudHazeIcon ? 'rgba(0,170,170,.5)' : (props.cloudHazeOn ? 'rgb(80,80,255)' : 'rgb(255,255,255)')}} onClick={() => props.toggleCloudHazeOn()} ref={ref => cloudHazeOnRef = ref} />
+                <i className='hand social-icon fa-solid fa-hand-sparkles' onMouseEnter={() => setIsHoveringOverHandControllerIcon(true)} onMouseLeave={() => setIsHoveringOverHandControllerIcon(false)} style={{color: isHoveringOverHandControllerIcon ? 'rgba(0,170,170,.5)' : (props.handControllerOn ? 'rgb(255,0,0)' : 'rgb(255,255,255)')}} onClick={() => props.toggleHandControllerOn()} />
             </div>
 
             <div className={socialIconsColumn1Classes}>
@@ -76,4 +79,4 @@ const SocialMenu = props => {
     )
 }
 
-export default React.memo(SocialMenu) //I was getting unnecesary renders here so I'm wrapping the export of the component in React.memo, which does a shallow comparison for function components as React.PureComponent, or the older lifecycle method componentShouldUpdate(), do shallow comparisons to limit unnecessary re-rendering in class components. One could also simply wrap the code block of the component itself in React.memo but I think doing it in the export is cleaner
+export default SocialMenu

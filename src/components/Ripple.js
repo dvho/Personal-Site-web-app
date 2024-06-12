@@ -1,12 +1,16 @@
 import React from 'react'
 
+import config from '../_config'
+
+const { screenWidth, canvasHeight, canvasWidth, wideScreen, margin } = config.constants
+
 const Ripple = props => {
 
-    let diameter = props.canvasHeight / 10
-    let blur = props.canvasHeight / 35
-    let spread = props.canvasHeight / 20
-    let left = props.wideScreen ? props.margin - diameter / 2 + props.canvasWidth * props.rippleXCoord : props.screenWidth * props.rippleXCoord - diameter / 2
-    let top = props.canvasHeight * props.rippleYCoord - diameter / 2
+    let diameter = canvasHeight / 10
+    let blur = canvasHeight / 35
+    let spread = canvasHeight / 20
+    let left = wideScreen ? margin - diameter / 2 + canvasWidth * props.coords.xCoordStatic : screenWidth * props.coords.xCoordStatic - diameter / 2
+    let top = canvasHeight * props.coords.yCoordStatic - diameter / 2
     let boxShadow = `0 0 ${blur}px ${spread}px #fff, inset 0 0 ${blur}px ${spread}px #fff`
 
     return(
@@ -14,4 +18,4 @@ const Ripple = props => {
     )
 }
 
-export default React.memo(Ripple) //I was getting unnecesary renders here so I'm wrapping the export of the component in React.memo, which does a shallow comparison for function components as React.PureComponent, or the older lifecycle method componentShouldUpdate(), do shallow comparisons to limit unnecessary re-rendering in class components. One could also simply wrap the code block of the component itself in React.memo but I think doing it in the export is cleaner.
+export default Ripple
