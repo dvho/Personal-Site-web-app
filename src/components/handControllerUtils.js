@@ -2,6 +2,11 @@ import * as Hands from '@mediapipe/hands'
 import * as drawingUtils from '@mediapipe/drawing_utils'
 import ReactDOM from 'react-dom'
 
+import config from '../_config'
+import utils from '../_utils'
+
+const { canvasHeight, canvasWidth, margin } = config.constants
+
 export const handControllerUtils = {
 
     isPointing: points => { //Calculates if either the tip of your middle finger is closer to your wrist than the base of your middle finger and if the tip of your middle finger is closer to your wrist than the middle knuckle of your middle finger, for which if at least one is true quite accurately indicates that the hand is in a fist, then calculates if the opposite is true for your index finger, which indicates that the user is deliberately pointing their finger
@@ -16,7 +21,7 @@ export const handControllerUtils = {
         )
     },
 
-    drawHand: (canvasCtx, results, calcAllDimensionsCoordsAndResetClouds) => { //Hand landmarks are illustrated here    https://google.github.io/mediapipe/images/mobile/hand_landmarks.png
+    drawHand: (canvasCtx, results, handleEvents) => { //Hand landmarks are illustrated here    https://google.github.io/mediapipe/images/mobile/hand_landmarks.png
 
         if (results.multiHandLandmarks) {
 
@@ -36,7 +41,7 @@ export const handControllerUtils = {
                     pageX = 1 - points[9].x
                     pageY = points[9].y
                 }
-                calcAllDimensionsCoordsAndResetClouds({type: 'handmove', pageX, pageY, isPointing}) //In the case of more than one hand, was going to conditionally fire this function based on which result had the closest multiHandLandmarks[i][9] value but it looks cool when Face.js gets confused
+                handleEvents({type: 'handmove', pageX, pageY, isPointing}) //In the case of more than one hand, was going to conditionally fire this function based on which result had the closest multiHandLandmarks[i][9] value but it looks cool when Face.js gets confused
             }
         }
     },
@@ -56,15 +61,15 @@ export const handControllerUtils = {
         )
     },
 
-    handleHand: (props, ref, fn, rateLimit) => {
+    handleHand: (isPointing, coords, ref, fn, rateLimit) => { //The rateLimit argument is passed to utils.throttle and is imperative because once props.isPointing is true the operations in handleHand would otherwise be called at the framerate of the webcam in HandController
+        if (isPointing) {
+            const boundingClientRect = ReactDOM.findDOMNode(ref).getBoundingClientRect()
 
-        const boundingClientRect = ReactDOM.findDOMNode(ref).getBoundingClientRect()
+            let componentCoords = handControllerUtils.getBoundingClientRectCoords(boundingClientRect, canvasWidth, canvasHeight, margin)
 
-        let componentCoords = handControllerUtils.getBoundingClientRectCoords(boundingClientRect, props.canvasWidth, props.canvasHeight, props.margin)
-
-        if (componentCoords && props.yCoord > componentCoords.topFloat && props.yCoord < componentCoords.bottomFloat && props.xCoord > componentCoords.leftFloat && props.xCoord < componentCoords.rightFloat && props.isPointing) {
-            fn()
-            props.limitPointing(rateLimit)
+            if (componentCoords && coords.yCoordMoving > componentCoords.topFloat && coords.yCoordMoving < componentCoords.bottomFloat && coords.xCoordMoving > componentCoords.leftFloat && coords.xCoordMoving < componentCoords.rightFloat) {
+                utils.throttle(fn, rateLimit)
+            }
         }
     }
 

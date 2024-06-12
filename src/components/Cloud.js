@@ -1,8 +1,11 @@
-import React from 'react'
+import React, { memo } from 'react'
+
+import config from '../_config'
+const { canvasHeight } = config.constants
 
 const Cloud = props => {
 
-    if (props.canvasHeight === 0) { //This prevents the unnecesary render caused by App.js not yet having its state set in componentDidMount when the first render happens. I'm still getting one extra render for Cloud.js but it's not coming from the componentDidMount in App.js
+    if (canvasHeight === 0) { //This prevents the unnecessary render caused by App.js not yet having its state set in componentDidMount when the first render happens. I'm still getting one extra render for Cloud.js but it's not coming from the componentDidMount in App.js
         return
     }
 
@@ -13,11 +16,11 @@ const Cloud = props => {
 
     let cloudClassNameStringIndex = Math.floor(Math.random() * 4)
     let color = Math.floor(Math.random() * 360)
-    let size = props.canvasHeight / (3 + Math.random() * 3)
+    let size = canvasHeight / (3 + Math.random() * 3)
     let opacity = .3 + Math.random() * .6
     let cloudHaze = size / 4
     let zIndex = Math.random() * -900
-    let travelDuration = 24 + Math.random() * 24 //Ideally, travelDuration would be a function of canvas width (inversely proportional to it), which is already a function of canvas height. "18000 / props.canvasHeight + Math.random() * props.canvasHeight / 18000" works perfectly but takes too long for clouds to enter the screen on small devices.
+    let travelDuration = 24 + Math.random() * 24 //Ideally, travelDuration would be a function of canvas width (inversely proportional to it), which is already a function of canvas height. "18000 / canvasHeight + Math.random() * canvasHeight / 18000" works perfectly but takes too long for clouds to enter the screen on small devices.
     let animationNumber = Math.ceil(Math.random() * 32)
 
     props.dimVeil(travelDuration, size) //Call dimVeil in App.js and pass it the travelDuration, so it knows how to set the setTimeout to change the opacity of the veil accordingly, and the size so it knows how to set the setTimeout to change the opacity again for when the cloud has finished passing
@@ -27,6 +30,7 @@ const Cloud = props => {
         <div
             className='clouds'
             id='cloud'
+            onAnimationEnd={() => {props.removeCloud(); console.log('animation end')}}
             style={{
                 top: '50%'
                 }}>
@@ -47,4 +51,4 @@ const Cloud = props => {
     )
 }
 
-export default React.memo(Cloud) //I was getting unnecesary renders here so I'm wrapping the export of the component in React.memo, which does a shallow comparison for function components as React.PureComponent, or the older lifecycle method componentShouldUpdate(), do shallow comparisons to limit unnecessary re-rendering in class components. One could also simply wrap the code block of the component itself in React.memo but I think doing it in the export is cleaner.
+export default memo(Cloud) //I was getting unnecessary renders here so I'm wrapping the export of the component in memo, which does a shallow comparison for function components as React.PureComponent, or the older lifecycle method componentShouldUpdate(), do shallow comparisons to limit unnecessary re-rendering in class components. One could also simply wrap the code block of the component itself in React.memo but I think doing it in the export is cleaner.

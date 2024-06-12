@@ -1,13 +1,17 @@
 import React from 'react'
 
+import config from '../_config'
+
+const { screenWidth, canvasHeight, canvasWidth, wideScreen, margin } = config.constants
+
 const InfoSheet = props => {
 
-        if (props.screenWidth === 0) { //This prevents the unnecesary render caused by App.js not yet having its state set in componentDidMount when the first render happens
+        if (screenWidth === 0) { //This prevents the unnecessary render caused by App.js not yet having its state set in componentDidMount when the first render happens
             return
         }
 
-        let left = props.wideScreen ? props.margin + props.canvasWidth - 270 : props.screenWidth - 270
-        let height = props.canvasHeight * .8
+        let left = wideScreen ? margin + canvasWidth - 270 : screenWidth - 270
+        let height = canvasHeight * .8
         let className = props.revealInfoSheet ? 'info-sheet-container info-sheet-container-revealed' : 'info-sheet-container'
 
         return(
@@ -21,4 +25,4 @@ const InfoSheet = props => {
         )
 }
 
-export default React.memo(InfoSheet) //I'm wrapping the export of the component in React.memo, which does a shallow comparison for function components as React.PureComponent, or the older lifecycle method componentShouldUpdate(), do shallow comparisons to limit unnecessary re-rendering in class components. One could also simply wrap the code block of the component itself in React.memo but I think doing it in the export is cleaner.
+export default InfoSheet
