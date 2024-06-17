@@ -46,12 +46,38 @@ const initialState = {
 const reducer = (state, action) => {
     const { type } = action
     switch (type) {
-        case 'cloudsOn': return {...state, cloudsOn: action.cloudsOn}
-        case 'cloudHazeOn': return {...state, cloudHazeOn: action.cloudHazeOn}
-        case 'handControllerOn': return {...state, handControllerOn: action.handControllerOn}
-        case 'revealContactForm': return {...state, revealContactForm: action.revealContactForm}
-        case 'revealInfoSheet': return {...state, revealInfoSheet: action.revealInfoSheet}
-        case 'menuPosition': return {...state, menuPosition: action.menuPosition}
+        case 'toggleMenuPosition': return {...state, menuPosition: (state.menuPosition + 1) % 4}
+        case 'toggleContactForm': return {...state, revealContactForm: !state.revealContactForm, revealInfoSheet: false} //toggling revealContactForm on (or off) also always hides the info sheet
+        case 'toggleInfoSheet': return {...state, revealInfoSheet: !state.revealInfoSheet, revealContactForm: false} //toggling revealInfoSheet on (or off) also always hides the contact form
+        case 'toggleClouds':
+            if (state.cloudsOn) { //If clouds are on...
+                return {
+                    ...state,
+                    cloudsOn: false, //...turn them off...
+                    cloudHazeOn: false, //...turn off cloud haze in case it's on...
+                    allClouds: [] //...and remove all clouds
+                }
+            } else { //...otherwise if clouds are already off...
+                return {
+                    ...state,
+                    cloudsOn: true, //...turn them on...
+                    allClouds: [] //...and remove all clouds in this case as well, just in case clouds were last turned on from toggleCloudHaze
+                }
+            }
+        case 'toggleCloudHaze':
+            if (state.cloudsOn) { //If clouds are on...
+                return {
+                    ...state,
+                    cloudHazeOn: !state.cloudHazeOn //...simply toggle cloud haze according to its current state..
+                }
+            } else { //...otherwise...
+                return {
+                    ...state,
+                    cloudsOn: true, //...turn clouds on...
+                    cloudHazeOn: true ///...and turn on cloud haze
+                }
+            }
+        case 'toggleHandController': return {...state, handControllerOn: !state.handControllerOn}
         case 'allTracks': return {...state, allTracks: action.allTracks}
         case 'currentTrack': return {...state, currentTrack: action.currentTrack}
         case 'leftColumnTracks': return {...state, leftColumnTracks: action.leftColumnTracks}
@@ -97,7 +123,7 @@ const Home = () => {
     }
 
 
-    const dimVeil = (travelDuration, size) => {
+    const dimVeil = (travelDuration, size) => { //TODO: cancel these timeouts when clouds are turned off
 
         travelDuration *= 1000 //Convert seconds to milliseconds for use in setTimeouts
 
@@ -120,24 +146,22 @@ const Home = () => {
 
         const leftColumnTracks = []
         const rightColumnTracks = []
-        const tracksArray = config.tracks //Back when config.tracks was an object with title keys and url values, was using Object.entries, which is a method that takes an object and returns an array whose elements are arrays of that object's key value pairs (i.e. each element is a [key, value]). In the case of images being a value, the value console.logs as a base64
         let titlesColumnsMargin = canvasHeight * .02
 
-        let j
+        const tracksArrayMidPoint = Math.ceil(config.tracks.length / 2) //Find the midpoint of the tracks array
 
-        for (j = 0; j < tracksArray.length; j++) {
-
-            if (j < 5) {
-                leftColumnTracks.push(<Track key={j} leftColumn={true} trackNumber={j + 1} selectTrack={selectTrack} track={tracksArray[j]} currentTrack={currentTrackRef.current} />)
+        config.tracks.forEach((i, index) => {
+            if (index < tracksArrayMidPoint) {
+                leftColumnTracks.push(<Track key={index} leftColumn={true} trackNumber={index + 1} selectTrack={selectTrack} track={i} currentTrack={currentTrackRef.current} />)
             } else {
-                rightColumnTracks.push(<Track key={j} leftColumn={false} trackNumber={j + 1} selectTrack={selectTrack} track={tracksArray[j]} currentTrack={currentTrackRef.current} />)
+                rightColumnTracks.push(<Track key={index} leftColumn={false} trackNumber={index + 1} selectTrack={selectTrack} track={i} currentTrack={currentTrackRef.current} />)
             }
-        }
+        })
 
         dispatch({type: 'leftColumnTracks', leftColumnTracks: leftColumnTracks})
         dispatch({type: 'rightColumnTracks', rightColumnTracks: rightColumnTracks})
         dispatch({type: 'titlesColumnsMargin', titlesColumnsMargin: titlesColumnsMargin})
-        dispatch({type: 'allTracks', allTracks: tracksArray})
+        dispatch({type: 'allTracks', allTracks: config.tracks})
     }
 
 
@@ -265,11 +289,22 @@ const Home = () => {
 
             <SocialMenuLabels menuPosition={menuPosition} veilOpacity={veilOpacity} />
 
-            <ContactForm toggleContactForm={() => {dispatch({type: 'revealContactForm', revealContactForm: !revealContactForm}); dispatch({type: 'revealInfoSheet', revealInfoSheet: false})} /* toggling revealContactForm on also always turns off revealInfoSheet */ } revealContactForm={revealContactForm} />
+            <ContactForm
+                dispatch={dispatch}
+                revealContactForm={revealContactForm}
+                />
 
             <InfoSheet revealInfoSheet={revealInfoSheet} />
 
-            <SocialMenu toggleMenuPosition={() => dispatch({type: 'menuPosition', menuPosition: (menuPosition + 1) % 4})} menuPosition={menuPosition} toggleContactForm={() => {dispatch({type: 'revealContactForm', revealContactForm: !revealContactForm}); dispatch({type: 'revealInfoSheet', revealInfoSheet: false})} /* toggling revealContactForm on also always turns off revealInfoSheet */ } toggleInfoSheet={() => {dispatch({type: 'revealInfoSheet', revealInfoSheet: !revealInfoSheet}); dispatch({type: 'revealContactForm', revealContactForm: false}) /* toggling revealInfoSheet on also always turns off revealContactForm */ }} cloudHazeOn={cloudHazeOn} toggleCloudHazeOn={() => {{if (!cloudHazeOn) {dispatch({type: 'cloudsOn', cloudsOn: true})}}; /* toggling cloudHazeOn also always toggles cloudsOn */ dispatch({type: 'cloudHazeOn', cloudHazeOn: !cloudHazeOn}) }} cloudsOn={cloudsOn} toggleCloudsOn={() => {dispatch({type: 'cloudsOn', cloudsOn: !cloudsOn}); if (cloudsOn) {dispatch({type: 'allClouds', allClouds: []}); dispatch({type: 'cloudHazeOn', cloudHazeOn: false})}}} handControllerOn={handControllerOn} toggleHandControllerOn={() => dispatch({type: 'handControllerOn', handControllerOn: !handControllerOn})} coords={coords} isHandPointing={isHandPointing} />
+            <SocialMenu
+                dispatch={dispatch}
+                menuPosition={menuPosition}
+                cloudsOn={cloudsOn}
+                cloudHazeOn={cloudHazeOn}
+                handControllerOn={handControllerOn}
+                isHandPointing={isHandPointing}
+                coords={coords}
+                />
 
             { isRippling ? <Ripple coords={coords} /> : null }
 

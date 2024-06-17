@@ -10,7 +10,6 @@ import SocialMenu from './SocialMenu'
 import SocialMenuLabels from './SocialMenuLabels'
 import SingleTrack from './SingleTrack'
 import HandController from './HandController'
-import { handControllerUtils } from './handControllerUtils'
 import TravelPhotos from './TravelPhotos'
 
 export {
@@ -26,6 +25,5 @@ export {
     SocialMenuLabels,
     SingleTrack,
     HandController,
-    handControllerUtils,
     TravelPhotos
 }

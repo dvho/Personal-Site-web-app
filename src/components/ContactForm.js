@@ -43,7 +43,7 @@ class ContactForm extends React.PureComponent {
                 subject: '',
                 message: ''
             })
-            this.props.toggleContactForm() //...and toggle the state of revealContactForm in App.js (back to false)
+            this.props.dispatch({type: 'toggleContactForm'}) //...and toggleContactForm so it's closed again
         }, 2500)
     }
 

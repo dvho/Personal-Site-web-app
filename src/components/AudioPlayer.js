@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactPlayer from 'react-player'
-import { handControllerUtils } from './handControllerUtils'
 
 import config from '../_config'
+import utils from '../_utils'
 
 const { screenWidth, canvasHeight, canvasWidth, wideScreen, margin } = config.constants
 
@@ -71,12 +71,12 @@ class AudioPlayer extends React.PureComponent {
         }
         if (type === 'pause' && this.state.currentTrack && !this.state.hasEnded) { //If the 'pause' button is selected and there's a track loaded in that hasn't ended (i.e. the 'stop' button was not pressed) only then will pause work to either pause or unpause the playing track.
             this.setState({
-                isPlaying: false //I used to have this as    isPlaying: !this.state.isPlaying    so that the pause button could toggle but once handControllerUtils.handleHand    was integrated tapping pause with the HandController crashed the app with "Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops."
+                isPlaying: false //I used to have this as    isPlaying: !this.state.isPlaying    so that the pause button could toggle but once utils.handleHand    was integrated tapping pause with the HandController crashed the app with "Maximum update depth exceeded. This can happen when a component repeatedly calls setState inside componentWillUpdate or componentDidUpdate. React limits the number of nested updates to prevent infinite loops."
             })
         }
         if (type === 'forward') {
             if (this.props.allTracks.length > 0) {
-                setTimeout(() => this.changeTrackOrEnd('forward'), 50) //I used to have this without the setTimeout but once handControllerUtils.handleHand    was integrated tapping forward with the HandController always brought the focused track to the last track with warnings for each of the tracks in between: "<track name> is being deferred until the player has loaded." At 10ms the error was occasionally still happening so I bumped it up to 50ms.
+                setTimeout(() => this.changeTrackOrEnd('forward'), 50) //I used to have this without the setTimeout but once utils.handleHand    was integrated tapping forward with the HandController always brought the focused track to the last track with warnings for each of the tracks in between: "<track name> is being deferred until the player has loaded." At 10ms the error was occasionally still happening so I bumped it up to 50ms.
             } else {
                 this.setState({
                     totalSeconds: 0,
@@ -88,7 +88,7 @@ class AudioPlayer extends React.PureComponent {
         }
         if (type === 'backward') {
             if (this.props.allTracks.length > 0) {
-                setTimeout(() => this.changeTrackOrEnd('backward'), 50) //I used to have this without the setTimeout but once handControllerUtils.handleHand    was integrated tapping backward with the HandController always brought the focused track to the first track with warnings for each of the tracks in between: "<track name> is being deferred until the player has loaded." At 10ms the error was occasionally still happening so I bumped it up to 50ms.
+                setTimeout(() => this.changeTrackOrEnd('backward'), 50) //I used to have this without the setTimeout but once utils.handleHand    was integrated tapping backward with the HandController always brought the focused track to the first track with warnings for each of the tracks in between: "<track name> is being deferred until the player has loaded." At 10ms the error was occasionally still happening so I bumped it up to 50ms.
             } else {
                 this.setState({
                     totalSeconds: 0,
@@ -165,11 +165,13 @@ class AudioPlayer extends React.PureComponent {
             currentTrack: this.props.currentTrack
         })
 
-        handControllerUtils.handleHand(this.props.isHandPointing, this.props.coords, this.playButtonRef, () => this.handlePlayer('play'), 300)
-        handControllerUtils.handleHand(this.props.isHandPointing, this.props.coords, this.stopButtonRef, () => this.handlePlayer('stop'), 300)
-        handControllerUtils.handleHand(this.props.isHandPointing, this.props.coords, this.pauseButtonRef, () => this.handlePlayer('pause'), 300)
-        handControllerUtils.handleHand(this.props.isHandPointing, this.props.coords, this.forwardButtonRef, () => this.handlePlayer('forward'), 300)
-        handControllerUtils.handleHand(this.props.isHandPointing, this.props.coords, this.backwardButtonRef, () => this.handlePlayer('backward'), 300)
+        if (this.props.isHandPointing) {
+            utils.handleHand(this.props.coords, this.playButtonRef, () => this.handlePlayer('play'), 300)
+            utils.handleHand(this.props.coords, this.stopButtonRef, () => this.handlePlayer('stop'), 300)
+            utils.handleHand(this.props.coords, this.pauseButtonRef, () => this.handlePlayer('pause'), 300)
+            utils.handleHand(this.props.coords, this.forwardButtonRef, () => this.handlePlayer('forward'), 300)
+            utils.handleHand(this.props.coords, this.backwardButtonRef, () => this.handlePlayer('backward'), 300)
+        }
     }
 
     render() {
