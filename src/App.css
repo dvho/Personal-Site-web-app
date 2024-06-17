@@ -284,7 +284,6 @@ body {
 .social-icons-column-open {
     flex: 1;
     font-size: 32px;
-    padding-left: 4px;
     transition: all .5s ease;
 }
 .social-icons-column-open-left-gradient {
@@ -354,7 +353,7 @@ body {
 
 
 .social-icon:hover {
-    color: rgba(0,170,170,.95);
+    /* color: rgba(0,170,170,.95); */
     transform: scale(1.2);
     transition: all .2s ease;
 }
@@ -497,6 +496,7 @@ body {
     justify-content: center;
     align-items: center;
 }
+/* These thumb classes are relics of my old implementation which had the issues caused by react-photo-view's rigidity as described in annotations to utils.simulateClickOrTouch
 .thumb-container {
     display: flex;
     flex-direction: column;
@@ -517,7 +517,7 @@ body {
     height: 180px;
     margin: 7.5px;
     box-shadow: 6px 8px 16px 6px rgba(0,0,0,0.3);
-}
+} */
 
 .album-container {
     display: flex;

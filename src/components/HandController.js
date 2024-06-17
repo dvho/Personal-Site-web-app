@@ -5,9 +5,8 @@ import * as Hands from '@mediapipe/hands'
 import * as cam from '@mediapipe/camera_utils'
 import Webcam from 'react-webcam'
 
-import { handControllerUtils } from './handControllerUtils'
-
 import config from '../_config'
+import utils from '../_utils'
 
 const { screenWidth, canvasHeight, canvasWidth, wideScreen } = config.constants
 
@@ -27,7 +26,7 @@ const HandController = props => {
         canvasCtx.save()
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height)
 
-        handControllerUtils.drawHand(canvasCtx, results, props.handleEvents)
+        utils.drawHand(canvasCtx, results, props.handleEvents)
 
         canvasCtx.restore()
     }, [])

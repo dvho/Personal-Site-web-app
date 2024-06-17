@@ -1,4 +1,4 @@
-import lyrics from './assets/_lyrics'
+import { lyrics } from './assets/data'
 
 const screenWidth = window.visualViewport === undefined ? window.innerWidth : window.visualViewport.width //Chrome mobile uses window.visualViewport property instead of the window object directly
 const canvasHeight = window.visualViewport === undefined ? window.innerHeight : window.visualViewport.height //Chrome mobile uses window.visualViewport property instead of the window object directly
@@ -21,6 +21,7 @@ const config = {
     images: {
         appFont: 'Nothing You Could Do, cursive',
         formFont: 'Cormorant Garamond, serif',
+        dummyImage: require('./assets/images/blank-single-pixel.png'),
         canvas: {
             backTreesOnly: require('./assets/images/back-trees-only.png'),
             back: require('./assets/images/back.png'),
