@@ -9,8 +9,10 @@ import { PhotoProvider, PhotoView } from 'react-photo-view' //https://react-phot
 import config from './_config'
 import { photoData } from './assets/data'
 
-const { canvasHeight, canvasWidth, margin } = config.constants
-const { dummyImage } = config.images
+const { canvasHeight, canvasWidth,screenWidth, moonDiameter, margin, blinkFrameDelays } = config.constants
+const { dummyImage, eyePosition, eyePosition: { faceEmpty, faceEyePosition1L1, faceEyePosition1L2, faceEyePosition1L3, faceEyePosition1R1, faceEyePosition1R2, faceEyePosition1R3, faceEyePosition1R4, faceEyePosition2L1, faceEyePosition2L2, faceEyePosition2L3, faceEyePosition2L4, faceEyePosition2R2, faceEyePosition2R3, faceEyePosition2R4, faceEyePosition3L1, faceEyePosition3L2, faceEyePosition3L3, faceEyePosition3R1, faceEyePosition3R2, faceEyePosition3R3, faceEyePosition4L1, faceEyePosition4L2, faceEyePosition4L3, faceEyePosition4L4, faceEyePosition4R1, faceEyePosition4R2, faceEyePosition4R3, faceEyePosition4R4, faceEyePosition5L1, faceEyePosition5L2, faceEyePosition5L3, faceEyePosition5L4, faceEyePosition5L5, faceEyePosition5R1, faceEyePosition5R2, faceEyePosition5R3, faceEyePosition5R4 }, blink: { faceBlinkA, faceBlinkB, faceBlinkC, faceBlinkD, faceBlinkE, faceBlinkF } } = config.images
+
+
 
 
 const utils = {
@@ -72,29 +74,45 @@ const utils = {
         }
     })(),
 
-    blink: (dispatch, faceFrame, coords) => { //utils.blink takes three arguments: Access to the reducer's dispatch function in Home.js, the faceFrame at the moment it's called and the coords at the moment it's called...
+    dimVeil: (dispatch, travelDuration, size) => { //TODO: cancel these timeouts when clouds are turned off
 
-        let blinkDuration = 100 + Math.random() * 150 //...set blinkDuration to 100ms < blinkDuration < 250ms...
+        travelDuration *= 1000 //Convert seconds to milliseconds for use in setTimeouts
 
-        dispatch({type: 'faceFrame', faceFrame: config.images.eyePosition.faceEmpty}) //...initialize faceFrame as config.images.eyePosition.faceEmpty (which reveals eyes facing forward) and necessarily remain at this position for a length of time equal to blinkDuration * config.constants.blinkFrameDelays[0], which is when the blink sequence begins...
+        const sizeCoefficient = size / 235 //The size of the cloud is a percentage of the screen width and dividing by about 235 gives a coefficient that, used with travelDuration, works well to account for how long the cloud will be in front of the moon and hence how long to dim the veil
 
-        //...follow with a sequence of 10 setTimeouts that dictate the blink sequence and run at blinkDuration * config.constants.blinkFrameDelays[<index>] (where config.constants.blinkFrameDelays[9] is 1.1, not 1, so the last frame, which becomes either whatever was passed as faceFrame or whatever is returned from utils.changeEyePositionWithUserInteraction, could run at a max setTimeout of 600 + 250 * 1.1 = 875ms, which is still always sufficiently less than the repeatRate set forth in blinkControl in Home.js. Note, setTimeouts are run for frames from D to A, then back up to F. I would have included two earlier indices in constants.blinkFrameDelays, .02 and .05 for an earlier frame F and frame E, respectively, to come at the very beginning of the sequence but discovered that the blink looked more natural when the eyes moved rapidly to the closed position and then dragged a little more on the way up, and omitting those two frames F and E at the beginning depicted this much better...
-        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: config.images.blink.faceBlinkD}), blinkDuration * config.constants.blinkFrameDelays[0])
-        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: config.images.blink.faceBlinkC}), blinkDuration * config.constants.blinkFrameDelays[1])
-        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: config.images.blink.faceBlinkB}), blinkDuration * config.constants.blinkFrameDelays[2])
-        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: config.images.blink.faceBlinkA}), blinkDuration * config.constants.blinkFrameDelays[3])
-        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: config.images.blink.faceBlinkB}), blinkDuration * config.constants.blinkFrameDelays[4])
-        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: config.images.blink.faceBlinkC}), blinkDuration * config.constants.blinkFrameDelays[5])
-        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: config.images.blink.faceBlinkD}), blinkDuration * config.constants.blinkFrameDelays[6])
-        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: config.images.blink.faceBlinkE}), blinkDuration * config.constants.blinkFrameDelays[7])
-        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: config.images.blink.faceBlinkF}), blinkDuration * config.constants.blinkFrameDelays[8])
-        setTimeout(() => {
-            if (coords.xCoordMoving === -1) { //...and for that last frame if there hasn't been any user input from mouse, hand or touchscreen (i.e. there has been no such user input in the past 10000ms per setAutoVsUserTimer)...
-                dispatch({type: 'faceFrame', faceFrame: faceFrame}) //...simply set the faceFrame back to what it was when utils.blink was first called...
-            } else { //..otherwise...
-                utils.changeEyePositionWithUserInteraction(dispatch, coords) //...run utils.changeEyePositionWithUserInteraction with coords instead
-            }
-        }, (blinkDuration * config.constants.blinkFrameDelays[9]))
+        if (canvasWidth === 0) return //If canvasWidth hasn't been set yet it will be null and the calculations below will crash the app
+
+        let cloudIn = travelDuration / 3 //The point at which each cloud enters from the left in front of the moon happens to be exactly the center of the screen. It's travel duration is the full width of the view port (translateX(-100vw) through translateX(100vw) or translateX(100vw) through translateX(-100vw) in the case of the cloud icon being flipped... see App.css for these @keyframes) so the moment the cloud enters in front of the moon is exactly it's travelDuration divided by 2.
+        let cloudOut = cloudIn + ((sizeCoefficient * travelDuration / 1.33) / (screenWidth / moonDiameter)) //The moment at which the cloud leaves the moon is the moment at which it enters the moon plus a function of its travelDuration (and, technically, also its size but I've averaged that between the largest and smallest cloud possibilities for this equation) and the diameter of the moon
+
+        setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
+            dispatch({type: 'veilOpacity', veilOpacity: .15})
+        }, cloudIn)
+
+        setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
+            dispatch({type: 'veilOpacity', veilOpacity: -.15})
+        }, cloudOut)
+    },
+
+    blink: (dispatch, currentFaceFrame) => { //utils.blink takes two arguments: Access to the reducer's dispatch function in Home.js and the currentFaceFrame at the moment it's called...
+
+        let randomBlinkDuration = 100 + Math.random() * 150 //...set a randomBlinkDuration between 100ms and 250ms...
+
+        dispatch({type: 'isBlinking', isBlinking: true}) //...dispatch isBlinking as true so that it can be used as a condition to prevent utils.changeEyePositionWithUserInteraction from being called from handleEvents in Home.js while the blinking is in progress, so as not to interrupt the blink...
+
+        dispatch({type: 'faceFrame', faceFrame: faceEmpty}) //...initialize the blink with config.images.eyePosition.faceEmpty (which reveals eyes facing forward) and necessarily remain at this position for a length of time equal to randomBlinkDuration * config.constants.blinkFrameDelays[0], which is when the blink sequence begins...
+
+        //...follow with a sequence of 10 setTimeouts that dictate the blink sequence and run at randomBlinkDuration * config.constants.blinkFrameDelays[<index>] (where config.constants.blinkFrameDelays[9] is 1.1, not 1, so the last frame, which becomes either whatever was passed as faceFrame or whatever is returned from utils.changeEyePositionWithUserInteraction, could run at a max setTimeout of 600 + 250 * 1.1 = 875ms, which is still always sufficiently less than the repeatRate set forth in blinkControl in Home.js. Note, setTimeouts are run for frames from D to A, then back up to F. I would have included two earlier indices in constants.blinkFrameDelays, .02 and .05 for an earlier frame F and frame E, respectively, to come at the very beginning of the sequence but discovered that the blink looked more natural when the eyes moved rapidly to the closed position and then dragged a little more on the way up, and omitting those two frames F and E at the beginning depicted this much better...
+        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: faceBlinkD}), randomBlinkDuration * blinkFrameDelays[0])
+        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: faceBlinkC}), randomBlinkDuration * blinkFrameDelays[1])
+        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: faceBlinkB}), randomBlinkDuration * blinkFrameDelays[2])
+        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: faceBlinkA}), randomBlinkDuration * blinkFrameDelays[3])
+        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: faceBlinkB}), randomBlinkDuration * blinkFrameDelays[4])
+        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: faceBlinkC}), randomBlinkDuration * blinkFrameDelays[5])
+        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: faceBlinkD}), randomBlinkDuration * blinkFrameDelays[6])
+        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: faceBlinkE}), randomBlinkDuration * blinkFrameDelays[7])
+        setTimeout(() => dispatch({type: 'faceFrame', faceFrame: faceBlinkF}), randomBlinkDuration * blinkFrameDelays[8])
+        setTimeout(() => { dispatch({type: 'faceFrame', faceFrame: currentFaceFrame}); dispatch({type: 'isBlinking', isBlinking: false}) }, randomBlinkDuration * blinkFrameDelays[9]) //...finally set faceFrame back to whatever it was before the blink sequence began and set isBlinking back to false so that utils.changeEyePositionWithUserInteraction can once again be called from handleEvents in Home.js
     },
 
     changeEyePositionWithUserInteraction: (dispatch, coords) => { //utils.changeEyePositionWithUserInteraction takes two arguments. Access to the reducer's dispatch function in Home.js and an object of coords passed to it (which are simply xCoordMoving and yCoordMoving)...
@@ -104,50 +122,81 @@ const utils = {
         let position //...declare a position...
 
         //...define position depending on where xCoordMoving and yCoordMoving are...
-        if (yCoordMoving >= 0 && yCoordMoving < .2) {
-            if (xCoordMoving < .25) { position = config.images.eyePosition.clock945 }
-            if (xCoordMoving >= .25) { position = config.images.eyePosition.clock1000 }
-            if (xCoordMoving >= .35) { position = config.images.eyePosition.clock1030 }
-            if (xCoordMoving >= .40) { position = config.images.eyePosition.clock1100 }
-            if (xCoordMoving >= .50) { position = config.images.eyePosition.clock1200 }
-            if (xCoordMoving >= .58) { position = config.images.eyePosition.clock100 }
-            if (xCoordMoving >= .70) { position = config.images.eyePosition.clock200 }
-        }
+        switch (true) {
+            case yCoordMoving >= 0 && yCoordMoving < .2:
+                switch (true) {
+                    case xCoordMoving < .25: position = faceEyePosition1R4; /* console.log('Block-01  Position-1R4'); */ break
+                    case xCoordMoving < .35: position = faceEyePosition1R3; /* console.log('Block-01  Position-1R3'); */ break
+                    case xCoordMoving < .40: position = faceEyePosition1R2; /* console.log('Block-01  Position-1R2'); */ break
+                    case xCoordMoving < .50: position = faceEyePosition1R1; /* console.log('Block-01  Position-1R1'); */ break
+                    case xCoordMoving < .58: position = faceEyePosition1L1; /* console.log('Block-01  Position-1L1'); */ break
+                    case xCoordMoving < .70: position = faceEyePosition1L2; /* console.log('Block-01  Position-1L2'); */ break
+                    default: position = faceEyePosition1L3; /* console.log('Block-01  Position-1L3-- */ break
+                }
+                break
 
-        if (yCoordMoving >= .2 && yCoordMoving < .4) {
-            if (xCoordMoving < .35) { position = config.images.eyePosition.clock945 }
-            if (xCoordMoving >= .35) { position = config.images.eyePosition.clock1000 }
-            if (xCoordMoving >= .40) { position = config.images.eyePosition.clock1030 }
-            if (xCoordMoving >= .45) { position = config.images.eyePosition.clock1100 }
-            if (xCoordMoving >= .5) { position = config.images.eyePosition.clock1200 }
-            if (xCoordMoving >= .55) { position = config.images.eyePosition.clock100 }
-            if (xCoordMoving >= .65) { position = config.images.eyePosition.clock200 }
-            if (xCoordMoving >= .75) { position = config.images.eyePosition.clock200 }
-            if (xCoordMoving >= .85) { position = config.images.eyePosition.clock230 }
-        }
+            case yCoordMoving >= .2 && yCoordMoving < .4:
+                switch (true) {
+                    case xCoordMoving < .35: position = faceEyePosition2R4; /* console.log('Block-02  Position-2R4'); */ break
+                    case xCoordMoving < .40: position = faceEyePosition2R3; /* console.log('Block-02  Position-2R3'); */ break
+                    case xCoordMoving < .50: position = faceEyePosition2R2; /* console.log('Block-02  Position-2R2'); */ break
+                    case xCoordMoving < .55: position = faceEyePosition2L1; /* console.log('Block-02  Position-2L1'); */ break
+                    case xCoordMoving < .70: position = faceEyePosition2L2; /* console.log('Block-02  Position-2L2'); */ break
+                    case xCoordMoving < .85: position = faceEyePosition2L3; /* console.log('Block-02  Position-2L3'); */ break
+                    default: position = faceEyePosition2L4; /* console.log('Block-02  Position-2L4-- */ break
+                }
+                break
 
-        if (yCoordMoving >=.4 && yCoordMoving < .5) {
-            if (xCoordMoving < .2) { position = config.images.eyePosition.clock930 }
-            if (xCoordMoving >= .2) { position = config.images.eyePosition.clock915 }
-            if (xCoordMoving >= .4) { position = config.images.eyePosition.clock900 }
-            if (xCoordMoving >= .45) { position = config.images.eyePosition.faceEmpty }
-            if (xCoordMoving >= .55) { position = config.images.eyePosition.clock300 }
-            if (xCoordMoving >= .7) { position = config.images.eyePosition.clock330 }
-        }
+            case yCoordMoving >= .4 && yCoordMoving < .45:
+                switch (true) {
+                    case xCoordMoving < .3: position = faceEyePosition2R4; /* console.log('Block-03  Position-2R4'); */ break
+                    case xCoordMoving < .4: position = faceEyePosition3R3; /* console.log('Block-03  Position-3R3'); */ break
+                    case xCoordMoving < .45: position = faceEyePosition3R2; /* console.log('Block-03  Position-3R2'); */ break
+                    case xCoordMoving < .5: position = faceEyePosition3R1; /* console.log('Block-03  Position-3R1'); */ break
+                    case xCoordMoving < .55: position = faceEmpty; /* console.log('Block-03  Position-EMPTY'); */ break
+                    case xCoordMoving < .625: position = faceEyePosition3L1; /* console.log('Block-03  Position-3L1'); */ break
+                    case xCoordMoving < .65: position = faceEyePosition3L2; /* console.log('Block-03  Position-3L2'); */ break
+                    case xCoordMoving < .7: position = faceEyePosition3L3; /* console.log('Block-03  Position-3L3'); */ break
+                    default: position = faceEyePosition4L4; /* console.log('Block-03  Position-4L4-- */ break
+                }
+                break
 
-        if (yCoordMoving >= .5) {
-            if (xCoordMoving < .15) { position = config.images.eyePosition.clock800 }
-            if (xCoordMoving >= .15) { position = config.images.eyePosition.clock745 }
-            if (xCoordMoving >= .30) { position = config.images.eyePosition.clock730 }
-            if (xCoordMoving >= .45) { position = config.images.eyePosition.clock700 }
-            if (xCoordMoving >= .55) { position = config.images.eyePosition.clock500 }
-            if (xCoordMoving >= .625) { position = config.images.eyePosition.clock445 }
-            if (xCoordMoving >= .70) { position = config.images.eyePosition.clock430 }
-            if (xCoordMoving >= .775) { position = config.images.eyePosition.clock415 }
-            if (xCoordMoving >= .85) { position = config.images.eyePosition.clock400 }
+            case yCoordMoving >= .45 && yCoordMoving < .5:
+                switch (true) {
+                    case xCoordMoving < .2: position = faceEyePosition4R4; /* console.log('Block-04  Position-4R4'); */ break
+                    case xCoordMoving < .40: position = faceEyePosition4R3; /* console.log('Block-04  Position-4R3'); */ break
+                    case xCoordMoving < .45: position = faceEyePosition4R2; /* console.log('Block-04  Position-4R2'); */ break
+                    case xCoordMoving < .55: position = faceEyePosition4R1; /* console.log('Block-04  Position-4R1'); */ break
+                    case xCoordMoving < .60: position = faceEyePosition4L1; /* console.log('Block-04  Position-4L1'); */ break
+                    case xCoordMoving < .70: position = faceEyePosition4L2; /* console.log('Block-04  Position-4L2'); */ break
+                    case xCoordMoving < .775: position = faceEyePosition4L3; /* console.log('Block-04  Position-4L3'); */ break
+                    case xCoordMoving < .85: position = faceEyePosition4L4; /* console.log('Block-04  Position-4L4'); */ break
+                    default: position = faceEyePosition5L5; /* console.log('Block-04  Position-5L5-- */ break
+                }
+                break
+
+            case yCoordMoving >= .5:
+                switch (true) {
+                    case xCoordMoving < .15: position = faceEyePosition5R4; /* console.log('Block-05  Position-5R4'); */ break
+                    case xCoordMoving < .30: position = faceEyePosition5R3; /* console.log('Block-05  Position-5R3'); */ break
+                    case xCoordMoving < .45: position = faceEyePosition5R2; /* console.log('Block-05  Position-5R2'); */ break
+                    case xCoordMoving < .55: position = faceEyePosition5R1; /* console.log('Block-05  Position-5R1'); */ break
+                    case xCoordMoving < .625: position = faceEyePosition5L1; /* console.log('Block-05  Position-5L1'); */ break
+                    case xCoordMoving < .70: position = faceEyePosition5L2; /* console.log('Block-05  Position-5L2'); */ break
+                    case xCoordMoving < .775: position = faceEyePosition5L3; /* console.log('Block-05  Position-5L3'); */ break
+                    case xCoordMoving < .85: position = faceEyePosition5L4; /* console.log('Block-05  Position-5L4'); */ break
+                    default: position = faceEyePosition5L5; /* console.log('Block-05  Position-5L5-- */ break
+                }
+                break
         }
 
         dispatch({type: 'faceFrame', faceFrame: position}) //...and dispatch it as faceFrame
+    },
+
+    autoSwitchEyePosition: dispatch => { //utils.autoSwitchEyePosition takes one argument, the reducer in Home.js' dispatch function, in order to call it every 500ms to 1000ms with type 'faceFrame' and a random eye position from config.images.eyePosition...
+        let randomPosition = Object.entries(eyePosition)[Math.floor(Math.random() * 37)][1] //...Object.entries is a method that takes an object and returns an array whose elements are arrays of that object's key value pairs (i.e. each element is a [key, value]). The value in this case is the image itself (it console.logs as a base64) so    Object.entries(config.images.eyePosition)[0][1]    , for example returns the 1st image,    Object.entries(config.images.eyePosition)[2][1]    returns the 3rd image, etc...
+            let holdEyePosition = 500 + Math.random() * 500 //...set holdEyePosition to 500ms < holdEyePosition < 1000ms...
+            utils.throttle(() => dispatch({type: 'faceFrame', faceFrame: randomPosition}), holdEyePosition) //...and call dispatch with the random eyePosition, throttling subsequent calls to utils.autoSwitchEyePosition for holdEyePosition ms TODO: Is the throttle necessary here?
     },
 
     drawHand: (canvasCtx, results, handleEvents) => { //utils.drawHand takes three arguments, canvasCtx, results and handleEvents, and is called from the onResults callback function in HandController, which processes the results from MediaPipe's Hands model. This callback is triggered on each frame captured from webcamRef.current.video, i.e. the webcam, as onResults is connected to MediaPipe's Hands model via hands.onResults(onResults) within HandController's useEffect. The useEffect is set up to re-initialize MediaPipe's Hands model and the webcam feed whenever onResults changes, which due to its dependency array, should only happen upon the initial component mount. However since onResults is wrapped in a useCallback with an empty dependency array it does not change across renders, ensuring that the setup for MediaPipe's Hands model and the webcam feed is done only once. Within onResults utils.drawHand is called to draw the detected hand landmarks on the canvas for each frame, utilizing video frames from webcamRef.current.video as input. This setup facilitates the continuous processing and visualization of hand tracking at the framerate of the webcam. Hand landmarks are illustrated at    https://github.com/google-ai-edge/mediapipe/blob/master/docs/solutions/hands.md    . utils.drawHand further calls utils.isPointing and if the hand is indeed pointing it identifies the end of the index finger as the coordinates to pass in my custom made event, otherwise it identifies the base of the index finger as coordinates to pass in my custom made event. The handleEvents function is then called with my custom event type 'handmove' with the identified coordinates and the isPointing boolean...
