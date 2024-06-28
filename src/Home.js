@@ -17,7 +17,7 @@ import { Cloud, Veil, Face, AudioPlayer, Track, Ripple, ContactForm, InfoSheet, 
 import config from './_config'
 import utils from './_utils'
 
-const { screenWidth, canvasHeight, canvasWidth, moonDiameter, margin } = config.constants
+const { screenWidth, canvasHeight, canvasWidth, margin } = config.constants
 
 const initialState = {
     //Component visibility and performance features
@@ -37,6 +37,7 @@ const initialState = {
     coords: { xCoordMoving: -1, yCoordMoving: -1, xCoordStatic: -1, yCoordStatic: -1 },
     isHandPointing: false,
     isRippling: false,
+    isBlinking: false,
     //Eyes and main display
     faceFrame: config.images.eyePosition.faceEmpty,
     allClouds: [],
@@ -86,9 +87,10 @@ const reducer = (state, action) => {
         case 'coords': return {...state, coords: action.coords}
         case 'isHandPointing': return {...state, isHandPointing: action.isHandPointing}
         case 'isRippling': return {...state, isRippling: action.isRippling}
+        case 'isBlinking': return {...state, isBlinking: action.isBlinking}
         case 'faceFrame': return {...state, faceFrame: action.faceFrame}
         case 'allClouds': return {...state, allClouds: action.allClouds}
-        case 'removeCloud': return { ...state, allClouds: state.allClouds.filter(cloud => cloud.key !== action.key) }
+        case 'removeCloud': return { ...state, allClouds: state.allClouds.filter(cloud => cloud.cloudNumber !== action.cloudNumber) }
         case 'veilOpacity': return {...state, veilOpacity: state.veilOpacity + action.veilOpacity}
         default: return state
     }
@@ -99,13 +101,14 @@ const Home = () => {
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const { cloudsOn, cloudHazeOn, handControllerOn, revealContactForm, revealInfoSheet, menuPosition, allTracks, currentTrack, leftColumnTracks, rightColumnTracks, titlesColumnsMargin, coords, isHandPointing, isRippling, faceFrame, allClouds, veilOpacity } = state
+    const { cloudsOn, cloudHazeOn, handControllerOn, revealContactForm, revealInfoSheet, menuPosition, allTracks, currentTrack, leftColumnTracks, rightColumnTracks, titlesColumnsMargin, coords, isHandPointing, isRippling, isBlinking, faceFrame, allClouds, veilOpacity } = state
 
     const coordsRef = useRef(coords)
     const allCloudsRef = useRef(allClouds)
     const cloudHazeOnRef = useRef(cloudHazeOn)
     const currentTrackRef = useRef(currentTrack)
     const faceFrameRef = useRef(faceFrame)
+    const isBlinkingRef = useRef(isBlinking)
 
 
     const selectTrack = _currentTrack => {
@@ -113,32 +116,6 @@ const Home = () => {
             dispatch({type: 'currentTrack', currentTrack: _currentTrack})
             setTimeout(() => renderTracks(), 0) //Have to call renderTracks again to be able to pass _currentTrack to currentTrack and to push that to the bottom of the execution stack so that the same penultimate currentTrack (the one that came before _currentTrack) doesn't wind up as currentTrack it must be broken out into a setTimeout of 0ms
         }
-    }
-
-
-    const autoSwitchEyePosition = () => {
-        let position = Object.entries(config.images.eyePosition)[Math.floor(Math.random() * 37)][1] //Object.entries is a method that takes an object and returns an array whose elements are arrays of that object's key value pairs (i.e. each element is a [key, value]). The value is the image itself (it console.logs as a base64) so Object.entries(config.images.eyePosition)[0][1] would return the 1st image, Object.entries(config.images.eyePosition)[2][1] the 3rd, etc.
-        let holdEyePosition = 500 + Math.random() * 500
-        utils.throttle(() => dispatch({type: 'faceFrame', faceFrame: position}), holdEyePosition)
-    }
-
-
-    const dimVeil = (travelDuration, size) => { //TODO: cancel these timeouts when clouds are turned off
-
-        travelDuration *= 1000 //Convert seconds to milliseconds for use in setTimeouts
-
-        if (canvasWidth === 0) return //If canvasWidth hasn't been set yet it will be null and the calculations below will crash the app
-
-        let cloudIn = travelDuration / 3 //The point at which each cloud enters from the left in front of the moon happens to be exactly the center of the screen. It's travel duration is the full width of the view port (translateX(-100vw) through translateX(100vw) or translateX(100vw) through translateX(-100vw) in the case of the cloud icon being flipped... see App.css for these @keyframes) so the moment the cloud enters in front of the moon is exactly it's travelDuration divided by 2.
-        let cloudOut = cloudIn + ((travelDuration / 1.33) / (screenWidth / moonDiameter)) //The moment at which the cloud leaves the moon is the moment at which it enters the moon plus a function of its travelDuration (and, technically, also its size but I've averaged that between the largest and smallest cloud possibilities for this equation) and the diameter of the moon
-
-        setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
-            dispatch({type: 'veilOpacity', veilOpacity: .15})
-        }, cloudIn)
-
-        setTimeout(() => { //Use cloudIn and cloudOut to affect the opacity of the veil (dimness of the room) which is the only prop passed to Veil.js
-            dispatch({type: 'veilOpacity', veilOpacity: -.15})
-        }, cloudOut)
     }
 
 
@@ -199,7 +176,9 @@ const Home = () => {
                     dispatch({type: 'isHandPointing', isHandPointing: isPointing})
 
                     utils.debounce(() => dispatch({type: 'coords', coords: { ...coordsRef.current, xCoordMoving: -1, yCoordMoving: -1 }}), 10000) //debounce the setting of coords to { xCoordMoving: -1, yCoordMoving: -1 } after 10000ms
-                    utils.changeEyePositionWithUserInteraction(dispatch, { xCoordMoving: xCoord, yCoordMoving: yCoord }) //call    utils.changeEyePositionWithUserInteraction    with { xCoordMoving: xCoord, yCoordMoving: yCoord } and know that autoSwitchEyePosition isn't being called from either autoSwitchEyePositionControl nor blinkControl because coordsRef.current.xCoordMoving would have to === -1 (and, by extension, coordsRef.current.yCoordMoving would also have to === -1) in order for that to happen
+                    if (!isBlinkingRef.current) {
+                        utils.changeEyePositionWithUserInteraction(dispatch, { xCoordMoving: xCoord, yCoordMoving: yCoord }) //call    utils.changeEyePositionWithUserInteraction    with { xCoordMoving: xCoord, yCoordMoving: yCoord } and know that utils.autoSwitchEyePosition isn't being called from either autoSwitchEyePositionControl nor blinkControl because coordsRef.current.xCoordMoving would have to === -1 (and, by extension, coordsRef.current.yCoordMoving would also have to === -1) in order for that to happen
+                    }
                 }
 
                 if (e.type === 'click' && !isRippling) { //If event type is click and the ripple is not currently active set isRippling to true and set static coordinates
@@ -216,23 +195,23 @@ const Home = () => {
 
     useEffect(() => {
         //Fire up event listeners when Home.js mounts
-        ['load', 'resize', 'pointermove', 'click', 'onmousedown', 'onmouseup', 'touchstart', 'touchend'].forEach(i => window.addEventListener(i, handleEvents)) //onmousedown and onmouseup are needed for the onHold function used in Track.js
+        ['load', 'resize', 'pointermove', 'click', 'onmousedown', 'onmouseup', 'touchstart', 'touchend'].forEach(i => window.addEventListener(i, handleEvents)) //onmousedown and onmouseup are only needed for the onHold function used in Track.js
 
         let cloudControl
         (cloudControl = () => {
             if (cloudsOn) {
-                const key = allCloudsRef.current.length
-                dispatch({type: 'allClouds', allClouds: [...allCloudsRef.current, <Cloud key={key} dimVeil={dimVeil} cloudHazeOn={cloudHazeOnRef.current} removeCloud={() => dispatch({ type: 'removeCloud', key })} />]})
-                setTimeout(cloudControl, 10000000 / screenWidth * Math.random()) //The rate of this setTimeout is a function of screenWidth (inversely proportional) because regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
+                const cloudNumber = allCloudsRef.current.length
+                dispatch({type: 'allClouds', allClouds: [...allCloudsRef.current, <Cloud dispatch={dispatch} key={cloudNumber} cloudNumber={cloudNumber} cloudHazeOn={cloudHazeOnRef.current} />]})
+                setTimeout(cloudControl, 4000 + 10000000 / screenWidth * Math.random()) //The rate of this setTimeout is a function of screenWidth (inversely proportional) because regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
             }
-        })() //TODO: Verify that removeCloud is actually working and also call it when clouds are turned off, and think through how not to have the removeCloud action at all by placing its logic outside a call to dispatch of type 'allClouds', OR refactor my reducer entirely so that all actions have logic inside them, which would involve creating some new actions
+        })() //TODO: refactor my reducer entirely so that all cases have logic inside them, which would involve creating some new cases
 
         let blinkControl
         (blinkControl = () => {
             let repeatRate = coordsRef.current.xCoordMoving === -1 ? (3000 + Math.random() * 3000) : (1000 + Math.random() * 3000) //Repeat rate of blinkControl must be more than the max time it would take to blink, which is blinkStareTimeCoefficient + blinkDuration * 1.1 in the blink method, which is called below. If coordsRef.current.xCoordMoving === -1, i.e. the user is not firing events, it should be shorter than if the user is firing events
-                utils.blink(dispatch, faceFrameRef.current, coordsRef.current)
+                utils.blink(dispatch, faceFrameRef.current)
                 if (coordsRef.current.xCoordMoving === -1) { //if coordsRef.current.xCoordMoving === -1, which means it's been longer than 10000ms since pointermove or click event has fired, switch eye position again.
-                    autoSwitchEyePosition()
+                    utils.autoSwitchEyePosition(dispatch)
                 }
 
             setTimeout(blinkControl, repeatRate)
@@ -241,8 +220,8 @@ const Home = () => {
         let autoSwitchEyePositionControl
         (autoSwitchEyePositionControl = () => {
             let repeatRate = 1000 + Math.random() * 3000
-            if (coordsRef.current.xCoordMoving === -1) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) and coordsRef.current.xCoordMoving === -1, which means it's been longer than 10000ms since pointermove or click events have fired, only then can you run autoSwitchEyePosition. Note, autoSwitchEyePosition can run from blinkControl as well
-                autoSwitchEyePosition()
+            if (coordsRef.current.xCoordMoving === -1) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) and coordsRef.current.xCoordMoving === -1, which means it's been longer than 10000ms since pointermove or click events have fired, only then can you run utils.autoSwitchEyePosition. Note, utils.autoSwitchEyePosition can run from blinkControl as well
+                utils.autoSwitchEyePosition(dispatch)
             }
             setTimeout(autoSwitchEyePositionControl, repeatRate)
         })()
@@ -256,6 +235,7 @@ const Home = () => {
         cloudHazeOnRef.current = cloudHazeOn
         currentTrackRef.current = currentTrack
         faceFrameRef.current = faceFrame
+        isBlinkingRef.current = isBlinking
     }, [coords, allClouds, cloudHazeOn, currentTrack, faceFrame])
 
 
@@ -270,15 +250,29 @@ const Home = () => {
 
             <img alt={"main"} src={config.images.canvas.main} className="canvas" id="main-image"/>
 
-            <Veil opacity={!cloudsOn ? .5 : veilOpacity} key={'a'} />
+            <Veil
+                opacity={!cloudsOn ? .5 : veilOpacity}
+                key={'a'}
+                />
 
-            <Face opacity={!cloudsOn ? .4 : veilOpacity * .75} key={'b'} faceFrame={faceFrame} />
+            <Face
+                opacity={!cloudsOn ? .4 : veilOpacity * .75}
+                key={'b'}
+                faceFrame={faceFrame}
+                />
 
             <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
 
             { !handControllerOn ? null : <HandController handleEvents={handleEvents} /> }
 
-            <AudioPlayer veilOpacity={veilOpacity} currentTrack={currentTrack} allTracks={allTracks} selectTrack={selectTrack} coords={coords} isHandPointing={isHandPointing} />
+            <AudioPlayer
+                veilOpacity={veilOpacity}
+                currentTrack={currentTrack}
+                allTracks={allTracks}
+                selectTrack={selectTrack}
+                coords={coords}
+                isHandPointing={isHandPointing}
+                />
 
             <div style={{position: 'absolute', marginTop: titlesColumnsMargin, marginLeft: titlesColumnsMargin, left: 0}}>
                 {leftColumnTracks}
@@ -287,14 +281,19 @@ const Home = () => {
                 {rightColumnTracks}
             </div>
 
-            <SocialMenuLabels menuPosition={menuPosition} veilOpacity={veilOpacity} />
+            <SocialMenuLabels
+                menuPosition={menuPosition}
+                veilOpacity={veilOpacity}
+                />
 
             <ContactForm
                 dispatch={dispatch}
                 revealContactForm={revealContactForm}
                 />
 
-            <InfoSheet revealInfoSheet={revealInfoSheet} />
+            <InfoSheet
+                revealInfoSheet={revealInfoSheet}
+                />
 
             <SocialMenu
                 dispatch={dispatch}

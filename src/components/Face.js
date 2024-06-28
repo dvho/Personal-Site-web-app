@@ -7,7 +7,7 @@ const { faceMain } = config.images.canvas
 
 const Face = props => {
 
-    if (screenWidth === 0) { //This prevents the unnecesary render caused by App.js not yet having its state set in componentDidMount when the first render happens. There's no other reason for me to pass screenWidth to Face.js from App.js other than to use it as an indicator for whether componentDidMount has run (and all state has been set) in App.js
+    if (screenWidth === 0) { //This prevents the unnecessary render caused by App.js not yet having its state set in componentDidMount when the first render happens. There's no other reason for me to pass screenWidth to Face.js from App.js other than to use it as an indicator for whether componentDidMount has run (and all state has been set) in App.js
         return
     }
 
