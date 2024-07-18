@@ -1,31 +1,22 @@
-import React from 'react'
+import React, { useMemo } from 'react'
+
 import config from '../_config'
+import utils from '../_utils'
 
-//Float point conversion was giving values like '8.9999999999999' hence the verbose localOpacity = `${((Math.round(props.opacity * 10))/10).toString()}`
+const { veil } = config.images.canvas
+const { getStylesForVeil } = utils
 
-const Veil = props => {
+const Veil = ({ veilOpacity }) => {
 
-    if (props.screenWidth === 0) { //After using React.PureComponent, or React.memo now that this is a function component, I wasn't getting the unnecesary render caused by App.js not yet having its state set in componentDidMount when the first render happens, but including this for good measure
-        return
-    }
-
-    let localOpacity
-    if (props.opacity >= 1) {
-        localOpacity = '.9'
-    } else {
-        localOpacity = `${((Math.round(props.opacity * 10))/10).toString()}`
-    }
+    const { styles } = useMemo(() => getStylesForVeil(veilOpacity), [veilOpacity]) //Memoize calls to utils.getStylesForVeil, within which only the opacity is calculated, to prevent the otherwise rapid unnecessary rerenders that would come from the coords changing in Home.js
 
     return(
-
         <img
             alt={'veil'}
-            src={config.images.canvas.veil}
+            src={veil}
             className='canvas'
-            style={{
-                opacity: localOpacity,
-                transition: 'opacity 1.5s linear'
-                }}/>
+            style={styles.veil}
+            />
     )
 }
 

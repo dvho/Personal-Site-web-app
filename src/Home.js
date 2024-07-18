@@ -8,8 +8,6 @@
 
 //Note 5: See how I cleaned up git history at the bottom of this file
 
-
-import './App.css'
 import React, { useReducer, useRef, useEffect } from 'react'
 
 import { Cloud, Veil, Face, AudioPlayer, Track, Ripple, ContactForm, InfoSheet, SocialMenu, SocialMenuLabels, HandController } from './components'
@@ -19,37 +17,17 @@ import utils from './_utils'
 
 const { screenWidth, canvasHeight, canvasWidth, margin } = config.constants
 
-const initialState = {
-    //Component visibility and performance features
-    cloudsOn: true,
-    cloudHazeOn: false,
-    handControllerOn: false,
-    revealContactForm: false,
-    revealInfoSheet: false,
-    menuPosition: 2,
-    //Tracks
-    allTracks: [],
-    currentTrack: {},
-    leftColumnTracks: [],
-    rightColumnTracks: [],
-    titlesColumnsMargin: 0,
-    //Coords and controllers
-    coords: { xCoordMoving: -1, yCoordMoving: -1, xCoordStatic: -1, yCoordStatic: -1 },
-    isHandPointing: false,
-    isRippling: false,
-    isBlinking: false,
-    //Eyes and main display
-    faceFrame: config.images.eyePosition.faceEmpty,
-    allClouds: [],
-    veilOpacity: .45
-}
+const initialState = config.initialStates.home
+
+const { debounce, autoSwitchEyePosition, blink, changeEyePositionWithUserInteraction } = utils
+
 
 const reducer = (state, action) => {
     const { type } = action
     switch (type) {
-        case 'toggleMenuPosition': return {...state, menuPosition: (state.menuPosition + 1) % 4}
-        case 'toggleContactForm': return {...state, revealContactForm: !state.revealContactForm, revealInfoSheet: false} //toggling revealContactForm on (or off) also always hides the info sheet
-        case 'toggleInfoSheet': return {...state, revealInfoSheet: !state.revealInfoSheet, revealContactForm: false} //toggling revealInfoSheet on (or off) also always hides the contact form
+        case 'toggleMenuPosition': return { ...state, menuPosition: (state.menuPosition + 1) % 4 }
+        case 'toggleContactForm': return { ...state, revealContactForm: !state.revealContactForm, revealInfoSheet: false } //toggling revealContactForm on (or off) also always hides the info sheet
+        case 'toggleInfoSheet': return { ...state, revealInfoSheet: !state.revealInfoSheet, revealContactForm: false } //toggling revealInfoSheet on (or off) also always hides the contact form
         case 'toggleClouds':
             if (state.cloudsOn) { //If clouds are on...
                 return {
@@ -78,20 +56,21 @@ const reducer = (state, action) => {
                     cloudHazeOn: true ///...and turn on cloud haze
                 }
             }
-        case 'toggleHandController': return {...state, handControllerOn: !state.handControllerOn}
-        case 'allTracks': return {...state, allTracks: action.allTracks}
-        case 'currentTrack': return {...state, currentTrack: action.currentTrack}
-        case 'leftColumnTracks': return {...state, leftColumnTracks: action.leftColumnTracks}
-        case 'rightColumnTracks': return {...state, rightColumnTracks: action.rightColumnTracks}
-        case 'titlesColumnsMargin': return {...state, titlesColumnsMargin: action.titlesColumnsMargin}
-        case 'coords': return {...state, coords: action.coords}
-        case 'isHandPointing': return {...state, isHandPointing: action.isHandPointing}
-        case 'isRippling': return {...state, isRippling: action.isRippling}
-        case 'isBlinking': return {...state, isBlinking: action.isBlinking}
-        case 'faceFrame': return {...state, faceFrame: action.faceFrame}
-        case 'allClouds': return {...state, allClouds: action.allClouds}
+        case 'toggleHandController': return { ...state, handControllerOn: !state.handControllerOn }
+        case 'renderTracks': return { ...state, leftColumnTracks: action.renderTracksPayload.leftColumnTracks, rightColumnTracks: action.renderTracksPayload.rightColumnTracks, titlesColumnsMargin: action.renderTracksPayload.titlesColumnsMargin }
+        case 'setCurrentTrack':
+            if (action.currentTrack.slug !== state.currentTrack.slug) {
+                return { ...state, currentTrack: action.currentTrack }
+            }
+            return state
+        case 'coords': return { ...state, coords: action.coords }
+        case 'isHandPointing': return { ...state, isHandPointing: action.isHandPointing }
+        case 'isRippling': return { ...state, isRippling: action.isRippling }
+        case 'isBlinking': return { ...state, isBlinking: action.isBlinking }
+        case 'faceFrame': return { ...state, faceFrame: action.faceFrame }
+        case 'allClouds': return { ...state, allClouds: action.allClouds }
         case 'removeCloud': return { ...state, allClouds: state.allClouds.filter(cloud => cloud.cloudNumber !== action.cloudNumber) }
-        case 'veilOpacity': return {...state, veilOpacity: state.veilOpacity + action.veilOpacity}
+        case 'veilOpacity': return { ...state, veilOpacity: state.veilOpacity + action.veilOpacity }
         default: return state
     }
 }
@@ -101,7 +80,7 @@ const Home = () => {
 
     const [state, dispatch] = useReducer(reducer, initialState)
 
-    const { cloudsOn, cloudHazeOn, handControllerOn, revealContactForm, revealInfoSheet, menuPosition, allTracks, currentTrack, leftColumnTracks, rightColumnTracks, titlesColumnsMargin, coords, isHandPointing, isRippling, isBlinking, faceFrame, allClouds, veilOpacity } = state
+    const { cloudsOn, cloudHazeOn, handControllerOn, revealContactForm, revealInfoSheet, menuPosition, currentTrack, leftColumnTracks, rightColumnTracks, titlesColumnsMargin, coords, isHandPointing, isRippling, isBlinking, faceFrame, allClouds, veilOpacity } = state
 
     const coordsRef = useRef(coords)
     const allCloudsRef = useRef(allClouds)
@@ -111,42 +90,7 @@ const Home = () => {
     const isBlinkingRef = useRef(isBlinking)
 
 
-    const selectTrack = _currentTrack => {
-        if (_currentTrack.slug !== currentTrackRef.current.slug) { //Make sure the _currentTrack isn't already selected
-            dispatch({type: 'currentTrack', currentTrack: _currentTrack})
-            setTimeout(() => renderTracks(), 0) //Have to call renderTracks again to be able to pass _currentTrack to currentTrack and to push that to the bottom of the execution stack so that the same penultimate currentTrack (the one that came before _currentTrack) doesn't wind up as currentTrack it must be broken out into a setTimeout of 0ms
-        }
-    }
-
-
-    const renderTracks = () => {
-
-        const leftColumnTracks = []
-        const rightColumnTracks = []
-        let titlesColumnsMargin = canvasHeight * .02
-
-        const tracksArrayMidPoint = Math.ceil(config.tracks.length / 2) //Find the midpoint of the tracks array
-
-        config.tracks.forEach((i, index) => {
-            if (index < tracksArrayMidPoint) {
-                leftColumnTracks.push(<Track key={index} leftColumn={true} trackNumber={index + 1} selectTrack={selectTrack} track={i} currentTrack={currentTrackRef.current} />)
-            } else {
-                rightColumnTracks.push(<Track key={index} leftColumn={false} trackNumber={index + 1} selectTrack={selectTrack} track={i} currentTrack={currentTrackRef.current} />)
-            }
-        })
-
-        dispatch({type: 'leftColumnTracks', leftColumnTracks: leftColumnTracks})
-        dispatch({type: 'rightColumnTracks', rightColumnTracks: rightColumnTracks})
-        dispatch({type: 'titlesColumnsMargin', titlesColumnsMargin: titlesColumnsMargin})
-        dispatch({type: 'allTracks', allTracks: config.tracks})
-    }
-
-
     const handleEvents = e => {
-
-        if (e.type === 'load') {
-            renderTracks()
-        }
 
         if (e.type === 'resize' && !navigator.userAgent.includes('iPhone')) { //Unfortunately I have to prevent this from working on iOS Safari because as of iOS 14 the new bottom address bar, which now dynamically appears on touchstart, also always fires the resize event
             setTimeout(() => window.location.reload(), 10) //setTimeout needed for Mozilla (not Chrome) per Morteza Ziyae on 2015, 01-27th in https://stackoverflow.com/questions/18967532/window-location-reload-not-working-for-firefox-and-chrome
@@ -175,9 +119,9 @@ const Home = () => {
                     dispatch({type: 'coords', coords: { ...coordsRef.current, xCoordMoving: xCoord, yCoordMoving: yCoord}})
                     dispatch({type: 'isHandPointing', isHandPointing: isPointing})
 
-                    utils.debounce(() => dispatch({type: 'coords', coords: { ...coordsRef.current, xCoordMoving: -1, yCoordMoving: -1 }}), 10000) //debounce the setting of coords to { xCoordMoving: -1, yCoordMoving: -1 } after 10000ms
+                    debounce(() => dispatch({type: 'coords', coords: { ...coordsRef.current, xCoordMoving: -1, yCoordMoving: -1 }}), 10000) //debounce the setting of coords to { xCoordMoving: -1, yCoordMoving: -1 } after 10000ms
                     if (!isBlinkingRef.current) {
-                        utils.changeEyePositionWithUserInteraction(dispatch, { xCoordMoving: xCoord, yCoordMoving: yCoord }) //call    utils.changeEyePositionWithUserInteraction    with { xCoordMoving: xCoord, yCoordMoving: yCoord } and know that utils.autoSwitchEyePosition isn't being called from either autoSwitchEyePositionControl nor blinkControl because coordsRef.current.xCoordMoving would have to === -1 (and, by extension, coordsRef.current.yCoordMoving would also have to === -1) in order for that to happen
+                        changeEyePositionWithUserInteraction(dispatch, { xCoordMoving: xCoord, yCoordMoving: yCoord }) //call    utils.changeEyePositionWithUserInteraction    with { xCoordMoving: xCoord, yCoordMoving: yCoord } and know that utils.autoSwitchEyePosition isn't being called from either autoSwitchEyePositionControl nor blinkControl because coordsRef.current.xCoordMoving would have to === -1 (and, by extension, coordsRef.current.yCoordMoving would also have to === -1) in order for that to happen
                     }
                 }
 
@@ -204,14 +148,14 @@ const Home = () => {
                 dispatch({type: 'allClouds', allClouds: [...allCloudsRef.current, <Cloud dispatch={dispatch} key={cloudNumber} cloudNumber={cloudNumber} cloudHazeOn={cloudHazeOnRef.current} />]})
                 setTimeout(cloudControl, 4000 + 10000000 / screenWidth * Math.random()) //The rate of this setTimeout is a function of screenWidth (inversely proportional) because regardless of anything else, each cloud's path is the width of the viewport (vw)... this prevents the feeling of a cloud onslaught on narrow (mobile) screens
             }
-        })() //TODO: refactor my reducer entirely so that all cases have logic inside them, which would involve creating some new cases
+        })()
 
         let blinkControl
         (blinkControl = () => {
             let repeatRate = coordsRef.current.xCoordMoving === -1 ? (3000 + Math.random() * 3000) : (1000 + Math.random() * 3000) //Repeat rate of blinkControl must be more than the max time it would take to blink, which is blinkStareTimeCoefficient + blinkDuration * 1.1 in the blink method, which is called below. If coordsRef.current.xCoordMoving === -1, i.e. the user is not firing events, it should be shorter than if the user is firing events
-                utils.blink(dispatch, faceFrameRef.current)
+                blink(dispatch, faceFrameRef.current)
                 if (coordsRef.current.xCoordMoving === -1) { //if coordsRef.current.xCoordMoving === -1, which means it's been longer than 10000ms since pointermove or click event has fired, switch eye position again.
-                    utils.autoSwitchEyePosition(dispatch)
+                    autoSwitchEyePosition(dispatch)
                 }
 
             setTimeout(blinkControl, repeatRate)
@@ -221,15 +165,47 @@ const Home = () => {
         (autoSwitchEyePositionControl = () => {
             let repeatRate = 1000 + Math.random() * 3000
             if (coordsRef.current.xCoordMoving === -1) { //If blink is not active and eyes were not just switched (i.e. it's been longer than holdEyePosition, which is between 500ms and 1000ms) and coordsRef.current.xCoordMoving === -1, which means it's been longer than 10000ms since pointermove or click events have fired, only then can you run utils.autoSwitchEyePosition. Note, utils.autoSwitchEyePosition can run from blinkControl as well
-                utils.autoSwitchEyePosition(dispatch)
+                autoSwitchEyePosition(dispatch)
             }
             setTimeout(autoSwitchEyePositionControl, repeatRate)
         })()
 
     }, [])
 
+    // Automatically recompute track columns when tracks or currentTrack change
     useEffect(() => {
-        //The difference in usage between <any-state-reference-from useRef>.current and its state directly from useReducer comes down to the timing and frequency of updates. <any-state-reference-from-useRef>.current is a mutable object whose changes do not trigger a re-render, which makes it suitable for storing values that change frequently (like coords) or that need to be accessed at a specific point in time that doesn't necessarily align with the render cycle (like currentTrack and cloudHazeOn). State from useReducer, on the other hand, is tied to the render cycle. When that state changes it triggers a re-render and the new state's values are used during the NEXT render. This makes state from useReducer suitable for storing values that, when changed, should cause the component to update and re-render with a new value (like cloudsOn). In some parts of the app state directly from useReducer is used to access the coords because those parts of the app only need the coords as they were at the start of the current render, not necessarily the most up-to-date coords. The same goes for parts of the app that use state directly from useReducer to access currentTrack, i.e. the AudioPlayer component already rendered in the markup; the state of currentTrack is a prop within AudioPlayer's rendered markup at the bottom of the Home component so it will always have the correct state of currentTrack. Note, generally all state access from within the main useEffect will require usage of <any-state-reference-from useRef>.current rather than its state directly from useReducer. Also note, all five of these references can be combined in the same useEffect without causing extra renders because useEffect runs after the render is committed to the screen, and updating a ref with .current does not cause a re-render
+
+        const newLeftColumnTracks = []
+        const newRightColumnTracks = []
+        const titlesColumnsMargin = canvasHeight * 0.02
+
+        const tracksArrayMidPoint = Math.ceil(config.tracks.length / 2)
+
+        config.tracks.forEach((track, index) => {
+            const TrackComponent = (
+                <Track
+                    dispatch={dispatch}
+                    key={index}
+                    leftColumn={index < tracksArrayMidPoint}
+                    trackNumber={index + 1}
+                    track={track}
+                    currentTrack={currentTrackRef.current}
+                />
+            )
+            if (index < tracksArrayMidPoint) {
+                newLeftColumnTracks.push(TrackComponent)
+            } else {
+                newRightColumnTracks.push(TrackComponent)
+            }
+        })
+
+        dispatch({ type: 'renderTracks', renderTracksPayload: { leftColumnTracks: newLeftColumnTracks, rightColumnTracks: newRightColumnTracks, titlesColumnsMargin } })
+
+    }, [currentTrackRef.current])
+
+
+    useEffect(() => {
+        //The difference in usage between <any-state-reference-from useRef>.current and its state directly from useReducer comes down to the timing and frequency of updates. <any-state-reference-from-useRef>.current is a mutable object whose changes do not trigger a rerender, which makes it suitable for storing values that change frequently (like coords) or that need to be accessed at a specific point in time that doesn't necessarily align with the render cycle (like currentTrack and cloudHazeOn). State from useReducer, on the other hand, is tied to the render cycle. When that state changes it triggers a rerender and the new state's values are used during the NEXT render. This makes state from useReducer suitable for storing values that, when changed, should cause the component to update and rerender with a new value (like cloudsOn). In some parts of the app state directly from useReducer is used to access the coords because those parts of the app only need the coords as they were at the start of the current render, not necessarily the most up to date coords. The same goes for parts of the app that use state directly from useReducer to access currentTrack, i.e. the AudioPlayer component already rendered in the markup, the state of currentTrack is a prop within AudioPlayer's rendered markup at the bottom of the Home component so it will always have the correct state of currentTrack. Note, generally all state access from within the main useEffect will require usage of <any-state-reference-from useRef>.current rather than its state directly from useReducer. Also note, all five of these references can be combined in the same useEffect without causing extra renders because useEffect runs after the render is committed to the screen, and updating a ref with .current does not cause a rerender
         coordsRef.current = coords
         allCloudsRef.current = allClouds
         cloudHazeOnRef.current = cloudHazeOn
@@ -240,36 +216,35 @@ const Home = () => {
 
 
     return (
-        <div className="canvas-parent" style={{opacity: screenWidth === 0 ? 0 : 1}}> { /* If the componentDidMount hasn't yet set all the initial values in state make the opacity 0, else 1 (.canvas-parent has a nice .3s transition on opacity in App.css) */ }
+        <div className='canvas-parent' style={{opacity: screenWidth === 0 ? 0 : 1}}> { /* If the componentDidMount hasn't yet set all the initial values in state make the opacity 0, else 1 (.canvas-parent has a nice .3s transition on opacity in App.css) */ }
 
-            <img alt={"back"} src={config.images.canvas.back} className="canvas" id="back-image"/>
+            <img alt={'back'} src={config.images.canvas.back} className='canvas' id='back-image'/>
 
             { !cloudsOn ? null : allClouds }
 
-            <img alt={"back trees only"} src={config.images.canvas.backTreesOnly} className="canvas" id="back-trees-only-image"/>
+            <img alt={'back trees only'} src={config.images.canvas.backTreesOnly} className='canvas' id='back-trees-only-image'/>
 
-            <img alt={"main"} src={config.images.canvas.main} className="canvas" id="main-image"/>
+            <img alt={'main'} src={config.images.canvas.main} className='canvas' id='main-image'/>
 
             <Veil
-                opacity={!cloudsOn ? .5 : veilOpacity}
+                veilOpacity={!cloudsOn ? .5 : veilOpacity}
                 key={'a'}
                 />
 
             <Face
-                opacity={!cloudsOn ? .4 : veilOpacity * .75}
+                veilOpacity={!cloudsOn ? .4 : veilOpacity * .75}
                 key={'b'}
                 faceFrame={faceFrame}
                 />
 
-            <img alt={"blank"} src={config.images.eyePosition.faceEmpty} className="canvas"/>
+            <img alt={'blank'} src={config.images.eyePosition.faceEmpty} className='canvas'/>
 
             { !handControllerOn ? null : <HandController handleEvents={handleEvents} /> }
 
             <AudioPlayer
+                dispatch={dispatch}
                 veilOpacity={veilOpacity}
                 currentTrack={currentTrack}
-                allTracks={allTracks}
-                selectTrack={selectTrack}
                 coords={coords}
                 isHandPointing={isHandPointing}
                 />
@@ -291,7 +266,7 @@ const Home = () => {
                 revealContactForm={revealContactForm}
                 />
 
-            <InfoSheet
+            <InfoSheet //InfoSheet animates on and off with a CSS transition in App.css (provided by utils.getStylesAndClassNameForInfoSheet called from InfoSheet.js) so handling its visibility with the pattern    { revealInfoSheet ? <InfoSheet /> : null }    wouldn't show those animations hence revealInfoSheet is passed as a prop to InfoSheet so its visibility can be handled from within the component
                 revealInfoSheet={revealInfoSheet}
                 />
 

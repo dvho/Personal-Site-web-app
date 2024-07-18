@@ -6,6 +6,7 @@ const canvasWidth = Math.round(canvasHeight * 1.323572474377745) //screenWidth <
 const wideScreen = screenWidth > canvasWidth ? true : false //This simple calculation was happening redundantly in so many components I decided to do it once here and subsequently pass as a prop to any of them that need it
 const moonDiameter = Math.round(canvasWidth * 0.199121522693997)
 const margin = ((screenWidth - canvasWidth) / 2)
+const aspectRatio = 1808 / 1366 //This is the aspect ratio of the canvas (derived from the dimensions of main.png)
 
 const config = {
 
@@ -16,7 +17,44 @@ const config = {
         wideScreen,
         moonDiameter,
         margin,
+        aspectRatio,
         blinkFrameDelays: [.09, .14, .20, .27, .36, .47, .60, .75, .92, 1.1]
+    },
+    initialStates: {
+        home: {
+            //Component visibility and performance features
+            cloudsOn: true,
+            cloudHazeOn: false,
+            handControllerOn: false,
+            revealContactForm: false,
+            revealInfoSheet: false,
+            menuPosition: 2,
+            //Tracks
+            currentTrack: {},
+            leftColumnTracks: [],
+            rightColumnTracks: [],
+            titlesColumnsMargin: 0,
+            //Coords and controllers
+            coords: { xCoordMoving: -1, yCoordMoving: -1, xCoordStatic: -1, yCoordStatic: -1 },
+            isHandPointing: false,
+            isRippling: false,
+            isBlinking: false,
+            //Eyes and main display
+            faceFrame: require('./assets/images/face-empty.png'), //If the config.initialStates.home object were set in Home.js and passed directly to the reducer as useReducer(reducer, initialState) it would simply be set to config.images.eyePosition.faceEmpty, but since it's set here in the config object of _config.js and passed to the reducer as useReducer(reducer, config.initialStates.home) it must be set to require('./assets/images/face-empty.png') because at this juncture the images object hasn't yet been defined in the config object of _config.js
+            allClouds: [],
+            veilOpacity: .45
+        },
+        contactForm: {
+            formSent: false,
+            firstNameValid: null,
+            lastNameValid: null,
+            emailValid: null,
+            firstName: '',
+            lastName: '',
+            email: '',
+            subject: '',
+            message: ''
+        }
     },
     images: {
         appFont: 'Nothing You Could Do, cursive',

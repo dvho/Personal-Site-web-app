@@ -1,6 +1,6 @@
 //Thanks to    https://github.com/syed-ashraf123/mediapipe_face_mesh    for demonstrating MediaPipe integration with React, not just VanillaJS
 
-import React, { useRef, useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useRef } from 'react'
 import * as Hands from '@mediapipe/hands'
 import * as cam from '@mediapipe/camera_utils'
 import Webcam from 'react-webcam'
@@ -9,9 +9,10 @@ import config from '../_config'
 import utils from '../_utils'
 
 const { screenWidth, canvasHeight, canvasWidth, wideScreen } = config.constants
+const { drawHand } = utils
 
-const HandController = props => {
-
+const HandController = ({ handleEvents }) => {
+    //I'm using useRef instead of the callback ref pattern    ref={ref => <refName> = ref}    for performance purposes. Refs with useRef return a mutable ref object whose .current property is initialized to the argument passed to it, in this case, null. The returned object will persist for the full lifetime of the component providing a consistent way to access the refs. The callback ref pattern on the other hand will be called more than once during updates, as it gets called first with null and then again with the DOM element each time the component rerenders. useRef however doesn't cause a rerender when the ref object is mutated, which is beneficial for performance when you need to frequently update the ref without needing to update the component visually. The callback ref pattern might lead to performance hits if not managed carefully especially if the ref callback triggers rerenders or is tied to high-frequency events
     const webcamRef = useRef(null)
     const canvasRef = useRef(null)
 
@@ -26,7 +27,7 @@ const HandController = props => {
         canvasCtx.save()
         canvasCtx.clearRect(0, 0, canvasElement.width, canvasElement.height)
 
-        utils.drawHand(canvasCtx, results, props.handleEvents)
+        drawHand(canvasCtx, results, handleEvents)
 
         canvasCtx.restore()
     }, [])

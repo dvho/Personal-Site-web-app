@@ -1,126 +1,42 @@
-import React from 'react'
-import emailValidator from 'email-validator'
-import emailjs from '@emailjs/browser'
+import React, { useState, useMemo } from 'react'
 
 import config from '../_config'
+import utils from '../_utils'
 
-const { wideScreen, margin } = config.constants
+const { getStylesClassNamesAndRenderingVariablesForContactForm, updateContactForm, submitContactForm } = utils
 
-// --Setting up email--
-//https://github.com/emailjs-com/emailjs-sdk
-//https://www.emailjs.com/docs/sdk/send/
+const initialState = config.initialStates.contactForm
 
-class ContactForm extends React.PureComponent {
-    constructor(props) {
-        super(props)
-        this.state = {
-            formSend: false,
-            firstNameValid: null,
-            lastNameValid: null,
-            emailValid: null,
-            firstName: '',
-            lastName: '',
-            email: '',
-            subject: '',
-            message: ''
-        }
-        this.handleSubmit = this.handleSubmit.bind(this)
-    }
+const ContactForm = ({ dispatch, revealContactForm }) => {
 
-    animateAndResetForm = () => { //Change any red fields back to white, set this.state.formSend to true for the purposes of a) triggering the inline ternary which changes the className to include either formSendWideAnimation or formSendNarrowAnimation (which are both 2.5s long), and b) displaying the word "Sending..." on the button.
-        this.setState({
-            formSend: true,
-            firstNameValid: null,
-            lastNameValid: null,
-            emailValid: null
-        })
-        setTimeout(() => { //Then after 2500ms reset the form to its original state...
-            this.setState({
-                formSend: false,
-                firstName: '',
-                lastName: '',
-                email: '',
-                subject: '',
-                message: ''
-            })
-            this.props.dispatch({type: 'toggleContactForm'}) //...and toggleContactForm so it's closed again
-        }, 2500)
-    }
+    const [form, setForm] = useState(initialState)
 
-    handleSubmit = (e) => {
-        e.preventDefault()
+    const { styles, classNames, renderingVariables } = useMemo(() => getStylesClassNamesAndRenderingVariablesForContactForm(revealContactForm, form), [revealContactForm, form]) //Memoize calls to utils.getStylesClassNamesAndRenderingVariablesForContactForm to prevent the otherwise rapid unnecessary rerenders that would come from the coords changing in Home.js. Note, the coords prop is not even passed to ContactForm but, unlike a couple of the other components' visibilities which are handled by booleans from directly within the markup of Home.js where the pattern    { isVisible ? <Component props={props} /> : null }    is implemented, ContactForm's visibility is handled from within ContactForm itself with revealContactForm, so to prevent unnecessary rerenders from coords in Home.js the calls to utils.getStylesClassNamesAndRenderingVariablesForContactForm must be memoized
 
-        let firstNameValid = /^[A-Z]+$/i.test(this.state.firstName) //Evaluates to either true or false when this.state.firstName is tested in a regex that makes sure there is at least one letter and no non letter characters in the string
-        let lastNameValid = /^[A-Z]+$/i.test(this.state.lastName) //Evaluates to either true or false when this.state.firstName is tested in a regex that makes sure there is at least one letter and no non letter characters in the string
-        let emailValid = emailValidator.validate(this.state.email) //Evaluates to either true or false when this.state.email is tested in a method on npm package 'email-validator,' which checks for valid email structure
+    return(
+        <div className={classNames.formContainer} style={styles.formContainer}>
 
-        if (firstNameValid && lastNameValid && emailValid) { //If all three of these fields test as valid then set the templateParams and pass them to emailjs.send()
+            <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={e => submitContactForm(e, dispatch, form, setForm)}>
 
-            let templateParams = {
-                from_email: this.state.email,
-                from_firstName: this.state.firstName,
-                from_lastName: this.state.lastName,
-                subject: this.state.subject,
-                message_html: this.state.message
-            }
+                <input className='form-fields' type='text' name='firstName' value={form.firstName} onChange={e => updateContactForm(e, 'firstName', form, setForm)} placeholder='First Name' style={styles.firstNameField} />
 
-            emailjs.send('service_j0tuddh','template_XwZav7A3', templateParams, 'user_cqWwBjugzaX0BXZjXbz8a')
-            	.then((response) => {
-            	   console.log('SUCCESS!', response.status, response.text)
-            	}, (err) => {
-            	   console.log('FAILED...', err)
-            	})
+                <input className='form-fields' type='text' name='lastName' value={form.lastName} onChange={e => updateContactForm(e, 'lastName', form, setForm)} placeholder='Last Name' style={styles.lastNameField} />
 
-            // window.emailjs.send( //Old emailjs API's send method worked with the below params and the EmailJS account was linked in the head of index.html
-            //     'gmail',
-            //     'template_XwZav7A3',
-            //     templateParams,
-            //     'user_cqWwBjugzaX0BXZjXbz8a'
-            // )
+                <input className='form-fields' type='email' name='email' value={form.email} onChange={e => updateContactForm(e, 'email', form, setForm)} placeholder='Email' style={styles.emailField} />
 
-            this.animateAndResetForm() // ...then animate the sending of the form and reset it.
+                <input className='form-fields' type='text' name='subject' value={form.subject} onChange={e => updateContactForm(e, 'subject', form, setForm)} placeholder='Subject' />
 
-        } else { //else setState with the true/false values for each of the three fields which need to be validated which, in turn, displays the field in red if it is invalid.
+                <textarea className='form-fields message' type='textarea' name='message' value={form.message} onChange={e => updateContactForm(e, 'message', form, setForm)} placeholder='(Message)' />
 
-            this.setState({
-                firstNameValid,
-                lastNameValid,
-                emailValid
-            })
-        }
-    }
+                <button className='form-fields button' type='button' value='Send' onClick={e => submitContactForm(e, dispatch, form, setForm)}>
+                    <span className='button-text'>{renderingVariables.sendButtonText}</span>
+                </button>
 
-    handleChange = (params, e) => { //Binded (bound) locally so as to maintain dynamicism, allowing for both event (character string) and param name
-        this.setState({ [params]: e.target.value})
-    }
+            </form>
 
-    render() { //Placing a conditional rendering based on screenWidth === 0 here, as I've done for the other components, causes an unwanted animation of the ContactForm where it is revealed and fades away, otherwise I would have done it exactly as it was done in AudioPlayer.js (my other big class component)
+        </div>
+    )
 
-        let right = wideScreen ? margin : 0
-        let className = this.props.revealContactForm ? (this.state.formSend ? (wideScreen ? 'form-container form-container-revealed form-send-wide-animation' : 'form-container form-container-revealed form-send-narrow-animation') : 'form-container form-container-revealed') : 'form-container' //Triple nested ternary just for fun: "If this.props.revealContactForm is true, then if this.state.formSend is true, if the screenWidth is more than the canvasWidth (i.e. if wideScreen is true) run the formSendWideAnimation or else run the formSendNarrowAnimation, else if this.state.formSend is false, just show the form, else if this.props.revealContactForm is false, don't show the form at all."
-
-        return(
-            <div className={className} style={{right: right}}>
-
-                <form style={{display: 'flex', flexDirection: 'column'}} onSubmit={this.handleSubmit}>
-
-                    <input className='form-fields' type='text' name='firstName' value={this.state.firstName} onChange={this.handleChange.bind(this, 'firstName')} placeholder='First Name' style={{backgroundColor: this.state.firstNameValid !== null ? (this.state.firstNameValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
-
-                    <input className='form-fields' type='text' name='lastName' value={this.state.lastName} onChange={this.handleChange.bind(this, 'lastName')} placeholder='Last Name' style={{backgroundColor: this.state.lastNameValid !== null ? (this.state.lastNameValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
-
-                    <input className='form-fields' type='email' name='email' value={this.state.email} onChange={this.handleChange.bind(this, 'email')} placeholder='Email' style={{backgroundColor: this.state.emailValid !== null ? (this.state.emailValid ? 'rgba(255,255,255,.85)' : 'rgba(255,0,0,.85)') : null}}/>
-
-                    <input className='form-fields' type='text' name='subject' value={this.state.subject} onChange={this.handleChange.bind(this, 'subject')} placeholder='Subject'/>
-
-                    <textarea className='form-fields message' type='textarea' name='message' value={this.state.message} onChange={this.handleChange.bind(this, 'message')} placeholder='(Message)'/>
-
-                    <button className='form-fields button' type='button' value='Send' onClick={this.handleSubmit}><span className='button-text'>{this.state.formSend ? 'Sending now...' : 'Send'}</span></button>
-
-                </form>
-
-            </div>
-        )
-    }
 }
 
 export default ContactForm
