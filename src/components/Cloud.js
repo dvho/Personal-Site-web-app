@@ -1,44 +1,29 @@
 import React, { memo } from 'react'
 
-import config from '../_config'
 import utils from '../_utils'
 
-const { canvasHeight } = config.constants
+const { getStylesAndRenderingVariablesForCloud, fluctuateVeilOpacity } = utils
 
-const Cloud = props => {
+const Cloud = ({ dispatch, cloudNumber, cloudHazeOn }) => {
 
-    const cloudClassNameStrings = ['fa fa-cloud', 'icon ion-ios-cloud', 'icon ion-md-cloud', 'icon ion-ios-cloudy'] //A range of four different cloud icons spanning two svg libraries
+    const { styles, classNames, renderingVariables } = getStylesAndRenderingVariablesForCloud(cloudHazeOn) //Unlike calls to utils.getStylesForAudioPlayer from AudioPlayer.js, utils.getStylesForFace from Face.js, utils.getStylesAndClassNamesForInfoSheet from InfoSheet.js etc., whose associated components render and rerender directly from within the markup of Home.js, Cloud.js is rendered from within cloudControl in the mounting useEffect of Home.js and so is not subject to the otherwise rapid unnecessary rerenders that would occur from the constant changing of coords in Home.js, therefore it doesn't need to be wrapped in useMemo like the others
 
-    let cloudClassNameStringIndex = Math.floor(Math.random() * 4)
-    let color = Math.floor(Math.random() * 360)
-    let size = canvasHeight / (3 + Math.random() * 3)
-    let opacity = .3 + Math.random() * .6
-    let cloudHaze = size / 4
-    let zIndex = Math.random() * -900
-    let travelDuration = 24 + Math.random() * 24 //Ideally, travelDuration would be a function of canvas width (inversely proportional to it), which is already a function of canvas height. "18000 / canvasHeight + Math.random() * canvasHeight / 18000" works perfectly but takes too long for clouds to enter the screen on small devices.
-    let animationNumber = Math.ceil(Math.random() * 32)
+    const { travelDuration, cloudWidth } = renderingVariables
 
-    utils.dimVeil(props.dispatch, travelDuration, size) //Call dimVeil in App.js and pass it the travelDuration, so it knows how to set the setTimeout to change the opacity of the veil accordingly, and the size so it knows how to set the setTimeout to change the opacity again for when the cloud has finished passing
+    fluctuateVeilOpacity(dispatch, travelDuration, cloudWidth)
 
     return(
         <div
             className='clouds'
             id='cloud'
-            onAnimationEnd={() => props.dispatch({type: 'removeCloud', cloudNumber: props.cloudNumber})}
+            onAnimationEnd={() => dispatch({type: 'removeCloud', cloudNumber})}
             style={{top: '50%'}}>
             <i
-                className={cloudClassNameStrings[cloudClassNameStringIndex]}
-                style={{
-                    fontSize: `${size}px`,
-                    color: `hsla(${color}, 100%, 96%, ${opacity})`,
-                    filter: !props.cloudHazeOn ? null : `drop-shadow(0px 0px ${cloudHaze}px hsla(${color}, 100%, 96%, 1)`, //This filter prop specifying a drop-shadow had to be added to the style object because FontAwesome comprises svg files, not fonts, so textShadow (and of course boxShadow) wouldn't have worked. Note, a drop shadow is effectively a blurred, offset version of the input image's alpha mask, drawn in a specific color and composited below the image, so not much wiggle room to do anything too creative with it.
-                    position: 'absolute',
-                    zIndex: `${zIndex}`,
-                    animation: `motionSizeAndFlip${animationNumber} ${travelDuration}s linear forwards`
-                }}
+                style={styles.cloud}
+                className={classNames.cloud}
             />
         </div>
     )
 }
 
-export default memo(Cloud) //I was getting unnecessary renders here so I'm wrapping the export of the component in memo, which does a shallow comparison for function components as React.PureComponent, or the older lifecycle method componentShouldUpdate(), do shallow comparisons to limit unnecessary re-rendering in class components. One could also simply wrap the code block of the component itself in React.memo but I think doing it in the export is cleaner.
+export default memo(Cloud)
