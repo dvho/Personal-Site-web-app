@@ -22,7 +22,6 @@ const Track = ({ dispatch, track, currentTrack, trackNumber, leftColumn }) => {
     const onHoldWrapper = e => {
         onHold(() => {
                 navigate(slug)
-                window.location.reload() //If you don't call this here the path will change in your browser's address bar but the app won't navigate, and it must be called from a setTimeout otherwise the navigation will not have completed first
         }, 1000, e)
     }
 

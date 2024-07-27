@@ -92,8 +92,8 @@ const Home = () => {
 
     const handleEvents = e => {
 
-        if (e.type === 'resize' && !navigator.userAgent.includes('iPhone')) { //Unfortunately I have to prevent this from working on iOS Safari because as of iOS 14 the new bottom address bar, which now dynamically appears on touchstart, also always fires the resize event
-            setTimeout(() => window.location.reload(), 10) //setTimeout needed for Mozilla (not Chrome) per Morteza Ziyae on 2015, 01-27th in https://stackoverflow.com/questions/18967532/window-location-reload-not-working-for-firefox-and-chrome
+        if (e.type === 'resize' && !navigator.userAgent.includes('iPhone')) { //Unfortunately I have to prevent this from working on iOS Safari because as of iOS 14 the new bottom address bar, which now dynamically appears on touchstart, also always fires the resize event...
+            setTimeout(() => window.location.reload(), 10) //...calling window.location.reload() is required so that resizing the window reloads the page to recalculate the canvasWidth and canvasHeight from within config.constants, and the setTimeout is needed for Mozilla (not Chrome) per Morteza Ziyae on 2015, 01-27th in    https://stackoverflow.com/questions/18967532/window-location-reload-not-working-for-firefox-and-chrome
         }
 
         if (e.type === 'pointermove' || e.type === 'click' || e.type === 'handmove') { //Get the X and Y positions on pointermove and on click. Note: e.pageX and e.pageY have to be used instead of e.clientX and e.clientY because the latter two are properties of the MouseEvent only, and the former of both MouseEvent and TouchEvent. This caused an hours long headache that was eventually solved.
