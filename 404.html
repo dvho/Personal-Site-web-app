@@ -4,15 +4,30 @@
   <meta charset="UTF-8">
   <title>Redirecting...</title>
   <script type="text/javascript">
-    // Preserve the original path and query string
+    //Function to load the index.html content
+    function loadIndex() {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', '/index.html', true);
+      xhr.onreadystatechange = function () {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+          document.open();
+          document.write(xhr.responseText);
+          document.close();
+        }
+      };
+      xhr.send();
+    }
+
+    //Preserve the original path, query string, and hash
     var path = window.location.pathname;
     var query = window.location.search;
     var hash = window.location.hash;
 
-    // Redirect to index.html but keep the original path, query, and hash
-    var newUrl = '/index.html' + query + hash;
+    // Load the index.html content
+    loadIndex();
+
+    // Update the browser's address bar to the original path
     history.replaceState(null, '', path + query + hash);
-    window.location.replace(newUrl);
   </script>
 </head>
 <body>
