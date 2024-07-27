@@ -34,7 +34,7 @@ const SocialMenu = ({ dispatch, coords, isHandPointing, menuPosition, cloudsOn, 
         <div className={classNames.socialMenuContainer} style={styles.socialMenuContainer}>
 
             <div className={classNames.socialIconsColumn1}>
-                <i className='plane social-icon fa fa-plane-departure' onClick={() => { navigate('journeys'); window.location.reload()}} /> { /* If you don't call window.location.reload here too the path will change in your browser's address bar but the app won't navigate */ }
+                <i className='plane social-icon fa fa-plane-departure' onClick={() => navigate('travel-photos')} />
                 <i className='cloud social-icon fa-solid fa-cloud' style={styles.cloudIcon} onClick={() => dispatch({type: 'toggleClouds'})} ref={cloudsOnRef} />
                 <i className='cloud-haze fi fi-cloudy-gusts' style={styles.cloudHazeIcon} onClick={() => dispatch({type: 'toggleCloudHaze'})} ref={cloudHazeOnRef} />
                 <i className='hand social-icon fa-solid fa-hand-sparkles' style={styles.handControllerIcon} onClick={() => dispatch({type: 'toggleHandController'})} />

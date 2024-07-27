@@ -13,7 +13,6 @@ const SingleTrack = ({ track }) => {
             const lyrics = document.getElementById('lyrics')
             title.innerHTML = `"${track.title}"`
             lyrics.innerHTML = lyrics.innerHTML + track.lyrics
-            return () => window.location.reload() //If you don't call this on when the useEffect unmounts the home page won't reload when you navigate back
     }, [])
 
     return (

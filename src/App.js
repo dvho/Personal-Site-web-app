@@ -1,38 +1,36 @@
-import { HashRouter, Route, Routes } from 'react-router-dom'
+import { BrowserRouter, useRoutes } from 'react-router-dom' // Changed from HashRouter to BrowserRouter
 
 import Home from './Home'
 import { SingleTrack, TravelPhotos } from './components'
 
+
 import config from './_config'
+import { photoData } from './assets/data'
+
+const RoutesComponent = () => { //This component is designed to handle routing for the entire app...
+    const routes = [ //...by constructing an array of routes from the config object, the photoData array and then adding two static routes, one for <TravelPhotos> when no photo album is open and all the photo albums are showing, and one for <Home> to handle the root route and to catch all remaining cases...
+        ...config.tracks.map(i => ({
+            path: `/${i.slug}`,
+            element: <SingleTrack track={i} />
+        })),
+        ...photoData.map(i => ({
+            path: `/travel-photos/${i.slug}`,
+            element: <TravelPhotos initialPhotoAlbumSlug={i.slug} />
+        })),
+        { path: '/travel-photos', element: <TravelPhotos initialPhotoAlbumSlug={''} /> },
+        { path: '*', element: <Home /> }
+    ]
+
+    const element = useRoutes(routes) //...then by using the useRoutes hook from react-router-dom to render the appropriate component based on the current route
+    return element
+}
 
 const App = () => {
 
-    let hashes, index, path, track, element
-
-    hashes = config.tracks.map(i => `#/${i.slug}`) //Make hashes from each of the slugs in    config.tracks[n].slug
-    hashes.push('#/journeys') //...and push    #/journeys    as the final one.
-
-    index = hashes.indexOf(window.location.hash) //...Because the hashes array begins with making hashes from the tracks in numerical order before    #/journeys    is pushed to the hashes array your    indexOf(window.location.hash)    will be the index...
-
-    if (config.tracks.filter(i => `#/${i.slug}` === window.location.hash).length === 1) {
-        path = window.location.hash.replace('#', '')
-        track = config.tracks[index] //...that you can pass here in order to get the track...
-        element = (() => <SingleTrack track={track}/>)() //...to pass here.
-    } else if (window.location.hash === '#/journeys') {
-        path = window.location.hash.replace('#', '')
-        element = (() => <TravelPhotos/>)()
-    } else {
-        path = window.location.hash.replace('#', '')
-        element = (() => <Home/>)()
-    }
-
     return (
-        <HashRouter>
-            <Routes>
-                { /* <Route path='*' element={<Home />} /> */ }
-                <Route path={path} element={element}/>
-            </Routes>
-        </HashRouter>
+        <BrowserRouter>
+            <RoutesComponent />
+        </BrowserRouter>
     )
 }
 
