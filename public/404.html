@@ -1,25 +1,20 @@
-<!--
-    Because this site is deployed to GitHub Pages, which doesn't support client-side routing, this file is used to handle the anticipated 404 errors thrown when a user tries to access any page that's not the root.  This file forces a redirect to the root path so as to allow react-router-dom to handle routing on the client side...
--->
-
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset="UTF-8" />
-        <script>
-            //...this script is for redirecting to the root path if the user tries to access a page that does not exist, thereby ensuring that react-router-dom is handling routing on the client side because GitHub Pages does not support client-side routing...
-            var redirectTo = '/index.html'
-            var query = window.location.search
-            var hash = window.location.hash
-            var path = window.location.pathname
-            var newUrl = redirectTo + query + hash
-            console.log('Redirecting to: ' + newUrl)
-            window.location.replace(newUrl)
-        </script>
-    </head>
-    <body>
-        <!--
-            ...The body is intentionally left empty as the user will be redirected immediately
-        -->
-    </body>
+<head>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
+  <script type="text/javascript">
+    // Preserve the original path and query string
+    var path = window.location.pathname;
+    var query = window.location.search;
+    var hash = window.location.hash;
+
+    // Redirect to index.html but keep the original path, query, and hash
+    var newUrl = '/index.html' + query + hash;
+    history.replaceState(null, '', path + query + hash);
+    window.location.replace(newUrl);
+  </script>
+</head>
+<body>
+</body>
 </html>
