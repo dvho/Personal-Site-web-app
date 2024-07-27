@@ -1,43 +1,46 @@
+<!--
+    Because this site is deployed to GitHub Pages, which doesn't support client-side routing, this file is used to handle the anticipated 404 errors thrown when a user tries to access any page that's not the root.  This file forces a redirect to the root path so as to allow react-router-dom to handle routing on the client side...
+-->
+
 <!DOCTYPE html>
 <html>
 <head>
-  <meta charset="UTF-8">
-  <title>Redirecting...</title>
-  <script type="text/javascript">
-    //Function to load the index.html content
-    function loadIndex() {
-      var xhr = new XMLHttpRequest();
-      xhr.open('GET', '/index.html', true);
-      xhr.onreadystatechange = function () {
-        if (xhr.readyState === 4 && xhr.status === 200) {
-          document.open();
-          document.write(xhr.responseText);
-          document.close();
-          fixRelativePaths();
+    <meta charset="UTF-8">
+    <title>Redirecting...</title>
+    <script type="text/javascript">
+        const loadIndex = () => { //...define a function to load the index.html content which...
+            const xhr = new XMLHttpRequest() //...creates a new XMLHttpRequest object...
+            xhr.open('GET', '/index.html', true) //...opens a new GET request to the index.html file...
+            xhr.onreadystatechange = () => { //...defines the onreadystatechange event handler wherein...
+                if (xhr.readyState === 4 && xhr.status === 200) { //...if the request is complete and successful...
+                    document.open() //...opens the document...
+                    document.write(xhr.responseText) //...writes the response text to the document...
+                    document.close() //...closes the document...
+                    fixRelativePaths() //...and calls the fixRelativePaths function to fix relative paths for assets...
+                }
+            }
+            xhr.send() //...and sends the request...
         }
-      };
-      xhr.send();
-    }
 
-    // Function to fix relative paths for assets
-    function fixRelativePaths() {
-      var base = document.createElement('base');
-      base.href = '/';
-      document.head.appendChild(base);
-    }
+        const fixRelativePaths = () => { //...define a function to fix relative paths for assets which...
+          const base = document.createElement('base') //...creates a new base element...
+          base.href = '/' //...sets the href attribute to the root path...
+          document.head.appendChild(base) //...and appends the base element to the head of the document...
+        }
 
-    // Preserve the original path, query string, and hash
-    var path = window.location.pathname;
-    var query = window.location.search;
-    var hash = window.location.hash;
+        //...get the current path, query, and hash...
+        const path = window.location.pathname
+        const query = window.location.search
+        const hash = window.location.hash
 
-    // Load the index.html content
-    loadIndex();
+        loadIndex() //...call the loadIndex function to load the index.html content...
 
-    // Update the browser's address bar to the original path
-    history.replaceState(null, '', path + query + hash);
-  </script>
+        history.replaceState(null, '', path + query + hash) //...and replace the current history state with the root path, query, and hash
+    </script>
 </head>
 <body>
+  <!--
+      ...The body is intentionally left empty as the user will be redirected immediately
+  -->
 </body>
 </html>
