@@ -116,58 +116,58 @@ const config = {
             faceEyePosition5R4: require('./assets/images/face-5R4.png')
         }
     },
-    tracks: [ //These tracks were bounced to WAV format from their Pro Tools sessions, then exported to m4a in QuickTime Player, then the file extension was simply changed from m4a to mp4 per Paul Roberts' 2013, 06-17th answer on    https://stackoverflow.com/questions/9412384/m4a-mp4-file-format-whats-the-difference-or-are-they-the-same    , then after deploying it was discovered that iOS Safari, as of iOS 15.4, unilaterally and uncontrollably launches an extraneous window that overlays any audio playing from a site if the audio is streaming from a url such as a CDN rather than being hosted locally. I had to revert back to my require('../assets/music/track_name') format at the expense of these tracks being cached when a user first loads the site. THEN it was further discovered that this behavior by iOS Safari has nothing to do with streaming from a url vs the require method and everything to do with the encoding format, mp3 vs mp4, the latter which is the only audio format github allows. When songs are encoded in mp4 iOS Safari launches the window that breaks the site and when they're encoded in mp3, regardless of whether or not they're hosted within the project and required in or on a CDN and streamed, iOS Safari doesn't launch the frustrating, brutal and tasteless window
+    tracks: [ //Originally, these tracks were bounced to wav format from their Pro Tools’ sessions, then exported to m4a in QuickTime Player, then their file extension was simply changed from m4a to mp4 per Paul Roberts' 2013, 06-17th answer on    https://stackoverflow.com/questions/9412384/m4a-mp4-file-format-whats-the-difference-or-are-they-the-same    , then they were uploaded to GitHub's CDN by creating a new "issue" at    https://github.com/dvho/Personal-Site-web-app/issues/new    , each dragged-and-dropped/attached to the new ticket so that GitHub would automatically generate CDN URLs for each so that each generated URL could then be used as the value of the url prop in the respective song’s object in the array of tracks. The circuitous conversion to mp4 was because GitHub's CDN only supports mp4, not mp3 nor any other audio format. But upon deploying it was discovered that upon attempting to play an mp4 iOS Safari, as of iOS 15.4, unilaterally and uncontrollably launches an extraneous window that overlays any site. I quickly reverted back to hosting the files locally within the project as mp3s (bouncing directly to mp3 format from Pro Tools), e.g.    require('../assets/music/track_name.mp3')    , at the expense of these tracks being cached when a user first loads the site. Eventually I stored the mp3s with Google Firebase, logging into my primary Google account associated with this/my main GitHub account, visiting console.firebase.google.com, clicking "Creat a new project", creating a project named "music", not adding Google Analytics nor Firebase Hosting, and when project creation had completed clicking "See all Firebase features" so I could ⌘+F for and click "Storage", click "Get started" and upload my music in mp3
         {
             title: 'Believe in You',
-            url: require('./assets/music/Believe in You-35.mp3'), //This used to be 'https://user-images.githubusercontent.com/45696445/184548499-cb11f1ac-66ad-4afd-a4fd-7ac5377b5a1e.mp4'
+            url: 'https://firebasestorage.googleapis.com/v0/b/music-e317c.appspot.com/o/Believe%20in%20You-35.mp3?alt=media&token=002fe75e-f946-4bdc-b13f-fa133d15c9ab', //This was first    'https://user-images.githubusercontent.com/45696445/184548499-cb11f1ac-66ad-4afd-a4fd-7ac5377b5a1e.mp4'    then    require('./assets/music/Believe in You-35.mp3')    before eventualy storing with Google Firebase
             slug: 'believe-in-you',
             lyrics: lyrics.believeInYou
         },
         {
             title: 'I Wish it Was Raining',
-            url: require('./assets/music/I Wish It Were Raining-23.mp3'), //This used to be 'https://user-images.githubusercontent.com/45696445/184548545-190fab63-9d29-47d4-be7b-2af7a54cc070.mp4'
+            url: 'https://firebasestorage.googleapis.com/v0/b/music-e317c.appspot.com/o/I%20Wish%20It%20Were%20Raining-23.mp3?alt=media&token=db82fca0-2402-46d9-81d5-7ff3f10e1ac9', //This was first    'https://user-images.githubusercontent.com/45696445/184548545-190fab63-9d29-47d4-be7b-2af7a54cc070.mp4'    then    require('./assets/music/I Wish It Were Raining-23.mp3')    before eventualy storing with Google Firebase
             slug: 'i-wish-it-was-raining',
             lyrics: lyrics.iWishItWasRaining
         },
         {
             title: 'How Could You Say That',
-            url: require('./assets/music/How Could You Say That-38.mp3'), //This used to be 'https://user-images.githubusercontent.com/45696445/184548559-a52249fe-b1b0-47ec-bd93-f72d1b3d4523.mp4'
+            url: 'https://firebasestorage.googleapis.com/v0/b/music-e317c.appspot.com/o/How%20Could%20You%20Say%20That-38.mp3?alt=media&token=8b2aa0d7-03fa-4011-bd7c-b33b3487182a', //This was first    'https://user-images.githubusercontent.com/45696445/184548559-a52249fe-b1b0-47ec-bd93-f72d1b3d4523.mp4'    then    require('./assets/music/How Could You Say That-38.mp3')    before eventualy storing with Google Firebase
             slug: 'how-could-you-say-that',
             lyrics: lyrics.howCouldYouSayThat
         },
         {
             title: 'No Answer, No Wonder',
-            url: require('./assets/music/Fire and Acid Rain-24.mp3'), //This used to be 'https://user-images.githubusercontent.com/45696445/184548566-7351c4a5-dbb1-4b6e-b63b-b3d93386f0e7.mp4'
+            url: 'https://firebasestorage.googleapis.com/v0/b/music-e317c.appspot.com/o/Fire%20and%20Acid%20Rain-24.mp3?alt=media&token=e37173dc-12c3-49f2-9374-3bda236a8a63', //This was first    'https://user-images.githubusercontent.com/45696445/184548566-7351c4a5-dbb1-4b6e-b63b-b3d93386f0e7.mp4'    then    require('./assets/music/Fire and Acid Rain-24.mp3')    before eventualy storing with Google Firebase
             slug: 'no-answer-no-wonder',
             lyrics: lyrics.noAnswerNoWonder
         },
         {
             title: 'Forgive',
-            url: require('./assets/music/I Will Not Forgive-18.mp3'), //This used to be 'https://user-images.githubusercontent.com/45696445/184548579-4156fb08-146a-4397-ab3f-00c1d7443c84.mp4'
+            url: 'https://firebasestorage.googleapis.com/v0/b/music-e317c.appspot.com/o/I%20Will%20Not%20Forgive-18.mp3?alt=media&token=69dc301d-ccbd-41a5-8722-4c5547189184', //This was first    'https://user-images.githubusercontent.com/45696445/184548579-4156fb08-146a-4397-ab3f-00c1d7443c84.mp4'    then    require('./assets/music/I Will Not Forgive-18.mp3')    before eventualy storing with Google Firebase
             slug: 'forgive',
             lyrics: lyrics.forgive
         },
         {
             title: 'Highest Mountain',
-            url: require('./assets/music/Highest Mountain-18.mp3'), //This used to be 'https://user-images.githubusercontent.com/45696445/184548780-6b432913-2da1-484d-99d1-e7a1436ee6d5.mp4'
+            url: 'https://firebasestorage.googleapis.com/v0/b/music-e317c.appspot.com/o/Highest%20Mountain-18.mp3?alt=media&token=a2e61c3b-3f46-4606-863a-871c455840cc', //This was first    'https://user-images.githubusercontent.com/45696445/184548780-6b432913-2da1-484d-99d1-e7a1436ee6d5.mp4'    then    require('./assets/music/Highest Mountain-18.mp3')    before eventualy storing with Google Firebase
             slug: 'highest-mountain',
             lyrics: lyrics.highestMountain
         },
         {
             title: 'Driving and Crying',
-            url: require('./assets/music/Driving and Crying-16.mp3'), //This used to be 'https://user-images.githubusercontent.com/45696445/184548802-1e1a3774-8690-4a03-87b4-841fded80e3d.mp4'
+            url: 'https://firebasestorage.googleapis.com/v0/b/music-e317c.appspot.com/o/Driving%20and%20Crying-16.mp3?alt=media&token=0bb98a70-81cb-4c86-b139-d2c12dc384a8', //This was first    'https://user-images.githubusercontent.com/45696445/184548802-1e1a3774-8690-4a03-87b4-841fded80e3d.mp4'    then    require('./assets/music/Driving and Crying-16.mp3')    before eventualy storing with Google Firebase
             slug: 'driving-and-crying',
             lyrics: lyrics.drivingAndCrying
         },
         {
             title: 'Baby Elephant',
-            url: require('./assets/music/Baby Elephant-07.mp3'), //This used to be 'https://user-images.githubusercontent.com/45696445/184548815-bba690ab-7da0-43ca-88b8-0c7f449ee46b.mp4'
+            url: 'https://firebasestorage.googleapis.com/v0/b/music-e317c.appspot.com/o/Baby%20Elephant-07.mp3?alt=media&token=e2687280-3411-4401-9776-466b2b58de8b', //This was first    'https://user-images.githubusercontent.com/45696445/184548815-bba690ab-7da0-43ca-88b8-0c7f449ee46b.mp4'    then    require('./assets/music/Baby Elephant-07.mp3')    before eventualy storing with Google Firebase
             slug: 'baby-elephant',
             lyrics: lyrics.babyElephant
         },
         {
             title: 'Bad Place',
-            url: require('./assets/music/Bad Place-08.mp3'), //This used to be 'https://user-images.githubusercontent.com/45696445/184548835-6de33283-8c91-4336-976e-d5794171530f.mp4'
+            url: 'https://firebasestorage.googleapis.com/v0/b/music-e317c.appspot.com/o/Bad%20Place-08.mp3?alt=media&token=152bbc0a-8550-4022-b15d-5892dfdf54e8', //This was first    'https://user-images.githubusercontent.com/45696445/184548835-6de33283-8c91-4336-976e-d5794171530f.mp4'    then    require('./assets/music/Bad Place-08.mp3')    before eventualy storing with Google Firebase
             slug: 'bad-place',
             lyrics: lyrics.badPlace
         },
