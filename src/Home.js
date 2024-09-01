@@ -303,7 +303,7 @@ export default Home
 /*
 Cleaning up git history in 5 steps:
 
-1) I ran command    git log --pretty=format: --name-only | sort -u    to see a grand total list of files in git commit history
+1) I ran command    git log --pretty=format: --name-only | sort -u    to see a grand total list of files in git commit history. Note, a simple way to filter this list to only show the files which are being tracked in git history but which are not present in the most recent commit (of the currently checked out branch), i.e. thereby contributing to repo bloat probably unnecessarily, using a single command is to use process substitution, which is a feature of some Unix-like shells such as bash and zsh that allows the output of a command to be used as if it were a file. Do    comm -23 <(git log --name-only --pretty=format: | sort -u) <(git ls-tree -r HEAD --name-only)    . What this does is gets the list of all files ever tracked in the repository using    git log --name-only --pretty=format:    , then uses    sort -u    to sort the list and remove duplicates, then lists all the files in the most recent commit using    git ls-tree -r HEAD --name-only    , then uses process substitution with    comm -23    to compare the two lists and shows files that were once tracked but are no longer present in the most recent commit
 
 2) I ran    git filter-branch -f --tree-filter 'git rm -r -f --ignore-unmatch [History] && git rm -r -f --ignore-unmatch build && git rm -r -f --ignore-unmatch music' -- --all    to permanently delete old folders in the commit history that were at some point either removed or renamed and hence unnecessarily contributing to repositry bloat
 
